@@ -16,7 +16,6 @@ export default function ClinicManagement() {
 
   //define state
   //-----------------------------------------------------------------------------------------
-
   const [allClinics, setAllClinics] = useState([])
   const [appointments, setAppointments] = useState([])
   console.log(allClinics)
