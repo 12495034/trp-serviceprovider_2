@@ -7,6 +7,7 @@ import { collection, addDoc } from "firebase/firestore";
 import { firestore } from '../Firebase'
 
 export default function NewClinicForm() {
+    
     //TODO: state initialised as 3 empty slots. But this needs to be initialised depending on what capacity the clinic can hold
     const [ClinicFormData, setClinicFormData] = useState({
         location: "",
