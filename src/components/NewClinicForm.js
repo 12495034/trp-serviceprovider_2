@@ -7,20 +7,21 @@ import { collection, addDoc } from "firebase/firestore";
 import { firestore } from '../Firebase'
 
 export default function NewClinicForm() {
-    
+
     //TODO: state initialised as 3 empty slots. But this needs to be initialised depending on what capacity the clinic can hold
+    //TODO: Add validation to clinic creation form
     const [ClinicFormData, setClinicFormData] = useState({
         location: "",
-        center:"",
+        center: "",
         date: "",
         time: "",
         capacity: "",
-        slots:{
-            1:"1800",
-            2:"1830",
+        slots: {
+            1: "1800",
+            2: "1830",
         }
     })
-    
+
     const [submitted, setSubmitted] = useState(false)
     //create reference to collection
     const ref = collection(firestore, "Clinics")
@@ -39,7 +40,7 @@ export default function NewClinicForm() {
 
     //function that updates state as the form fields are compiled
     function handleChange(event) {
-        
+
         setClinicFormData(prevFormData => {
             return {
                 ...prevFormData,
@@ -53,7 +54,7 @@ export default function NewClinicForm() {
         const array = {}
         for (var i = 0; i < ClinicFormData.capacity; i++) {
             //let appointmentString = `slot ${i}:{time:'',userid:'',},`
-            Object.assign(array,{key1:"Slot1", key2:"Slot2"})
+            Object.assign(array, { key1: "Slot1", key2: "Slot2" })
         }
         return array
     }
@@ -126,10 +127,11 @@ export default function NewClinicForm() {
             {/* <Form.Group className="mb-3" id="formGridCheckbox">
                 <Form.Check type="checkbox" label="Notify Users" />
             </Form.Group> */}
-
-            <Button variant="primary" type="submit">
-                Create Clinic
-            </Button>
+            <div className='d-grid'>
+                <Button variant="primary" type="submit">
+                    Create Clinic
+                </Button>
+            </div>
         </Form>
     )
 }
