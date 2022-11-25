@@ -1,19 +1,21 @@
 import React from 'react'
 import { Card } from 'react-bootstrap'
+import '../App.css'
 
 export default function StatisticElement(props) {
     //individual stat components would be imported into the required sheet
   return (
-    <Card style={{ width: '18rem' }}>
-      <Card.Img variant="top" src="holder.js/100px180" alt="Add image to indicate stat"/>
-      <Card.Body>
-        <Card.Title>{props.title}</Card.Title>
-        <Card.Text>{props.number}</Card.Text>
-        <Card.Text>
-          Some quick example text to build on the card title and make up the
-          bulk of the card's content.
+    <Card className='Statistic-card'>
+      {/* <Card.Img variant="top" src="holder.js/100px180" alt="Add image to indicate stat"/> */}
+      <Card.Body className='Statistic-card-body'>
+        <Card.Title><div className='Statistic-card-title'>{props.title}{props.icon}</div></Card.Title>
+        <Card.Text className='Statistic-card-count'>{props.number}</Card.Text>
+        <Card.Text className='Statistic-card-description'>
+          {props.description}
         </Card.Text>
       </Card.Body>
     </Card>
   )
 }
+
+

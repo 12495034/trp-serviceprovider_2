@@ -4,37 +4,39 @@ import NavBarTRP from '../components/NavBarTRP'
 import Footer from '../components/Footer'
 import StatisticElement from '../components/StatisticElement'
 import { Container, Row, Col } from 'react-bootstrap'
+import { UserAuth } from '../context/AuthContext'
+import { MdCalendarToday, MdDone, MdOutlinePersonOff, MdOutlineGroups,} from "react-icons/md";
+import {FaDoorOpen, faDoorClosed, FaDoorClosed} from 'react-icons/fa'
+
 
 //TODO: Add footer
 export default function Homepage() {
+  const { user } = UserAuth()
+
   return (
-    <div>
+    //TODO: need to use flexbox to place footer at bottom of the page at all times
+    <div className='page-body'>
       <NavBarTRP />
-      <Container>
-        <Row>
+      <Container className='page-content'>
+        <Row className='page-content-text'>
           <div className="Home-message">
-            <h1>Welcome (username)</h1>
-            <h3>to the Rapid HIV & syphillis clinic management portal. Through this system you can collect statistics about clinics held to date, schedule/manage clinics and manage user access to this service.  </h3>
-            <p>Statistics shown below shall be pulled from an online database and dynamically rendered</p>
+            <h1>Welcome {user.email}</h1>
+            <h5>to the Rapid HIV & syphillis clinic management portal  </h5>
+            {/* <p>Statistics shown below shall be pulled from an online database and dynamically rendered</p> */}
           </div>
         </Row>
-        <Row>
-          <Col>
-          <StatisticElement title="Clinics Held" number="4" />
+
+        <Row md={1} sm={1} xs={1} className='page-content-cards'>
+          <Col  className='Statistic-card-container'>
+          <StatisticElement icon=<FaDoorOpen size={30} color='purple'/> title="" number="1" description="Number of open clinics" />
+            <StatisticElement icon=<FaDoorClosed size={30} color='purple'/> title="" number="4" description="Total count of Clinics held to date" />
+            <StatisticElement icon=<MdDone size={30} color='green'/> title="" number="30" description="Total count of tests administered" />
+            <StatisticElement icon=<MdOutlinePersonOff size={30} color='red'/> title="" number="5" description="Total count of missed appointments" />
+            <StatisticElement icon=<MdOutlineGroups size={30} color='orange' /> title="" number="2" description="Average Queue size per clinic" />
           </Col>
-          <Col>
-          <StatisticElement title="Tests Carried Out" number="4" />
-          </Col>
-          <Col>
-          <StatisticElement title="No Shows" number="4" />
-          </Col>
-          <Col>
-          <StatisticElement title="Average Queue Size" number="4" />
-          </Col>
-          
         </Row>
       </Container>
-
+      <Footer />
     </div>
   )
 }

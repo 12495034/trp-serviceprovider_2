@@ -1,18 +1,20 @@
 import React, { useState } from "react"
+import { Button, Container, Row, Col, Form, Image } from "react-bootstrap"
+import { Link, useNavigate } from "react-router-dom"
 import NavBarTRP from "../components/NavBarTRP"
+import { UserAuth } from "../context/AuthContext"
 
 export default function LoginScreen() {
-  //add some logic to check to login details, if they are incorrect log a message above the login button
-  //only a placeholder for now until connection to firebase authentication is setup
 
+  const navigate = useNavigate()
+  const { signIn } = UserAuth()
   const [formData, setformData] = useState({
     email: "",
     password: "",
-    passwordConfirm: "",
-    subscribe: false
-  }
-  )
+  })
+  const [error, setError] = useState('')
 
+  //console log state for debugging
   console.log(formData)
 
   function handleChange(event) {
@@ -25,53 +27,66 @@ export default function LoginScreen() {
     })
   }
 
-  function handleSubmit(event) {
-    event.preventDefault()
-    if (formData.password === formData.passwordConfirm) {
-      console.log("Passwords Match")
-    } else {
-      console.log("Passwords do not match")
-    }
-
-    if (formData.subscribe) {
-      console.log("Thanks for signing up")
+  async function handleSubmit(e) {
+    e.preventDefault()
+    setError('')
+    try {
+      await signIn(formData.email, formData.password)
+      navigate('/userProfile')
+    } catch (e) {
+      setError(e.message)
+      console.log(e.message)
     }
   }
 
   return (
-    <>
-    {/* This is only here so that other pages can be navigated to until authentication is setup */}
-    <NavBarTRP />
-    <div className="login-screen">
-      <div className="form-container">
-        <form className="form" onSubmit={handleSubmit}>
-          <h1>Management system for Rapid HIV & Syphillus Clinics</h1>
-          <img src={require("../images/logo.png")} alt="missing" />
-          <input
-            type="email"
-            placeholder="Email address"
-            className="form--input"
-            name="email"
-            onChange={handleChange}
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            className="form--input"
-            name="password"
-            onChange={handleChange}
-          />
-          <button
-            className="form--submit"
-          >
-            Login
-          </button>
-        </form>
-        {/* Add function return here for incorrect login details message */}
-        <h5>No login details?</h5>
-        <h5>Sign-up</h5>
-      </div>
+    <div className='login-body'>
+      <Container className='login-content'>
+        <Row >
+          <h1 className='text-center login-title '>The Rapid HIV & Syphilis Booking System</h1>
+        </Row>
+        <Row md={2} sm={1} xs={2} className='d-flex justify-content-center mb-4 mt-4'>
+          <Image src={require("../images/logo.png")} alt="missing" />
+        </Row>
+        <Row md={2} className='d-flex justify-content-center'>
+          <Col >
+            <Form onSubmit={handleSubmit}>
+              <Form.Group className="mb-3" controlId="formBasicEmail">
+                <Form.Label>Email address</Form.Label>
+                <Form.Control
+                  type="email"
+                  placeholder="Enter email"
+                  name='email'
+                  onChange={handleChange}
+                />
+              </Form.Group>
+
+              <Form.Group className="mb-3" controlId="formBasicPassword">
+                <Form.Label>Password</Form.Label>
+                <Form.Control
+                  type="password"
+                  placeholder="Password"
+                  name='password'
+                  onChange={handleChange}
+                />
+              </Form.Group>
+              <Form.Text className="text-muted">
+                {error?error:"We will never share your email address"}
+              </Form.Text>
+              <div className='d-grid mt-2'>
+                <Button variant="primary" type="submit">
+                  Submit
+                </Button>
+              </div>
+            </Form>
+            {/* Add function return here for incorrect login details message */}
+          </Col>
+        </Row>
+        <Row md={1} className='text-center login-options mt-4'>
+          <h6>No login details? <Link to='/signup'>Signup</Link></h6>
+          <h6>Forgot Password? <Link to='/reset'>Reset</Link></h6>
+        </Row>
+      </Container>
     </div>
-    </>
   )
 }

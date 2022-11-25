@@ -11,25 +11,13 @@ export default function NewClinicForm() {
     //TODO: state initialised as 3 empty slots. But this needs to be initialised depending on what capacity the clinic can hold
     const [ClinicFormData, setClinicFormData] = useState({
         location: "",
+        center:"",
         date: "",
         time: "",
         capacity: "",
-        appointments: {
-            slot1:{
-                time:"1830",
-                userid:"",
-                checkedin:false,
-            },
-            slot2:{
-                time:"1800",
-                userid:"",
-                checkedin:false,
-            },
-            slot3:{
-                time:"1830",
-                userid:"",
-                checkedin:false,
-            }
+        slots:{
+            1:"1800",
+            2:"1830",
         }
     })
     
@@ -86,6 +74,19 @@ export default function NewClinicForm() {
                         <option value="Derry">Derry</option>
                     </Form.Control>
                 </Form.Group>
+                <Form.Group className="mb-3" as={Col} controlId="formGridState">
+                    <Form.Label>Center</Form.Label>
+                    <Form.Control
+                        as="select"
+                        name="center"
+                        onChange={handleChange}
+                        value={ClinicFormData.center}
+                    >
+                        <option value="Choose location">Choose Location</option>
+                        <option value="LGBT Center">LGBT Center</option>
+                        <option value="Trans Resource Center">Trans Resource Center</option>
+                    </Form.Control>
+                </Form.Group>
             </Row>
 
             <Row className="mb-3">
@@ -113,7 +114,9 @@ export default function NewClinicForm() {
                     <Form.Label>Capacity</Form.Label>
                     <Form.Control
                         name="capacity"
-                        type="number"
+                        type="ticker"
+                        max={8}
+                        min={0}
                         placeholder="Enter clinic capacity"
                         onChange={handleChange}
                         value={ClinicFormData.capacity} />
@@ -125,7 +128,7 @@ export default function NewClinicForm() {
             </Form.Group> */}
 
             <Button variant="primary" type="submit">
-                Submit
+                Create Clinic
             </Button>
         </Form>
     )
