@@ -9,7 +9,7 @@
 /coverage
 
 #configfilesFirebase
-/src/Firebase.js
+# /src/Firebase.js
 
 # production
 /build
