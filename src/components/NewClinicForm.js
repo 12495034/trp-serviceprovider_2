@@ -14,7 +14,7 @@ export default function NewClinicForm() {
         location: "",
         center: "",
         date: "",
-        time: "",
+        startTime: "",
         capacity: "",
         slots: {
             1: "1800",
@@ -65,12 +65,13 @@ export default function NewClinicForm() {
                 <Form.Group className="mb-3" as={Col} controlId="formGridState">
                     <Form.Label>Location</Form.Label>
                     <Form.Control
+                        required
                         as="select"
                         name="location"
                         onChange={handleChange}
                         value={ClinicFormData.location}
                     >
-                        <option value="Choose location">Choose Location</option>
+                        <option value="">Choose Location</option>
                         <option value="Belfast">Belfast</option>
                         <option value="Derry">Derry</option>
                     </Form.Control>
@@ -78,12 +79,13 @@ export default function NewClinicForm() {
                 <Form.Group className="mb-3" as={Col} controlId="formGridState">
                     <Form.Label>Center</Form.Label>
                     <Form.Control
+                        required
                         as="select"
                         name="center"
                         onChange={handleChange}
                         value={ClinicFormData.center}
                     >
-                        <option value="Choose location">Choose Location</option>
+                        <option value="">Choose Location</option>
                         <option value="LGBT Center">LGBT Center</option>
                         <option value="Trans Resource Center">Trans Resource Center</option>
                     </Form.Control>
@@ -94,6 +96,7 @@ export default function NewClinicForm() {
                 <Form.Group as={Col} controlId="formGridCity">
                     <Form.Label>Date</Form.Label>
                     <Form.Control
+                        required
                         name="date"
                         type="date"
                         placeholder="Enter date"
@@ -104,6 +107,7 @@ export default function NewClinicForm() {
                 <Form.Group as={Col} controlId="formGridZip">
                     <Form.Label>Time</Form.Label>
                     <Form.Control
+                        required
                         name="time"
                         type="time"
                         placeholder="Enter time"
@@ -114,10 +118,11 @@ export default function NewClinicForm() {
                 <Form.Group as={Col} controlId="formGridZip">
                     <Form.Label>Capacity</Form.Label>
                     <Form.Control
+                        required
                         name="capacity"
-                        type="ticker"
+                        type="number"
                         max={8}
-                        min={0}
+                        min={1}
                         placeholder="Enter clinic capacity"
                         onChange={handleChange}
                         value={ClinicFormData.capacity} />

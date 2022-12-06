@@ -6,6 +6,8 @@ import {
     onAuthStateChanged
 } from 'firebase/auth'
 import { auth } from "../Firebase";
+import { collection, getDocs, getDoc, setDoc, addDoc, doc } from "firebase/firestore";
+import { firestore } from '../Firebase'
 
 const UserContext = createContext()
 
@@ -31,7 +33,7 @@ export const AuthContextProvider = ({ children }) => {
     //runs once to determine the user state following render
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-            console.log(currentUser)
+            //console.log(currentUser)
             setUser(currentUser)
         })
         return () => {
@@ -40,7 +42,7 @@ export const AuthContextProvider = ({ children }) => {
     }, [])
 
     return (
-        <UserContext.Provider value={{ createUser, signIn, user, logOut }}>
+        <UserContext.Provider value={{ createUser, signIn, user, logOut}}>
             {children}
         </UserContext.Provider>
     )

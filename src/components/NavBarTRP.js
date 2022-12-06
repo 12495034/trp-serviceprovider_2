@@ -29,7 +29,6 @@ export default function NavBarTRP() {
                     >
                         <Nav.Link href="/home">Home</Nav.Link>
                         <Nav.Link href="/clinics">Clinic Management</Nav.Link>
-                        <Nav.Link href="/clinicid">Clinic Detail</Nav.Link>
                         <Nav.Link href="/users">User Management</Nav.Link>
                     </Nav>
                     <Nav>

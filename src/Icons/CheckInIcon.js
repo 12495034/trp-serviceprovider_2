@@ -2,12 +2,12 @@ import React from 'react'
 import { FaUserCheck, FaUserClock, FaThumbsUp } from "react-icons/fa";
 
 export default function CheckInIcon(props) {
-
-    if (props.checkedIn) {
-
-        return <FaUserCheck color='green' size='30' />
+    if (props.checkedIn === true) {
+        return <FaUserCheck color='green' size='20' />
+    } else if (props.checkedIn === false) {
+        return <FaUserClock color='red' size='15' />
     } else {
-        return <FaUserClock color='red' size='30' />
+        return null
     }
 
 }

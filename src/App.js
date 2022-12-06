@@ -29,14 +29,14 @@ function App() {
       <Routes>
         <Route path="/home" element={<ProtectedRoute><Homepage /></ProtectedRoute>} />
         <Route path="/clinics" element={<ProtectedRoute><ClinicManagement /></ProtectedRoute>} />
-        <Route path="/clinicid" element={<ProtectedRoute><ClinicDetail /></ProtectedRoute>} />
+        <Route path="/clinics/:clinicId" element={<ProtectedRoute><ClinicDetail /></ProtectedRoute>} />
         <Route path="/users" element={<ProtectedRoute><UserManagement /></ProtectedRoute>} />
         <Route path="/userProfile" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
-       
+
         {/* <Route path="/home" element={<Homepage />} />
         <Route path="/clinics" element={<ClinicManagement />} />
         <Route path="/users" element={<UserManagement />} /> */}
-  
+
         <Route path="/" element={<LoginScreen />} />
         <Route path="/reset" element={<ResetScreen />} />
         <Route path="/signup" element={<SignupScreen />} />
