@@ -1,5 +1,6 @@
 import React from 'react'
 import { Container, Row, Col } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
 import CallAppointmentIcon from '../Icons/CallAppointmentIcon';
 import CheckInIcon from '../Icons/CheckInIcon';
@@ -11,9 +12,11 @@ import { doc, getDoc, getDocs, collection, updateDoc } from 'firebase/firestore'
 
 export default function AppointmentCard(props) {
 
-    //retrieve signed in Rainbow project user
-    const { user } = UserAuth();
-    const userid = user.uid
+  //retrieve signed in Rainbow project user
+  const { user } = UserAuth();
+  const userid = user.uid
+
+  const navigate = useNavigate()
 
   //---------------------------------------------------------------
   // Functions
@@ -37,10 +40,10 @@ export default function AppointmentCard(props) {
     //TODO: firebase cloud messaging needs to be integrated here at a later stage
     console.log("Calling: " + user)
     const docRef = doc(firestore, `Clinics/${props.clinicid}/Appointments`, `${props.userid}`);
-    const data = { 
+    const data = {
       [field]: value,
       calledBy: userid
-     }
+    }
     updateDoc(docRef, data)
       .then(docRef => {
         console.log("Value of an Existing Document Field has been updated");
@@ -48,6 +51,10 @@ export default function AppointmentCard(props) {
       .catch(error => {
         console.log(error);
       })
+  }
+
+  function handleClick() {
+    navigate(`/Users/${props.userid}`);
   }
 
   return (
@@ -60,7 +67,7 @@ export default function AppointmentCard(props) {
           <div className='divider'>{props.time}</div>
         </Col>
         <Col md={3}>
-          <div className='divider'>{props.userid}</div>
+          <div onClick={handleClick} className='divider'>{props.userid}</div>
         </Col>
         <Col md={3}>
           <div className='divider'>{props.calledBy}</div>
@@ -72,7 +79,7 @@ export default function AppointmentCard(props) {
           <div className='divider' onClick={() => { handleUpdate("checkedIn", true) }}><CheckInIcon checkedIn={props.checkedIn} /></div>
         </Col>
         <Col md={1}>
-          <div className='divider' onClick={()=>{handleCall("called",true,props.userid)}}><CallAppointmentIcon checkedIn={props.checkedIn} called={props.called}/></div>
+          <div className='divider' onClick={() => { handleCall("called", true, props.userid) }}><CallAppointmentIcon checkedIn={props.checkedIn} called={props.called} /></div>
         </Col>
       </Row>
     </Container>

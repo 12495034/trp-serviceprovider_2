@@ -4,12 +4,12 @@ import { Container, Row, Col, Button, Stack, Badge, Modal } from 'react-bootstra
 
 import ClinicInformationCard from '../components/ClinicInformationCard'
 import NavBarTRP from '../components/NavBarTRP'
-import ConfirmationBox from '../components/ConfirmationBox';
+import ModalConfirmation from '../components/ModalConfirmation'
 import AppointmentCard from '../components/AppointmentCard'
 import ProgressSpinner from '../components/ProgressSpinner'
 
 import { firestore } from '../Firebase'
-import { doc, getDoc, getDocs, collection, updateDoc } from 'firebase/firestore'
+import { doc, getDoc, getDocs, collection, updateDoc, query, where, onSnapshot } from 'firebase/firestore'
 
 export default function ClinicDetail() {
 
@@ -24,14 +24,24 @@ export default function ClinicDetail() {
     const [clinic, setClinic] = useState({});
     const [appointments, setAppointments] = useState([]);
     const [error, setError] = useState("");
-    const [show, setShow] = useState(false);
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+    const [cancelModalShow, setCancelModalShow] = useState(false);
+    const handleCloseCancel = () => setCancelModalShow(false);
+    const handleShowCancel = () => setCancelModalShow(true);
+    const [endModalshow, setEndModalShow] = useState(false);
+    const handleCloseEnd = () => setEndModalShow(false);
+    const handleShowEnd = () => setEndModalShow(true);
     const [loading, setLoading] = useState(false)
+    const [userData, setUserData] = useState({})
 
     console.log(clinic);
     console.log(appointments)
 
+    //initialise new array using appointments
+    const combinedList = combinedSlotsAndAppointments()
+    //Array is sorted using a compare method in an arrow function
+    const sortedAppointments = combinedList.sort(
+        (p1, p2) => (p1.slot > p2.slot) ? 1 : (p1.slot < p2.slot) ? -1 : 0)
+    console.log(sortedAppointments)
 
     //-------------------------------------------------------------------------------------
     // useEffect
@@ -47,55 +57,54 @@ export default function ClinicDetail() {
     //-------------------------------------------------------------------------------------
 
     //function to fetch high level clinic information
-    async function fetchClinicInfo() {
+    function fetchClinicInfo() {
         const docRef = doc(firestore, "Clinics", `${clinicId}`);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-            //console.log("Document data:", docSnap.data());
-            setClinic(docSnap.data())
-        } else {
-            // doc.data() will be undefined in this case
-            setError("Clinic with the chosen ID does not exist")
-        }
+        const unsubscribe = onSnapshot(docRef, (doc) => {
+            if (doc.exists()) {
+                //console.log("Document data:", docSnap.data());
+                setClinic(doc.data())
+            } else {
+                // doc.data() will be undefined in this case
+                setError("Clinic with the chosen ID does not exist")
+            }
+        })
+        return () => unsubscribe();
     }
 
-    //function to fetch clinic appointments sub-collection data
-    async function fetchClinicAppointmentInfo() {
+    function fetchClinicAppointmentInfo() {
         const docRef = collection(firestore, `Clinics/${clinicId}/Appointments`);
-        //console.log(docRef)
-        const docSnap = await getDocs(docRef);
-        docSnap.forEach((doc) => {
-            // console.log(doc.data()); // "doc1", "doc2" and "doc3"
-            setAppointments((prev) => {
+        const q = query(docRef);
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            let appointmentArray = []
+            querySnapshot.forEach((doc) => {
                 const id = { id: doc.id }
                 const data = doc.data()
                 const combine = Object.assign({}, id, data)
-                //need to combine string and array prior to setting state
-                return [...prev, combine]
+                appointmentArray.push(combine)
             })
-        });
+            setAppointments(appointmentArray)
+        })
+        return () => unsubscribe();
+        //
     }
 
-    // async function fetchUserInfo() {
-    //     const docRef = collection(firestore, `Clinics/${clinicId}/Appointments`);
-    //     //console.log(docRef)
-    //     const docSnap = await getDocs(docRef);
-    //     docSnap.forEach((doc) => {
-    //         // console.log(doc.data()); // "doc1", "doc2" and "doc3"
-    //         setAppointments((prev) => {
-    //             const id = { id: doc.id }
-    //             const data = doc.data()
-    //             const combine = Object.assign({}, id, data)
-    //             //need to combine string and array prior to setting state
-    //             return [...prev, combine]
-    //         })
-    //     });
-    // }
+    function getUserInfo(id) {
+        const docRef = doc(firestore, "Users", `${id}`);
+        const unsubscribe = onSnapshot(docRef, (doc) => {
+            if (doc.exists()) {
+                //console.log("Document data:", docSnap.data());
+                setUserData(doc.data())
+            } else {
+                // doc.data() will be undefined in this case
+                setError("Clinic with the chosen ID does not exist")
+            }
+        })
+        return () => unsubscribe();
+    }
 
     //function to update specified clinic fields
     function handleClinicUpdate(field, value) {
         console.log("Updating Clinic data")
-        setLoading(prev => !prev)
         //object data based on generic field and value input
         const data = { [field]: value }
         const docRef = doc(firestore, "Clinics", `${clinicId}`);
@@ -107,29 +116,49 @@ export default function ClinicDetail() {
                 console.log(error);
             })
         //close modal if open
-        handleClose()
+        handleCloseCancel()
+        handleCloseEnd()
+    }
 
-        //set time delay
-        var delayInMilliseconds = 1000; //1 second
-
-        setTimeout(function () {
-            setLoading(prev => !prev)
-        }, delayInMilliseconds);
-
+    //function to update specified clinic fields
+    function handleSlotsUpdate(newSlotNumber, time) {
+        console.log("Updating Slots data")
+        const newSlot = { [newSlotNumber]: time }
+        const newSlotsObject = Object.assign({}, clinic.slots, newSlot)
+        const docRef = doc(firestore, "Clinics", `${clinicId}`);
+        updateDoc(docRef, {
+            slots: newSlotsObject
+        })
+            .then(docRef => {
+                console.log("Value of an Existing Document Field has been updated");
+            })
+            .catch(error => {
+                console.log(error);
+            })
     }
 
     //TODO: Issues here in that I can't successfully add a new field to the slots object
-    const handleAddSlot = () => {
+    function handleAddSlot() {
+        const inc = 30
+        console.log("Adding a new slot")
         //get the number of slots currently in use from capacity
+        //this is the most appointments the clinic can have
         const currentCapacity = parseInt(clinic.capacity)
+        //incrementing this capacity by 1
         var newCapacity = currentCapacity + 1
-        //define new object to be added
-        const newSlot = { [newCapacity]: "21:00" }
-        //get the time of the last appointment
-        //set state so that screen updates
-        //TODO: How do I only ammend the object not overwrite then the entire slots object
 
+        //define the next 30 minute time slot
+        //get last index of sorted array
+        const latestTime = sortedAppointments[sortedAppointments.length - 1].time
+        let hours = parseInt(latestTime.substring(0, 2))
+        let mins = parseInt(latestTime.substring(3, 5))
+        const dt = new Date(1970, 0, 1, hours, mins);
+        dt.setMinutes(dt.getMinutes() + inc);
+        var newTime = dt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+
+        //update clinic capacity and add a new slot field to the slots map
         handleClinicUpdate("capacity", newCapacity)
+        handleSlotsUpdate(newCapacity, newTime)
     }
 
     //function to combined the available slots and booked appointments into a single list for screen display purposes
@@ -139,7 +168,8 @@ export default function ClinicDetail() {
         //loop throough object fields and add as a new object to the combinedList array
         for (const key in clinic.slots) {
             if (clinic.slots.hasOwnProperty(key)) {
-                const newSlot = { slot: key, time: clinic.slots[key] }
+                //parse string to int to enable correct sorting
+                const newSlot = { slot: parseInt(key), time: clinic.slots[key] }
                 combinedList.push(newSlot)
             }
         }
@@ -150,14 +180,9 @@ export default function ClinicDetail() {
     // Data rendering
     //-------------------------------------------------------------------------------------
 
-    //initialise new array using appointments
-    const combinedList = combinedSlotsAndAppointments()
-    //console.log(combinedList)
-    //Array is sorted using a compare method in an arrow function
-    const sortedAppointments = combinedList.sort(
-        (p1, p2) => (p1.slot > p2.slot) ? 1 : (p1.slot < p2.slot) ? -1 : 0)
     //create JSX elements based on stored state data
     const appointmentList = sortedAppointments.map((item) => {
+        //for data security the name of the person is not shown but the id of the person is perhaps
         return (
             <AppointmentCard
                 key={item.slot}
@@ -185,9 +210,9 @@ export default function ClinicDetail() {
                 //actions can therefore not be performed on the clinic data */}
                 {clinic.clinicStatus != "Active" ? null : <Stack direction='horizontal' gap={3}>
                     <h1 className="Title">Clinic Information</h1>
-                    <h4 className='ms-auto'>Queue Size</h4><Badge text='light' bg="info">4</Badge>
-                    <Button onClick={handleShow}>Cancel</Button>
-                    <Button variant='warning'>End</Button>
+                    {/* <h4 className='ms-auto'>Queue Size</h4><Badge text='light' bg="info">4</Badge> */}
+                    <Button className='ms-auto' onClick={handleShowCancel}>Cancel</Button>
+                    <Button variant='warning' onClick={handleShowEnd}>End</Button>
                     {loading ? <ProgressSpinner /> : null}
                 </Stack>}
 
@@ -236,7 +261,22 @@ export default function ClinicDetail() {
                 </Row>
             </Container>
 
-            {/* TODO: Modal is working but want it as a seperate component that can be re-used for different confirmation messages */}
+            //Modal component called and shown when relevant button is pressed
+            <ModalConfirmation
+                show={cancelModalShow}
+                close={handleCloseCancel}
+                header="Are you sure you want to Cancel the Clinic?"
+                body="There are ...active appointments still to be seen"
+                updatefunction={() => handleClinicUpdate("clinicStatus", "Cancelled")}
+            />
+            <ModalConfirmation
+                show={endModalshow}
+                close={handleCloseEnd}
+                header="Are you sure you want to End the Clinic?"
+                body="Ending the clinic will update clinic statistics and cancel any active appointments still to be seen. This action cannot be undone"
+                updatefunction={() => handleClinicUpdate("clinicStatus", "Complete")}
+            />
+            {/* TODO: Modal is working but want it as a seperate component that can be re-used for different confirmation messages
             <>
                 <Modal show={show} onHide={handleClose}>
                     <Modal.Header closeButton>
@@ -252,7 +292,7 @@ export default function ClinicDetail() {
                         </Button>
                     </Modal.Footer>
                 </Modal>
-            </>
+            </> */}
 
         </div>
 

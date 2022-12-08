@@ -72,7 +72,8 @@ export default function SignupScreen() {
                         Email: formData.Email,
                         PhoneNumber: formData.PhoneNumber,
                         isAgreedTC: formData.isAgreedTC,
-                        Role: formData.role
+                        Role: formData.role,
+                        status: "Active"
                     })
                 })
             navigate('/userProfile')
