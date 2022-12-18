@@ -21,14 +21,14 @@ export default function ClinicManagement() {
   //define state
   //-----------------------------------------------------------------------------------------
   const [allClinics, setAllClinics] = useState([])
-  //TODO: state initialised as 3 empty slots. But this needs to be initialised depending on what capacity the clinic can hold
+  const [clinicLocations, setClinicLocations] = useState({})
   //TODO: Add validation to clinic creation form
   const [ClinicFormData, setClinicFormData] = useState({
     location: "",
     center: "",
     date: "",
     startTime: "",
-    capacity: "",
+    capacity: 0,
     slots: {},
     clinicStatus: "Active",
   })
@@ -38,9 +38,10 @@ export default function ClinicManagement() {
     space:true
   })
   //console.log(allClinics)
-  //console.log(ClinicFormData)
+  console.log(ClinicFormData)
   //console.log("Parent State:" + filterRadio)
   console.log(filterCheck)
+  console.log(clinicLocations)
   //----------------------------------------------------------------------------------------
 
   //firebase firestore references
@@ -67,6 +68,7 @@ export default function ClinicManagement() {
     }
   }
 
+  //TODO: potential failure point here if time is set before capacity is then slots map is not populated
   //function that updates state as the form fields are compiled
   function handleChange(event) {
     //when the capacity is set the state needs to add or remove as required
@@ -126,13 +128,29 @@ export default function ClinicManagement() {
     //
   }
 
-  function handleFilterRadio() {
-
+  //function to get a list of locations 
+  //TODO: use data to populate drop down lists in clinic creation
+  function fetchClinicLocationData(){
+    const q = query(collection(firestore, 'Location'));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      let clinicLocations = []
+      querySnapshot.forEach((doc) => {
+        const id = { id: doc.id }
+        const data = doc.data()
+        const combine = Object.assign({}, id, data)
+        clinicLocations.push(combine)
+      })
+      setClinicLocations(clinicLocations)
+    })
+    return () => unsubscribe();
+    //
   }
+
 
   //use effect runs once after every render or when state is updated
   useEffect(() => {
     fetchClinics()
+    fetchClinicLocationData()
   }, [filterRadio, filterCheck])
 
   //----------------------------------------------------------------------------------------
@@ -227,7 +245,7 @@ export default function ClinicManagement() {
                     </Form.Group>
 
                     <Form.Group as={Col} controlId="formGridZip">
-                      <Form.Label>Time</Form.Label>
+                      <Form.Label>Start Time</Form.Label>
                       <Form.Control
                         required
                         name="startTime"
@@ -238,9 +256,11 @@ export default function ClinicManagement() {
                     </Form.Group>
 
                     <Form.Group as={Col} controlId="formGridZip">
-                      <Form.Label>Capacity</Form.Label>
+                      <Form.Label>Capacity (30 min per appointment) </Form.Label>
                       <Form.Control
                         required
+                        //added to prevent error caused by adding capacity before time
+                        disabled={ClinicFormData.startTime!=""?false:true}
                         name="capacity"
                         type="number"
                         max={8}
@@ -270,7 +290,7 @@ export default function ClinicManagement() {
         </Row>
         <Row>
           <Col >
-            {allClinics.length > 0 ? Cards : <h3>There are no clinics that match the selected criteria</h3>}
+            {allClinics.length > 0 ? Cards : <h4>There are no clinics that match the selected criteria</h4>}
           </Col>
         </Row>
       </Container>

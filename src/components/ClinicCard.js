@@ -1,6 +1,6 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
-import { Button, Col, Row, Container } from 'react-bootstrap';
+import {Col, Row, Container } from 'react-bootstrap';
 
 export default function ClinicCard(props) {
 
@@ -13,16 +13,16 @@ export default function ClinicCard(props) {
   return (
     <Container className='clinic-card' onClick={handleClick}>
       <Row className="justify-content-md-center">
-        <Col md={2}>
+        {/* <Col md={2}>
           <div>{props.clinicId}</div>
-        </Col>
-        <Col md={1}>
+        </Col> */}
+        <Col md={2}>
           <div>{props.date}</div>
         </Col>
         <Col md={2}>
           <div>{props.location}</div>
         </Col>
-        <Col md={2}>
+        <Col md={3}>
           <div>{props.center}</div>
         </Col>
         <Col md={1}>

@@ -1,11 +1,8 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom';
-import { Button, Col, Row, Container } from 'react-bootstrap';
+import { Col, Row, Container } from 'react-bootstrap';
 
 export default function ClinicInformationCard(props) {
 
-  const navigate = useNavigate()
- 
   return (
     <Container className='clinic-information'>
     <Row>

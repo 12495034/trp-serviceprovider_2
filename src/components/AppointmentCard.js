@@ -7,12 +7,12 @@ import CheckInIcon from '../Icons/CheckInIcon';
 import TestCompleteIcon from '../Icons/TestCompleteIcon';
 import { UserAuth } from '../context/AuthContext';
 
-import { firestore } from '../Firebase';
-import { doc, getDoc, getDocs, collection, updateDoc } from 'firebase/firestore'
+import { handleUpdate, handleCall } from '../ApiFunctions/firestoreUpdate';
 
 export default function AppointmentCard(props) {
 
   //retrieve signed in Rainbow project user
+  //passed to handleCall function to populate field that indicates which tester has called the user forward
   const { user } = UserAuth();
   const userid = user.uid
 
@@ -22,39 +22,13 @@ export default function AppointmentCard(props) {
   // Functions
   //--------------------------------------------------------------
 
-  function handleUpdate(field, value) {
-    //function to update user checkedIn status from false to tru
-    const docRef = doc(firestore, `Clinics/${props.clinicid}/Appointments`, `${props.userid}`);
-    const data = { [field]: value }
-    updateDoc(docRef, data)
-      .then(docRef => {
-        console.log("Value of an Existing Document Field has been updated");
-      })
-      .catch(error => {
-        console.log(error);
-      })
-  }
-
-  function handleCall(field, value, user) {
-    //function to update user called status and enter the tester that has called them
-    //TODO: firebase cloud messaging needs to be integrated here at a later stage
-    console.log("Calling: " + user)
-    const docRef = doc(firestore, `Clinics/${props.clinicid}/Appointments`, `${props.userid}`);
-    const data = {
-      [field]: value,
-      calledBy: userid
-    }
-    updateDoc(docRef, data)
-      .then(docRef => {
-        console.log("Value of an Existing Document Field has been updated");
-      })
-      .catch(error => {
-        console.log(error);
-      })
-  }
-
+  {/* //TODO:possible to click on a no booking item. If there is no booking clicking on such an item should spark a different action to a proper booking */ }
   function handleClick() {
-    navigate(`/Users/${props.userid}`);
+    if (props.userid != "unbooked") {
+      navigate(`/Users/${props.userid}`);
+    } else {
+      console.log("Add appointment")
+    }
   }
 
   return (
@@ -73,13 +47,13 @@ export default function AppointmentCard(props) {
           <div className='divider'>{props.calledBy}</div>
         </Col>
         <Col md={1}>
-          <div className='divider' onClick={() => { handleUpdate("wasSeen", true) }} ><TestCompleteIcon complete={props.wasSeen} checkedIn={props.checkedIn} /></div>
+          <div className='divider' onClick={() => { handleUpdate("wasSeen", !props.wasSeen, props.userid, props.clinicid) }} ><TestCompleteIcon complete={props.wasSeen} checkedIn={props.checkedIn} /></div>
         </Col>
         <Col md={2}>
-          <div className='divider' onClick={() => { handleUpdate("checkedIn", true) }}><CheckInIcon checkedIn={props.checkedIn} /></div>
+          <div className='divider' onClick={() => { handleUpdate("checkedIn", !props.checkedIn, props.userid, props.clinicid) }}><CheckInIcon checkedIn={props.checkedIn} /></div>
         </Col>
         <Col md={1}>
-          <div className='divider' onClick={() => { handleCall("called", true, props.userid) }}><CallAppointmentIcon checkedIn={props.checkedIn} called={props.called} /></div>
+          <div className='divider' onClick={() => { handleCall("called", true, props.userid, props.clinicid, userid) }}><CallAppointmentIcon checkedIn={props.checkedIn} called={props.called} /></div>
         </Col>
       </Row>
     </Container>

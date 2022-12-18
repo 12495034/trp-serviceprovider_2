@@ -1,7 +1,6 @@
 import React from 'react'
 import Form from 'react-bootstrap/Form';
 
-
 export default function ToolBar(props) {
   function handleChangeRadio(e){
     props.setRadioState(e.target.value)
@@ -9,26 +8,26 @@ export default function ToolBar(props) {
 
   //Not possible to filter on multiple fields in firestore
   //full/space check boxes removed
-  // function handleFullCheck(){
-  //   props.setCheckState((prev)=>{
-  //     return{
-  //       ...prev, full:!prev.full
-  //     }
-  //   })
-  // }
+  function handleFullCheck(){
+    props.setCheckState((prev)=>{
+      return{
+        ...prev, full:!prev.full
+      }
+    })
+  }
 
-  // function handleSpaceCheck(){
-  //   props.setCheckState((prev)=>{
-  //     return{
-  //       ...prev, space:!prev.space
-  //     }
-  //   })
-  // }
+  function handleSpaceCheck(){
+    props.setCheckState((prev)=>{
+      return{
+        ...prev, space:!prev.space
+      }
+    })
+  }
 
   return (
     <Form  className=" mb-3 mt-3 pt-3">
-        {/* <div>
-        <Form.Check
+        <div>
+        {/* <Form.Check
             inline
             label="Full"
             name="full"
@@ -43,8 +42,8 @@ export default function ToolBar(props) {
             type="checkbox"
             checked={props.checkState.space}
             onChange={handleSpaceCheck}
-          />
-        </div> */}
+          /> */}
+        </div>
         <div className="mb-3 mt-3">
           <Form.Check
             inline

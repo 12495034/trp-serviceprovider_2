@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { Container, Row, Col, Button, Stack, Badge, Modal } from 'react-bootstrap'
+import { Container, Row, Col, Button, Stack } from 'react-bootstrap'
 
 import ClinicInformationCard from '../components/ClinicInformationCard'
 import NavBarTRP from '../components/NavBarTRP'
@@ -9,14 +9,13 @@ import AppointmentCard from '../components/AppointmentCard'
 import ProgressSpinner from '../components/ProgressSpinner'
 
 import { firestore } from '../Firebase'
-import { doc, getDoc, getDocs, collection, updateDoc, query, where, onSnapshot } from 'firebase/firestore'
+import { doc, collection, updateDoc, query, where, onSnapshot } from 'firebase/firestore'
 
 export default function ClinicDetail() {
 
     //react-router-dom params that are passed through navigate
     const { clinicId } = useParams();
     //console.log(clinicId)
-
 
     //-------------------------------------------------------------------------------------
     // Define State
@@ -32,9 +31,6 @@ export default function ClinicDetail() {
     const handleShowEnd = () => setEndModalShow(true);
     const [loading, setLoading] = useState(false)
     const [userData, setUserData] = useState({})
-
-    console.log(clinic);
-    console.log(appointments)
 
     //initialise new array using appointments
     const combinedList = combinedSlotsAndAppointments()
@@ -88,6 +84,7 @@ export default function ClinicDetail() {
         //
     }
 
+    //TODO: Function is currently un-used
     function getUserInfo(id) {
         const docRef = doc(firestore, "Users", `${id}`);
         const unsubscribe = onSnapshot(docRef, (doc) => {
@@ -216,9 +213,8 @@ export default function ClinicDetail() {
                     {loading ? <ProgressSpinner /> : null}
                 </Stack>}
 
-                <Row>
+                <Row className="justify-content-md-center">
                     <Col>
-                        {/* data here needs to be pulled from firebase */}
                         <ClinicInformationCard clinicid={clinicId} date={clinic.date} location={clinic.location} center={clinic.center} appointments={appointments.length} capacity={clinic.capacity} active={clinic.clinicStatus} />
                     </Col>
                 </Row>
@@ -254,14 +250,12 @@ export default function ClinicDetail() {
                 </Row>
                 <Row>
                     <div className='d-grid'>
-                        {/* //TODO: change this condition as will want to base it on just an empty object. JSON. stringify wont be used to print to screen */}
                         {/* {availslots === '{}' ? <Button onClick={handleAddSlot}>Add Additional Slot</Button> : <Button disabled >All slots must be allocated before adding more</Button>} */}
-                        <Button onClick={handleAddSlot}>Add Additional Slot</Button>
+                        {clinic.clinicStatus != "Active" ? <Button disabled onClick={handleAddSlot}>Add Additional Slot</Button> : <Button onClick={handleAddSlot}>Add Additional Slot</Button>}
                     </div>
                 </Row>
             </Container>
 
-            //Modal component called and shown when relevant button is pressed
             <ModalConfirmation
                 show={cancelModalShow}
                 close={handleCloseCancel}
@@ -269,6 +263,7 @@ export default function ClinicDetail() {
                 body="There are ...active appointments still to be seen"
                 updatefunction={() => handleClinicUpdate("clinicStatus", "Cancelled")}
             />
+
             <ModalConfirmation
                 show={endModalshow}
                 close={handleCloseEnd}
@@ -276,24 +271,6 @@ export default function ClinicDetail() {
                 body="Ending the clinic will update clinic statistics and cancel any active appointments still to be seen. This action cannot be undone"
                 updatefunction={() => handleClinicUpdate("clinicStatus", "Complete")}
             />
-            {/* TODO: Modal is working but want it as a seperate component that can be re-used for different confirmation messages
-            <>
-                <Modal show={show} onHide={handleClose}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Are you sure you want to cancel the clinic?</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>There are {appointments.length} live appointments that are yet to be seen</Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="primary" onClick={() => handleClinicUpdate("clinicStatus", "Cancelled")}>
-                            Confirm
-                        </Button>
-                        <Button variant="secondary" onClick={handleClose}>
-                            Cancel
-                        </Button>
-                    </Modal.Footer>
-                </Modal>
-            </> */}
-
         </div>
 
     )

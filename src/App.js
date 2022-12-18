@@ -18,6 +18,7 @@ import LoginScreen from './pages/LoginScreen';
 import ResetScreen from './pages/ResetScreen';
 import SignupScreen from './pages/SignupScreen';
 import UserProfile from './pages/UserProfile';
+import UserProfileEdit from './pages/UserProfileEdit';
 import UserProfileData from './pages/UserProfileData';
 import { AuthContextProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -33,6 +34,7 @@ function App() {
         <Route path="/clinics/:clinicId" element={<ProtectedRoute><ClinicDetail /></ProtectedRoute>} />
         <Route path="/users" element={<ProtectedRoute><UserManagement /></ProtectedRoute>} />
         <Route path="/users/:userid" element={<ProtectedRoute><UserProfileData /></ProtectedRoute>} />
+        <Route path="/users/:userid/edit" element={<ProtectedRoute><UserProfileEdit /></ProtectedRoute>} />
         <Route path="/userProfile" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
 
         {/* <Route path="/home" element={<Homepage />} />
