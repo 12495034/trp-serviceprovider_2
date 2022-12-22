@@ -6,16 +6,16 @@ export default function ClinicInformationCard(props) {
   return (
     <Container className='clinic-information'>
     <Row>
-      <Col md={2}>
+      {/* <Col md={2}>
         <div>{props.clinicid}</div>
-      </Col>
+      </Col> */}
       <Col md={2}>
         <div>{props.date}</div>
       </Col>
       <Col md={2}>
         <div>{props.location}</div>
       </Col>
-      <Col md={2}>
+      <Col md={4}>
         <div>{props.center}</div>
       </Col>
       <Col md={2}>

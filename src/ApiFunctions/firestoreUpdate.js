@@ -1,4 +1,4 @@
-import { doc, getDoc, getDocs, collection, updateDoc } from 'firebase/firestore'
+import { doc, updateDoc } from 'firebase/firestore'
 import { firestore } from '../Firebase';
 
 //Update firestore data in multiple locations
@@ -55,4 +55,6 @@ export function handleCall(field, value, userid, clinicid, tester) {
         console.log(error);
       })
   }
+
+
 

@@ -6,16 +6,19 @@ import ClinicInformationCard from '../components/ClinicInformationCard'
 import NavBarTRP from '../components/NavBarTRP'
 import ModalConfirmation from '../components/ModalConfirmation'
 import AppointmentCard from '../components/AppointmentCard'
-import ProgressSpinner from '../components/ProgressSpinner'
+import { UserAuth } from '../context/AuthContext';
 
 import { firestore } from '../Firebase'
-import { doc, collection, updateDoc, query, where, onSnapshot } from 'firebase/firestore'
+import { doc, collection, updateDoc, query, onSnapshot, getDoc } from 'firebase/firestore'
 
 export default function ClinicDetail() {
 
     //react-router-dom params that are passed through navigate
     const { clinicId } = useParams();
-    //console.log(clinicId)
+    //retrieve signed in Rainbow project user id
+    const { user } = UserAuth();
+    const userid = user.uid
+
 
     //-------------------------------------------------------------------------------------
     // Define State
@@ -29,8 +32,7 @@ export default function ClinicDetail() {
     const [endModalshow, setEndModalShow] = useState(false);
     const handleCloseEnd = () => setEndModalShow(false);
     const handleShowEnd = () => setEndModalShow(true);
-    const [loading, setLoading] = useState(false)
-    const [userData, setUserData] = useState({})
+    const [currentUser, setCurrentUser] = useState({});
 
     //initialise new array using appointments
     const combinedList = combinedSlotsAndAppointments()
@@ -44,6 +46,7 @@ export default function ClinicDetail() {
     //-------------------------------------------------------------------------------------
     //use effect runs once after every render or when state is updated
     useEffect(() => {
+        getUserInfo(userid)
         fetchClinicInfo()
         fetchClinicAppointmentInfo()
     }, [])
@@ -84,19 +87,31 @@ export default function ClinicDetail() {
         //
     }
 
-    //TODO: Function is currently un-used
-    function getUserInfo(id) {
+    //set current user details
+    async function getUserInfo(id) {
         const docRef = doc(firestore, "Users", `${id}`);
-        const unsubscribe = onSnapshot(docRef, (doc) => {
-            if (doc.exists()) {
-                //console.log("Document data:", docSnap.data());
-                setUserData(doc.data())
-            } else {
-                // doc.data() will be undefined in this case
-                setError("Clinic with the chosen ID does not exist")
-            }
+        const docSnap = await getDoc(docRef);
+        const data = docSnap.exists() ? docSnap.data() : null
+
+        if (data === null || data === undefined) return null
+        setCurrentUser({ id, ...data })
+    }
+
+    //function to update specified clinic fields
+    function handleSlotsUpdate(availableSlots, newSlotNumber, time) {
+        console.log("Updating Slots data")
+        const newSlot = { [newSlotNumber]: time }
+        const newSlotsObject = Object.assign({}, availableSlots, newSlot)
+        const docRef = doc(firestore, "Clinics", `${clinicId}`);
+        updateDoc(docRef, {
+            slots: newSlotsObject
         })
-        return () => unsubscribe();
+            .then(docRef => {
+                console.log("Value of an Existing Document Field has been updated");
+            })
+            .catch(error => {
+                console.log(error);
+            })
     }
 
     //function to update specified clinic fields
@@ -117,22 +132,6 @@ export default function ClinicDetail() {
         handleCloseEnd()
     }
 
-    //function to update specified clinic fields
-    function handleSlotsUpdate(newSlotNumber, time) {
-        console.log("Updating Slots data")
-        const newSlot = { [newSlotNumber]: time }
-        const newSlotsObject = Object.assign({}, clinic.slots, newSlot)
-        const docRef = doc(firestore, "Clinics", `${clinicId}`);
-        updateDoc(docRef, {
-            slots: newSlotsObject
-        })
-            .then(docRef => {
-                console.log("Value of an Existing Document Field has been updated");
-            })
-            .catch(error => {
-                console.log(error);
-            })
-    }
 
     //TODO: Issues here in that I can't successfully add a new field to the slots object
     function handleAddSlot() {
@@ -155,7 +154,7 @@ export default function ClinicDetail() {
 
         //update clinic capacity and add a new slot field to the slots map
         handleClinicUpdate("capacity", newCapacity)
-        handleSlotsUpdate(newCapacity, newTime)
+        handleSlotsUpdate(clinic.slots,newCapacity, newTime)
     }
 
     //function to combined the available slots and booked appointments into a single list for screen display purposes
@@ -186,11 +185,14 @@ export default function ClinicDetail() {
                 clinicid={clinicId}
                 slot={item.slot}
                 time={item.time}
-                userid={item.id ? item.id : "unbooked"}
+                userid={item.id}
                 checkedIn={item.id ? item.checkedIn : ""}
                 called={item.called}
                 calledBy={item.calledBy}
                 wasSeen={item.wasSeen}
+                tester={`${currentUser.FirstName} ${currentUser.LastName}`}
+                slotsUpdate={handleSlotsUpdate}
+                availableSlots = {clinic.slots}
             />
         )
     })
@@ -205,12 +207,11 @@ export default function ClinicDetail() {
             <Container className='page-content'>
                 {/* //conditional rendering so that if the clinic is not active then it is assumed to be cancelled or complete
                 //actions can therefore not be performed on the clinic data */}
-                {clinic.clinicStatus != "Active" ? null : <Stack direction='horizontal' gap={3}>
+                {clinic.clinicStatus !== "Active" ? null : <Stack direction='horizontal' gap={3}>
                     <h1 className="Title">Clinic Information</h1>
                     {/* <h4 className='ms-auto'>Queue Size</h4><Badge text='light' bg="info">4</Badge> */}
                     <Button className='ms-auto' onClick={handleShowCancel}>Cancel</Button>
                     <Button variant='warning' onClick={handleShowEnd}>End</Button>
-                    {loading ? <ProgressSpinner /> : null}
                 </Stack>}
 
                 <Row className="justify-content-md-center">
@@ -225,20 +226,23 @@ export default function ClinicDetail() {
                     <Col md={1}>
                         Time
                     </Col>
-                    <Col md={3}>
-                        Name
+                    <Col md={2}>
+                        Slot Status
                     </Col>
-                    <Col md={3}>
+                    <Col md={2}>
                         Called By
                     </Col>
                     <Col md={1}>
                         Tested
                     </Col>
                     <Col md={2}>
-                        User Status
+                        Check In Status
                     </Col>
                     <Col md={1}>
-                        Action
+                        Call
+                    </Col>
+                    <Col md={2}>
+                        Manage
                     </Col>
                 </Row>
                 <hr />
@@ -251,7 +255,7 @@ export default function ClinicDetail() {
                 <Row>
                     <div className='d-grid'>
                         {/* {availslots === '{}' ? <Button onClick={handleAddSlot}>Add Additional Slot</Button> : <Button disabled >All slots must be allocated before adding more</Button>} */}
-                        {clinic.clinicStatus != "Active" ? <Button disabled onClick={handleAddSlot}>Add Additional Slot</Button> : <Button onClick={handleAddSlot}>Add Additional Slot</Button>}
+                        {clinic.clinicStatus !== "Active" ? <Button disabled onClick={handleAddSlot}>Add Additional Slot</Button> : <Button onClick={handleAddSlot}>Add Additional Slot</Button>}
                     </div>
                 </Row>
             </Container>

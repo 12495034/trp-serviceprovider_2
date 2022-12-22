@@ -1,5 +1,5 @@
 import React from 'react'
-import { FaUserCheck, FaUserClock, FaThumbsUp } from "react-icons/fa";
+import { FaUserCheck, FaUserClock } from "react-icons/fa";
 
 export default function CheckInIcon(props) {
     if (props.checkedIn === true) {

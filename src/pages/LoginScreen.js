@@ -1,7 +1,6 @@
 import React, { useState } from "react"
 import { Button, Container, Row, Col, Form, Image } from "react-bootstrap"
 import { Link, useNavigate } from "react-router-dom"
-import NavBarTRP from "../components/NavBarTRP"
 import { UserAuth } from "../context/AuthContext"
 
 export default function LoginScreen() {
@@ -13,9 +12,6 @@ export default function LoginScreen() {
     password: "",
   })
   const [error, setError] = useState('')
-
-  //console log state for debugging
-  console.log(formData)
 
   function handleChange(event) {
     // console.log(event.target.type)
@@ -32,10 +28,10 @@ export default function LoginScreen() {
     setError('')
     try {
       await signIn(formData.email, formData.password)
-      navigate('/userProfile')
+      navigate('/home')
     } catch (e) {
       setError(e.message)
-      console.log(e.message)
+
     }
   }
 
@@ -54,6 +50,7 @@ export default function LoginScreen() {
               <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Email address</Form.Label>
                 <Form.Control
+                  required
                   type="email"
                   placeholder="Enter email"
                   name='email'
@@ -64,6 +61,7 @@ export default function LoginScreen() {
               <Form.Group className="mb-3" controlId="formBasicPassword">
                 <Form.Label>Password</Form.Label>
                 <Form.Control
+                  required
                   type="password"
                   placeholder="Password"
                   name='password'
@@ -71,7 +69,7 @@ export default function LoginScreen() {
                 />
               </Form.Group>
               <Form.Text className="text-muted">
-                {error?error:"We will never share your email address"}
+                {error ? error : null}
               </Form.Text>
               <div className='d-grid mt-2'>
                 <Button variant="primary" type="submit">
@@ -79,7 +77,6 @@ export default function LoginScreen() {
                 </Button>
               </div>
             </Form>
-            {/* Add function return here for incorrect login details message */}
           </Col>
         </Row>
         <Row md={1} className='text-center login-options mt-4'>

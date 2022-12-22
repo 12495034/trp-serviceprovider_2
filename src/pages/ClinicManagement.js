@@ -11,11 +11,9 @@ import NavBarTRP from '../components/NavBarTRP';
 //import NewClinicForm from '../components/NewClinicForm';
 import ToolBar from '../components/ClinicToolBar';
 
-import { collection, getDocs, getDoc, addDoc, query, onSnapshot, getCountFromServer, where } from "firebase/firestore";
+import { collection, addDoc, query, onSnapshot, where } from "firebase/firestore";
 import { firestore } from '../Firebase'
-import { FaCreativeCommonsNcJp } from 'react-icons/fa';
 
-//TODO: Add footer
 export default function ClinicManagement() {
 
   //define state
@@ -34,21 +32,16 @@ export default function ClinicManagement() {
   })
   const [filterRadio, setFilterRadio] = useState("Active")
   const [filterCheck, setFilterCheck] = useState({
-    full:true,
-    space:true
+    full: true,
+    space: true
   })
-  //console.log(allClinics)
-  console.log(ClinicFormData)
-  //console.log("Parent State:" + filterRadio)
-  console.log(filterCheck)
-  console.log(clinicLocations)
+
   //----------------------------------------------------------------------------------------
 
   //firebase firestore references
   //-------------------------------------------------------------------------------------------
   //clinic collection
   const refClinics = collection(firestore, "Clinics")
-  //Appointments sub-collection within a clinic document
 
   //----------------------------------------------------------------------------------------
   // Functions
@@ -130,7 +123,7 @@ export default function ClinicManagement() {
 
   //function to get a list of locations 
   //TODO: use data to populate drop down lists in clinic creation
-  function fetchClinicLocationData(){
+  function fetchClinicLocationData() {
     const q = query(collection(firestore, 'Location'));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       let clinicLocations = []
@@ -158,7 +151,7 @@ export default function ClinicManagement() {
   //----------------------------------------------------------------------------------------
 
   //sort clinics by date prior to rendering
-  const sortedClinics = allClinics.sort(
+  allClinics.sort(
     (p1, p2) => (p1.date > p2.date) ? 1 : (p1.date < p2.date) ? -1 : 0)
 
   //create Cards object that can be listed on the screen
@@ -179,7 +172,7 @@ export default function ClinicManagement() {
         capacity={item.capacity}
         time={item.time}
         appointments={appointments}
-        status={appointments == item.capacity ? "Full" : "Space Available"}
+        status={appointments === item.capacity ? "Full" : "Space Available"}
         active={item.clinicStatus}
         clinicId={item.id}
       />
@@ -260,7 +253,7 @@ export default function ClinicManagement() {
                       <Form.Control
                         required
                         //added to prevent error caused by adding capacity before time
-                        disabled={ClinicFormData.startTime!=""?false:true}
+                        disabled={ClinicFormData.startTime !== "" ? false : true}
                         name="capacity"
                         type="number"
                         max={8}
@@ -270,9 +263,6 @@ export default function ClinicManagement() {
                         value={ClinicFormData.capacity} />
                     </Form.Group>
                   </Row>
-                  {/* <Form.Group className="mb-3" id="formGridCheckbox">
-                <Form.Check type="checkbox" label="Notify Users" />
-            </Form.Group> */}
                   <div className='d-grid'>
                     <Button variant="primary" type="submit">
                       Create Clinic

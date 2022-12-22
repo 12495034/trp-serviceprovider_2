@@ -4,11 +4,11 @@ import { Button, Container, Row, Col } from 'react-bootstrap'
 import { useNavigate, useParams } from 'react-router-dom'
 import Card from 'react-bootstrap/Card'
 import { ListGroup } from 'react-bootstrap'
-import { FaUserCheck, FaUserClock } from "react-icons/fa";
 
 import NavBarTRP from '../components/NavBarTRP'
 import Footer from '../components/Footer'
 import AppointmentHistoryCard from '../components/AppointmentHistoryCard'
+import { UserAuth } from '../context/AuthContext'
 
 import { getDoc, doc, collection, query, onSnapshot } from "firebase/firestore";
 import { firestore } from '../Firebase'
@@ -17,6 +17,7 @@ import { firestore } from '../Firebase'
 //TODO: Move signout from this page to the navbar as you should be able to signout from whatever screen you are on
 export default function UserProfileData() {
 
+  const { user, logOut } = UserAuth();
   //Define State
   const [userData, setUserData] = useState({})
   const [userAppointmentHistory, setUserAppointmentHistory] = useState([])
@@ -24,7 +25,6 @@ export default function UserProfileData() {
   console.log(userAppointmentHistory)
   //retrieve userid from URL parameter
   const { userid } = useParams()
-
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -36,9 +36,20 @@ export default function UserProfileData() {
   //TODO: profile is shown to be correct on the initial navigation. But if the page is refreshed the context is not updated 
   //if the source code is altered and the page re-created then it works. Is this a demo built issue? No issue present after npm run build
 
-  function handleEditUser(){
+  function handleEditUser() {
     navigate(`/Users/${userid}/edit`);
-}
+  }
+
+  async function handleSignOut() {
+    console.log("Sign out")
+    try {
+      await logOut()
+      navigate('/')
+    } catch (e) {
+      console.log(e.message)
+    }
+
+  }
 
   async function fetchUser(firestoreUserId) {
     //button has been setup to call the firestore database and get the user info if available
@@ -90,10 +101,10 @@ export default function UserProfileData() {
         center={item.center}
         checkedIn={item.checkedIn}
         wasSeen={item.wasSeen}
+        called={item.called}
       />
     )
   })
-
 
   return (
     <div className='page-body'>
@@ -127,6 +138,7 @@ export default function UserProfileData() {
               <Card.Body className='user-card-buttons'>
                 <Button variant='warning' className='user-card-button' onClick={handleEditUser}>Edit</Button>
                 <Button variant='danger' className='user-card-button'>Delete</Button>
+                {userid === user.uid?<Button variant='primary' className='user-card-button' onClick={handleSignOut}>Logout</Button>:null}
               </Card.Body>
             </Card>
           </Col>

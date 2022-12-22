@@ -1,14 +1,21 @@
 import React from 'react'
-import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
-import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
 import { MdPerson} from "react-icons/md";
+import { UserAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 //TODO: User icon style needs adjusted to make it look better. It is currently overlayed over menu item, should be its own line item
 export default function NavBarTRP() {
+
+    const { user } = UserAuth();
+    const navigate = useNavigate()
+
+    function handleUserProfile(){
+        navigate(`/Users/${user.uid}`);
+    }
+
     return (
         <Navbar className='NavBar' expand="lg">
             <Container fluid>
@@ -32,7 +39,7 @@ export default function NavBarTRP() {
                         <Nav.Link href="/users">User Management</Nav.Link>
                     </Nav>
                     <Nav>
-                        <Nav.Link href="/userProfile"><MdPerson size={50} color='purple'/></Nav.Link>
+                        <MdPerson onClick={handleUserProfile} size={20} color='purple'/>
                     </Nav>
                 </Navbar.Collapse>
             </Container>

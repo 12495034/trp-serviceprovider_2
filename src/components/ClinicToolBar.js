@@ -6,44 +6,8 @@ export default function ToolBar(props) {
     props.setRadioState(e.target.value)
   }
 
-  //Not possible to filter on multiple fields in firestore
-  //full/space check boxes removed
-  function handleFullCheck(){
-    props.setCheckState((prev)=>{
-      return{
-        ...prev, full:!prev.full
-      }
-    })
-  }
-
-  function handleSpaceCheck(){
-    props.setCheckState((prev)=>{
-      return{
-        ...prev, space:!prev.space
-      }
-    })
-  }
-
   return (
     <Form  className=" mb-3 mt-3 pt-3">
-        <div>
-        {/* <Form.Check
-            inline
-            label="Full"
-            name="full"
-            type="checkbox"
-            checked={props.checkState.full}
-            onChange={handleFullCheck}
-          />
-        <Form.Check
-            inline
-            label="Space Available"
-            name="space"
-            type="checkbox"
-            checked={props.checkState.space}
-            onChange={handleSpaceCheck}
-          /> */}
-        </div>
         <div className="mb-3 mt-3">
           <Form.Check
             inline

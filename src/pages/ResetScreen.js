@@ -5,15 +5,15 @@ import { Button, Container, Row, Col, Image } from 'react-bootstrap'
 
 export default function ResetScreen() {
 
-  const navigate = useNavigate()
+  //const navigate = useNavigate()
   //const { reset } = UserAuth()
   const [formData, setformData] = useState({
     email: "",
   })
-  const [error, setError] = useState('')
+  //const [error, setError] = useState('')
 
   function handleSubmit() {
-
+    console.log("Reset function needs to be written")
   }
 
   function handleChange(event) {

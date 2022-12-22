@@ -1,12 +1,11 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import NavBarTRP from '../components/NavBarTRP'
 import Footer from '../components/Footer'
 import StatisticElement from '../components/StatisticElement'
 import { Container, Row, Col } from 'react-bootstrap'
 import { UserAuth } from '../context/AuthContext'
-import { MdCalendarToday, MdDone, MdOutlinePersonOff, MdOutlineGroups,} from "react-icons/md";
-import {FaDoorOpen, faDoorClosed, FaDoorClosed} from 'react-icons/fa'
+import { MdDone, MdOutlinePersonOff, MdOutlineGroups,} from "react-icons/md";
+import {FaDoorOpen, FaDoorClosed} from 'react-icons/fa'
 
 
 //TODO: Add footer
@@ -14,7 +13,6 @@ export default function Homepage() {
   const { user } = UserAuth()
 
   return (
-    //TODO: need to use flexbox to place footer at bottom of the page at all times
     <div className='page-body'>
       <NavBarTRP />
       <Container className='page-content'>

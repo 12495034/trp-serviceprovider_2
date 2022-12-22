@@ -7,9 +7,6 @@ import { collection, addDoc } from "firebase/firestore";
 import { firestore } from '../Firebase'
 
 export default function NewClinicForm() {
-
-    //TODO: state initialised as 3 empty slots. But this needs to be initialised depending on what capacity the clinic can hold
-    //TODO: Add validation to clinic creation form
     const [ClinicFormData, setClinicFormData] = useState({
         location: "",
         center: "",
@@ -21,7 +18,6 @@ export default function NewClinicForm() {
             2: "1830",
         }
     })
-
     const [submitted, setSubmitted] = useState(false)
     //create reference to collection
     const ref = collection(firestore, "Clinics")
@@ -47,16 +43,6 @@ export default function NewClinicForm() {
                 [event.target.name]: event.target.value
             }
         })
-    }
-
-    //TODO:find a way to generate an object that can be initialised in state when the number of appointments is selected
-    function blankAppointmentList() {
-        const array = {}
-        for (var i = 0; i < ClinicFormData.capacity; i++) {
-            //let appointmentString = `slot ${i}:{time:'',userid:'',},`
-            Object.assign(array, { key1: "Slot1", key2: "Slot2" })
-        }
-        return array
     }
 
     return (

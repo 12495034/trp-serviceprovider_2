@@ -60,9 +60,6 @@
     
 }
 
-.Home-message{
-}
-
 @media only screen and (max-width: 600px) {
     .footer{
         background-color: rgba(0, 128, 255, 0.238);
@@ -196,21 +193,10 @@
     width:300px;
 }
 
-.login-title{
-    
-}
-
-.login-options{
- 
-}
 
 .NavBar{
     background-color: rgba(0, 128, 255, 0.238);
 }
-
-
-
-
 
 .page-content-text{
     flex:1;
@@ -221,10 +207,6 @@
     flex:10; 
     justify-content: center;
     align-items: flex-center; 
-}
-
-.user-card{
-   
 }
 
 .user-card-buttons{
@@ -240,10 +222,6 @@
     border-style: solid;
     border-width: 10px;
     border-color: black;
-}
-
-.user-appointments{
- 
 }
 
 .appointment-card{
@@ -268,12 +246,13 @@
     
 }
 
-.divider{
-    //border-style:solid;
-}
 
 .clinic-detail-table-title{
     text-align: center;
+}
+
+.office{
+    font-size: small;
 }
 
 

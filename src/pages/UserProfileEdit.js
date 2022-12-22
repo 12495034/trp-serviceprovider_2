@@ -1,16 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { Container, Row, Col, Form, Button } from 'react-bootstrap'
-
 import { useNavigate, useParams } from 'react-router-dom'
 
 import NavBarTRP from '../components/NavBarTRP'
 import Footer from '../components/Footer'
 
-import { getDoc, doc, collection, query, onSnapshot, updateDoc } from "firebase/firestore";
+import { getDoc, doc, updateDoc } from "firebase/firestore";
 import { firestore } from '../Firebase'
-
-import { updateUserDetails } from '../ApiFunctions/firestoreUpdate'
-
 
 export default function UserProfileEdit() {
 

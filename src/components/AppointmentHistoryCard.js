@@ -5,7 +5,7 @@ import CallAppointmentIcon from '../Icons/CallAppointmentIcon';
 import CheckInIcon from '../Icons/CheckInIcon';
 import TestCompleteIcon from '../Icons/TestCompleteIcon';
 
-import { handleUpdate } from '../ApiFunctions/firestoreUpdate';
+import { handleUpdate, handleCall } from '../ApiFunctions/firestoreUpdate';
 import { useNavigate } from 'react-router-dom';
 
 export default function AppointmentHistoryCard(props) {
@@ -21,12 +21,12 @@ export default function AppointmentHistoryCard(props) {
 
   return (
     <Container fluid="md" className='appointment-card'>
-      <Row onClick={handleClick}>
+      <Row>
         {/* <Col md={3}>
           <div className='divider'>{props.clinicid}</div>
         </Col> */}
-        <Col md={3}>
-          <div className='divider'>{props.date}</div>
+        <Col md={2}>
+          <div  onClick={handleClick} className='divider'>{props.date}</div>
         </Col>
         <Col md={1}>
           <div className='divider'>{props.time}</div>
@@ -44,8 +44,12 @@ export default function AppointmentHistoryCard(props) {
           <div className='divider' onClick={() => { handleUpdate("checkedIn", !props.checkedIn, props.userid, props.clinicid) }}><CheckInIcon checkedIn={props.checkedIn} /></div>
         </Col>
         <Col md={1}>
+          <div className='divider' onClick={() => { handleCall("called", true, props.userid, props.clinicid, props.tester) }}><CallAppointmentIcon checkedIn={props.checkedIn} called={props.called} /></div>
+        </Col>
+        <Col md={1}>
           <div className='divider' onClick={() => { handleUpdate("wasSeen", !props.wasSeen, props.userid, props.clinicid) }} ><TestCompleteIcon complete={props.wasSeen} checkedIn={props.checkedIn} /></div>
         </Col>
+       
       </Row>
     </Container>
   )
