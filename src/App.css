@@ -42,7 +42,7 @@
 }
 
 .clinic-information{
-    background-color: white;
+    background-color: rgba(255, 0, 187, 0.103);
     text-align: center;
     border-style:solid;
     border-width:0.1em;
@@ -62,60 +62,130 @@
 
 @media only screen and (max-width: 600px) {
     .footer{
+        margin-top: 10px;
         background-color: rgba(0, 128, 255, 0.238);
-        height:50px; 
+        height:115px; 
+        padding-top:5px;
+        box-shadow: 0px -5px 10px 1px #e0dcdc;
     }
 
     .Home-message>h5 {
         font-size: 0.79rem; 
     }
     .Home-message>h1 {
-        font-size: 1.3rem; 
+        font-size: 1.6rem; 
     }
 
     .Statistic-card-container{
         display:flex;
         justify-content: center;
         align-content: center;
-        flex-direction:row;
-        flex-wrap: wrap;
-        gap:3%;
-        flex:1;
+        flex-direction:column;
     }
 
     .Statistic-card-body{
+        display:flex;
+        justify-content: space-between;
+        align-items: center;
         background-color: rgba(255, 20, 145, 0.096);
     }
     
     .Statistic-card-count{
-        text-align: center;
         font-size: 20px;
         color: rgba(0, 0, 255, 0.572);
         font-weight: 600;
-        margin:20px
     }
 
     .Statistic-card{
-        margin-bottom:10px;
-        width: 150px;
-        
-    }
-
-    .Statistic-card-title{
-        display:flex;
-        justify-content: space-between;
-        font-size: 1.0rem;
+        margin-bottom:10px;   
     }
 
     .Statistic-card-description{
-        font-size: 0.75rem;
+        font-size: 1rem;
     }
+
+    .appointment-card{
+        background-color:white;
+        padding-top:10px;
+        padding-left:10px;
+        padding-right:10px;
+        padding-bottom:10px;
+        margin-bottom:5px;
+        border-radius: 5px;
+        text-align: center;
+        border-style: solid;
+        border-width: 1px;
+    }
+
+    .appointment-card-active{
+        background-color:white;
+        padding-top:10px;
+        padding-left:10px;
+        padding-right:10px;
+        padding-bottom:10px;
+        margin-bottom:5px;
+        border-radius: 5px;
+        text-align: center;
+        border-style: solid;
+        border-width: 1px;
+    }
+
+    .appointment-card-cancelled{
+        background-color:rgb(249, 212, 212);
+        padding-top:10px;
+        padding-left:10px;
+        padding-right:10px;
+        padding-bottom:10px;
+        margin-bottom:5px;
+        border-radius: 5px;
+        text-align: center;
+        border-style: solid;
+        border-width: 1px;
+    }
+
+    .appointment-card-complete{
+        background-color:rgba(144, 238, 144, 0.388);
+        padding-top:10px;
+        padding-left:10px;
+        padding-right:10px;
+        padding-bottom:10px;
+        margin-bottom:5px;
+        border-radius: 5px;
+        text-align: center;
+        border-style: solid;
+        border-width: 1px;
+    }
+    
+    .appointment-card:hover{
+        background-color: rgba(255, 0, 187, 0.103);
+        padding-top:10px;
+        padding-left:10px;
+        padding-right:10px;
+        padding-bottom:10px;
+        margin-bottom:5px;
+        border-radius: 5px;
+    }
+
+    .appointment-card-icons{
+        padding-top:10px;
+       display:flex;
+       flex-direction: row;
+       justify-content: space-between;
+       align-items: center;
+
+    }
+
 }
 
 @media only screen and (min-width: 992px) {
     .footer{
+        margin-top: 10px;
+        display:flex;
+        flex-direction: column;
+        justify-content: center;
         background-color: rgba(0, 128, 255, 0.238);
         height:100px; 
+        box-shadow: 0px -5px 10px 1px #e0dcdc;
     }
 
     .Home-message>h5 {
@@ -158,10 +228,93 @@
         display:flex;
         justify-content: space-between;
     }
+    .appointment-card{
+        background-color:white;
+        padding-top:10px;
+        padding-left:10px;
+        padding-right:10px;
+        padding-bottom:10px;
+        margin-bottom:5px;
+        border-radius: 5px;
+        text-align: center;
+        border-style: solid;
+        border-width: 1px;
+    }
+
+    .appointment-card:hover{
+        background-color: rgba(255, 0, 187, 0.103);
+        padding-top:10px;
+        padding-left:10px;
+        padding-right:10px;
+        padding-bottom:10px;
+        margin-bottom:5px;
+        border-radius: 5px;
+        
+    }
+
+    .appointment-card-active{
+        background-color:white;
+        padding-top:10px;
+        padding-left:10px;
+        padding-right:10px;
+        padding-bottom:10px;
+        margin-bottom:5px;
+        border-radius: 5px;
+        text-align: center;
+        border-style: solid;
+        border-width: 1px;
+    }
+
+    .appointment-card-cancelled{
+        background-color:rgb(249, 212, 212);
+        padding-top:10px;
+        padding-left:10px;
+        padding-right:10px;
+        padding-bottom:10px;
+        margin-bottom:5px;
+        border-radius: 5px;
+        text-align: center;
+        border-style: solid;
+        border-width: 1px;
+    }
+
+    .appointment-card-complete{
+        background-color:rgba(144, 238, 144, 0.388);
+        padding-top:10px;
+        padding-left:10px;
+        padding-right:10px;
+        padding-bottom:10px;
+        margin-bottom:5px;
+        border-radius: 5px;
+        text-align: center;
+        border-style: solid;
+        border-width: 1px;
+    }
+    
+    
+    .appointment-card-active:hover{
+        background-color: rgba(255, 0, 187, 0.103);
+        padding-top:10px;
+        padding-left:10px;
+        padding-right:10px;
+        padding-bottom:10px;
+        margin-bottom:5px;
+        border-radius: 5px;
+        
+    }
+
+    .appointment-card-icons{
+        width: max-content;
+       display:flex;
+       flex-direction: row;
+       justify-content: space-evenly;
+       border-width: 2px;
+    }
 }
 
 .Title{
     padding:10px;
+    font-size: x-large;
 }
 
 
@@ -196,6 +349,7 @@
 
 .NavBar{
     background-color: rgba(0, 128, 255, 0.238);
+    box-shadow: 0px 5px 10px 1px #e0dcdc;
 }
 
 .page-content-text{
@@ -224,27 +378,7 @@
     border-color: black;
 }
 
-.appointment-card{
-    background-color:white;
-    padding-top:10px;
-    padding-left:10px;
-    padding-right:10px;
-    padding-bottom:10px;
-    margin-bottom:5px;
-    border-radius: 5px;
-    text-align: center;
-}
 
-.appointment-card:hover{
-    background-color: rgba(255, 0, 187, 0.103);
-    padding-top:10px;
-    padding-left:10px;
-    padding-right:10px;
-    padding-bottom:10px;
-    margin-bottom:5px;
-    border-radius: 5px;
-    
-}
 
 
 .clinic-detail-table-title{

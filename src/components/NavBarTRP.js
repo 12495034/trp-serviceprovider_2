@@ -2,17 +2,20 @@ import React from 'react'
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import { MdPerson} from "react-icons/md";
+import { Stack } from 'react-bootstrap';
+import { MdPerson } from "react-icons/md";
 import { UserAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 //TODO: User icon style needs adjusted to make it look better. It is currently overlayed over menu item, should be its own line item
 export default function NavBarTRP() {
 
-    const { user } = UserAuth();
+    const { user, userDetails } = UserAuth();
     const navigate = useNavigate()
 
-    function handleUserProfile(){
+    const { Email } = userDetails
+
+    function handleUserProfile() {
         navigate(`/Users/${user.uid}`);
     }
 
@@ -32,14 +35,20 @@ export default function NavBarTRP() {
                 <Navbar.Collapse id="navbarScroll">
                     <Nav
                         className="me-auto my-2 my-lg-0"
-                        style={{ maxHeight: '100px' }}
+                        style={{ maxHeight: '200px' }}
                     >
                         <Nav.Link href="/home">Home</Nav.Link>
                         <Nav.Link href="/clinics">Clinic Management</Nav.Link>
                         <Nav.Link href="/users">User Management</Nav.Link>
+
                     </Nav>
                     <Nav>
-                        <MdPerson onClick={handleUserProfile} size={20} color='purple'/>
+                    <Stack direction='horizontal' gap={3}>
+                        <MdPerson onClick={handleUserProfile} size={20} color='purple' />
+                        <Navbar.Text>
+                            Signed in as: {Email}
+                        </Navbar.Text>
+                        </Stack>
                     </Nav>
                 </Navbar.Collapse>
             </Container>

@@ -5,7 +5,7 @@ export default function CheckInIcon(props) {
     if (props.checkedIn === true) {
         return <FaUserCheck color='green' size='20' />
     } else if (props.checkedIn === false) {
-        return <FaUserClock color='red' size='15' />
+        return <FaUserClock color='red' size='20' />
     } else {
         return null
     }

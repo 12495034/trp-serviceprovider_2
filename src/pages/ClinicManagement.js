@@ -11,18 +11,28 @@ import NavBarTRP from '../components/NavBarTRP';
 //import NewClinicForm from '../components/NewClinicForm';
 import ToolBar from '../components/ClinicToolBar';
 
-import { collection, addDoc, query, onSnapshot, where } from "firebase/firestore";
+import { collection, addDoc, query, onSnapshot, where, doc, getDoc } from "firebase/firestore";
 import { firestore } from '../Firebase'
 
 export default function ClinicManagement() {
 
+  //set the current date in a specific format YYYY-MM-DD
+  let d = new Date();
+  let ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d);
+  let mo = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d);
+  let da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d);
+  const today = `${ye}-${mo}-${da}`;
+  console.log(today)
+
   //define state
   //-----------------------------------------------------------------------------------------
   const [allClinics, setAllClinics] = useState([])
-  const [clinicLocations, setClinicLocations] = useState({})
+  const [clinicLocations, setClinicLocations] = useState([])
+  const [clinicCenters, setClinicCenters] = useState([])
   //TODO: Add validation to clinic creation form
   const [ClinicFormData, setClinicFormData] = useState({
-    location: "",
+    //default location to belfast to avoid error being thrown due to undefined location
+    location: "Belfast",
     center: "",
     date: "",
     startTime: "",
@@ -35,7 +45,6 @@ export default function ClinicManagement() {
     full: true,
     space: true
   })
-
   //----------------------------------------------------------------------------------------
 
   //firebase firestore references
@@ -73,7 +82,6 @@ export default function ClinicManagement() {
     })
     //create array of slots based on time, updating state each time it is changed
     //needed a seperate function to update the state as there was no input with a name. The slots are derived data based on capacity
-    console.log(ClinicFormData.capacity)
     //ensure correct input field is triggering the handle slots function to run
     if (event.target.name === "capacity") {
       handleSlotsList(ClinicFormData.startTime, event.target.value, 30)
@@ -122,7 +130,6 @@ export default function ClinicManagement() {
   }
 
   //function to get a list of locations 
-  //TODO: use data to populate drop down lists in clinic creation
   function fetchClinicLocationData() {
     const q = query(collection(firestore, 'Location'));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -139,12 +146,29 @@ export default function ClinicManagement() {
     //
   }
 
+  //function get list of centers for the selected city location
+  async function fetchCenterData() {
+    const docRef = doc(firestore, "Location", `${ClinicFormData.location}`);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      var centerArray = []
+      //push stored centers for a selected location into array
+      Object.keys(docSnap.data()).forEach(function (key, index) {
+        centerArray.push(key)
+      });
+      setClinicCenters(centerArray)
+    } else {
+      // doc.data() will be undefined in this case
+      console.log("No such document!");
+    }
+  }
 
   //use effect runs once after every render or when state is updated
   useEffect(() => {
     fetchClinics()
     fetchClinicLocationData()
-  }, [filterRadio, filterCheck])
+    fetchCenterData()
+  }, [filterRadio, filterCheck, ClinicFormData.location])
 
   //----------------------------------------------------------------------------------------
   // Data Rendering
@@ -152,7 +176,7 @@ export default function ClinicManagement() {
 
   //sort clinics by date prior to rendering
   allClinics.sort(
-    (p1, p2) => (p1.date > p2.date) ? 1 : (p1.date < p2.date) ? -1 : 0)
+    (p1, p2) => (p1.date > p2.date) ? -1 : (p1.date < p2.date) ? 1 : 0)
 
   //create Cards object that can be listed on the screen
   //TODO: need to include unique identifier as key here to stop error in console
@@ -170,12 +194,26 @@ export default function ClinicManagement() {
         center={item.center}
         date={item.date}
         capacity={item.capacity}
-        time={item.time}
+        time={item.startTime}
         appointments={appointments}
         status={appointments === item.capacity ? "Full" : "Space Available"}
         active={item.clinicStatus}
         clinicId={item.id}
       />
+    )
+  })
+
+  //render list of locations (cities) that tests take place in
+  const locations = clinicLocations.map((item) => {
+    return (
+      <option key={item.id} value={item.id}>{item.id}</option>
+    )
+  })
+
+  //render list of centers available in the selected city
+  const centers = clinicCenters.map((item) => {
+    return (
+      <option key={item} value={item}>{item}</option>
     )
   })
 
@@ -204,9 +242,8 @@ export default function ClinicManagement() {
                         onChange={handleChange}
                         value={ClinicFormData.location}
                       >
-                        <option value="">Choose Location</option>
-                        <option value="Belfast">Belfast</option>
-                        <option value="Derry">Derry</option>
+                        {/* <option value="">Choose Location</option> */}
+                        {locations}
                       </Form.Control>
                     </Form.Group>
                     <Form.Group className="mb-3" as={Col} controlId="formGridState">
@@ -219,8 +256,7 @@ export default function ClinicManagement() {
                         value={ClinicFormData.center}
                       >
                         <option value="">Choose Location</option>
-                        <option value="LGBT Center">LGBT Center</option>
-                        <option value="Trans Resource Center">Trans Resource Center</option>
+                        {centers}
                       </Form.Control>
                     </Form.Group>
                   </Row>
@@ -232,7 +268,7 @@ export default function ClinicManagement() {
                         required
                         name="date"
                         type="date"
-                        placeholder="Enter date"
+                        min={today}
                         onChange={handleChange}
                         value={ClinicFormData.date} />
                     </Form.Group>

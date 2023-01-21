@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import {
   Routes,
   Route,
+  useLocation
 } from 'react-router-dom'
 //import pages for react-router-dom routes
 import Homepage from './pages/Homepage'
@@ -15,24 +16,35 @@ import ResetScreen from './pages/ResetScreen';
 import SignupScreen from './pages/SignupScreen';
 import UserProfileEdit from './pages/UserProfileEdit';
 import UserProfileData from './pages/UserProfileData';
+import UnAuthorisedScreen from './pages/UnAuthorisedScreen';
+import Missing from './pages/Missing';
 import { AuthContextProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
 
-
   return (
     <AuthContextProvider>
       <Routes>
-        <Route path="/home" element={<ProtectedRoute><Homepage /></ProtectedRoute>} />
-        <Route path="/clinics" element={<ProtectedRoute><ClinicManagement /></ProtectedRoute>} />
-        <Route path="/clinics/:clinicId" element={<ProtectedRoute><ClinicDetail /></ProtectedRoute>} />
-        <Route path="/users" element={<ProtectedRoute><UserManagement /></ProtectedRoute>} />
-        <Route path="/users/:userid" element={<ProtectedRoute><UserProfileData /></ProtectedRoute>} />
-        <Route path="/users/:userid/edit" element={<ProtectedRoute><UserProfileEdit /></ProtectedRoute>} />
+        {/* //Protected Routes */}
+        <Route element={<ProtectedRoute/>} >
+          <Route path="/home" element={<Homepage />} />
+          <Route path="/clinics" element={<ClinicManagement />} />
+          <Route path="/clinics/:clinicId" element={<ClinicDetail />} />
+          <Route path="/users" element={<UserManagement />} />
+          <Route path="/users/:userid" element={<UserProfileData />} />
+          <Route path="/users/:userid/edit" element={<UserProfileEdit />} />
+         
+        </Route>
+
+        {/* //un-protected routed */}
         <Route path="/" element={<LoginScreen />} />
         <Route path="/reset" element={<ResetScreen />} />
         <Route path="/signup" element={<SignupScreen />} />
+        <Route path="/unauthorised" element={<UnAuthorisedScreen />} />
+
+        {/* //Catch all - page does not exist */}
+        <Route path="*" element={<Missing />} />
       </Routes>
     </AuthContextProvider >
   );

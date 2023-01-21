@@ -7,17 +7,20 @@ import NavBarTRP from '../components/NavBarTRP'
 import ModalConfirmation from '../components/ModalConfirmation'
 import AppointmentCard from '../components/AppointmentCard'
 import { UserAuth } from '../context/AuthContext';
+import Footer from '../components/Footer'
 
 import { firestore } from '../Firebase'
-import { doc, collection, updateDoc, query, onSnapshot, getDoc } from 'firebase/firestore'
+import { doc, collection, updateDoc, query, onSnapshot, getDocs, where } from 'firebase/firestore'
+
+//Firestore helper functions
+import { firestoreUpdate } from '../ApiFunctions/firestoreUpdate'
 
 export default function ClinicDetail() {
 
     //react-router-dom params that are passed through navigate
     const { clinicId } = useParams();
     //retrieve signed in Rainbow project user id
-    const { user } = UserAuth();
-    const userid = user.uid
+    const { userDetails } = UserAuth();
 
 
     //-------------------------------------------------------------------------------------
@@ -27,29 +30,34 @@ export default function ClinicDetail() {
     const [appointments, setAppointments] = useState([]);
     const [error, setError] = useState("");
     const [cancelModalShow, setCancelModalShow] = useState(false);
+    const [currentUser, setCurrentUser] = useState({});
+
     const handleCloseCancel = () => setCancelModalShow(false);
     const handleShowCancel = () => setCancelModalShow(true);
     const [endModalshow, setEndModalShow] = useState(false);
     const handleCloseEnd = () => setEndModalShow(false);
     const handleShowEnd = () => setEndModalShow(true);
-    const [currentUser, setCurrentUser] = useState({});
+
+    //console.log(attended)
+    //console.log(unattended)
 
     //initialise new array using appointments
     const combinedList = combinedSlotsAndAppointments()
     //Array is sorted using a compare method in an arrow function
     const sortedAppointments = combinedList.sort(
         (p1, p2) => (p1.slot > p2.slot) ? 1 : (p1.slot < p2.slot) ? -1 : 0)
-    console.log(sortedAppointments)
 
     //-------------------------------------------------------------------------------------
     // useEffect
     //-------------------------------------------------------------------------------------
     //use effect runs once after every render or when state is updated
     useEffect(() => {
-        getUserInfo(userid)
         fetchClinicInfo()
+    }, [userDetails])
+
+    useEffect(() => {
         fetchClinicAppointmentInfo()
-    }, [])
+    }, [userDetails])
 
     //-------------------------------------------------------------------------------------
     // Functions
@@ -87,19 +95,9 @@ export default function ClinicDetail() {
         //
     }
 
-    //set current user details
-    async function getUserInfo(id) {
-        const docRef = doc(firestore, "Users", `${id}`);
-        const docSnap = await getDoc(docRef);
-        const data = docSnap.exists() ? docSnap.data() : null
-
-        if (data === null || data === undefined) return null
-        setCurrentUser({ id, ...data })
-    }
-
     //function to update specified clinic fields
     function handleSlotsUpdate(availableSlots, newSlotNumber, time) {
-        console.log("Updating Slots data")
+        //console.log("Updating Slots data")
         const newSlot = { [newSlotNumber]: time }
         const newSlotsObject = Object.assign({}, availableSlots, newSlot)
         const docRef = doc(firestore, "Clinics", `${clinicId}`);
@@ -116,20 +114,74 @@ export default function ClinicDetail() {
 
     //function to update specified clinic fields
     function handleClinicUpdate(field, value) {
-        console.log("Updating Clinic data")
-        //object data based on generic field and value input
         const data = { [field]: value }
-        const docRef = doc(firestore, "Clinics", `${clinicId}`);
-        updateDoc(docRef, data)
-            .then(docRef => {
-                console.log("Value of an Existing Document Field has been updated");
-            })
-            .catch(error => {
-                console.log(error);
-            })
-        //close modal if open
-        handleCloseCancel()
-        handleCloseEnd()
+        firestoreUpdate(`Clinics`, `${clinicId}`, data)
+    }
+
+    async function getClinicList() {
+        //console.log("Running get Attended list function...")
+        let listArray = []
+        const q = query(collection(firestore, `Clinics/${clinicId}/Appointments`));
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+            listArray.push({ id: doc.id })
+        });
+        return listArray
+    }
+
+    async function getAttendedList() {
+        //console.log("Running get Attended list function...")
+        let attendedArray = []
+        const q = query(collection(firestore, `Clinics/${clinicId}/Appointments`), where("wasSeen", "==", true));
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+            attendedArray.push({ id: doc.id })
+        });
+        return attendedArray
+    }
+
+    async function getUnAttendedList() {
+        let unAttendedArray = []
+        //console.log("Running get unAttended list function...")
+        const q = query(collection(firestore, `Clinics/${clinicId}/Appointments`), where("wasSeen", "==", false));
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+            unAttendedArray.push({ id: doc.id })
+        });
+        return unAttendedArray
+    }
+
+    async function updateAttendedAppointments() {
+        const attendedList = await getAttendedList()
+        if (attendedList.length > 0) {
+            for (var i = 0; i < attendedList.length; i++) {
+                const data = { status: "Attended" }
+                firestoreUpdate(`Clinics/${clinicId}/Appointments`, `${attendedList[i].id}`, data)
+                firestoreUpdate(`Users/${attendedList[i].id}/Appointments`, `${clinicId}`, data)
+            }
+        }
+    }
+
+    async function updateUnAttendedAppointments() {
+        const unAttendedList = await getUnAttendedList()
+        if (unAttendedList.length > 0) {
+            for (var i = 0; i < unAttendedList.length; i++) {
+                const data = { status: "Un-Attended" }
+                firestoreUpdate(`Clinics/${clinicId}/Appointments`, `${unAttendedList[i].id}`, data)
+                firestoreUpdate(`Users/${unAttendedList[i].id}/Appointments`, `${clinicId}`, data)
+            }
+        }
+    }
+
+    async function cancelAllAppointments() {
+        const completeList = await getClinicList()
+        if (completeList.length > 0) {
+            for (var i = 0; i < completeList.length; i++) {
+                const data = { status: "Clinic Cancelled" }
+                firestoreUpdate(`Clinics/${clinicId}/Appointments`, `${completeList[i].id}`, data)
+                firestoreUpdate(`Users/${completeList[i].id}/Appointments`, `${clinicId}`, data)
+            }
+        }
     }
 
 
@@ -154,7 +206,7 @@ export default function ClinicDetail() {
 
         //update clinic capacity and add a new slot field to the slots map
         handleClinicUpdate("capacity", newCapacity)
-        handleSlotsUpdate(clinic.slots,newCapacity, newTime)
+        handleSlotsUpdate(clinic.slots, newCapacity, newTime)
     }
 
     //function to combined the available slots and booked appointments into a single list for screen display purposes
@@ -190,9 +242,10 @@ export default function ClinicDetail() {
                 called={item.called}
                 calledBy={item.calledBy}
                 wasSeen={item.wasSeen}
-                tester={`${currentUser.FirstName} ${currentUser.LastName}`}
+                tester={`${userDetails.FirstName} ${userDetails.LastName}`}
                 slotsUpdate={handleSlotsUpdate}
-                availableSlots = {clinic.slots}
+                availableSlots={clinic.slots}
+                clinicStatus={clinic.clinicStatus}
             />
         )
     })
@@ -210,46 +263,20 @@ export default function ClinicDetail() {
                 {clinic.clinicStatus !== "Active" ? null : <Stack direction='horizontal' gap={3}>
                     <h1 className="Title">Clinic Information</h1>
                     {/* <h4 className='ms-auto'>Queue Size</h4><Badge text='light' bg="info">4</Badge> */}
-                    <Button className='ms-auto' onClick={handleShowCancel}>Cancel</Button>
-                    <Button variant='warning' onClick={handleShowEnd}>End</Button>
+                    <Button className='ms-auto' onClick={handleShowCancel}>Cancel Clinic</Button>
+                    <Button variant='warning' onClick={handleShowEnd}>Close Clinic</Button>
                 </Stack>}
 
                 <Row className="justify-content-md-center">
                     <Col>
-                        <ClinicInformationCard clinicid={clinicId} date={clinic.date} location={clinic.location} center={clinic.center} appointments={appointments.length} capacity={clinic.capacity} active={clinic.clinicStatus} />
-                    </Col>
-                </Row>
-                <Row className='clinic-detail-table-title'>
-                    <Col md={1}>
-                        Slot id
-                    </Col>
-                    <Col md={1}>
-                        Time
-                    </Col>
-                    <Col md={2}>
-                        Slot Status
-                    </Col>
-                    <Col md={2}>
-                        Called By
-                    </Col>
-                    <Col md={1}>
-                        Tested
-                    </Col>
-                    <Col md={2}>
-                        Check In Status
-                    </Col>
-                    <Col md={1}>
-                        Call
-                    </Col>
-                    <Col md={2}>
-                        Manage
+                        <ClinicInformationCard clinicid={clinicId} date={clinic.date} time={clinic.startTime} location={clinic.location} center={clinic.center} appointments={appointments.length} capacity={clinic.capacity} active={clinic.clinicStatus} />
                     </Col>
                 </Row>
                 <hr />
                 <Row>
                     <Col>
                         {/* <AppointmentTable /> */}
-                        {appointmentList.length > 0 ? appointmentList : <h3>No Appointments currently booked</h3>}
+                        {appointmentList}
                     </Col>
                 </Row>
                 <Row>
@@ -259,21 +286,31 @@ export default function ClinicDetail() {
                     </div>
                 </Row>
             </Container>
+            <Footer />
 
             <ModalConfirmation
                 show={cancelModalShow}
                 close={handleCloseCancel}
                 header="Are you sure you want to Cancel the Clinic?"
-                body="There are ...active appointments still to be seen"
-                updatefunction={() => handleClinicUpdate("clinicStatus", "Cancelled")}
+                body="This will cancel all appointments scheduled for this clinic"
+                updatefunction={() => {
+                    handleClinicUpdate("clinicStatus", "Cancelled")
+                    cancelAllAppointments()
+                    handleCloseCancel()
+                }}
             />
 
             <ModalConfirmation
                 show={endModalshow}
                 close={handleCloseEnd}
                 header="Are you sure you want to End the Clinic?"
-                body="Ending the clinic will update clinic statistics and cancel any active appointments still to be seen. This action cannot be undone"
-                updatefunction={() => handleClinicUpdate("clinicStatus", "Complete")}
+                body="Ending the clinic will update clinic statistics and update applicable appointments to un-attended. This action cannot be undone"
+                updatefunction={() => {
+                    handleClinicUpdate("clinicStatus", "Complete")
+                    updateAttendedAppointments()
+                    updateUnAttendedAppointments()
+                    handleCloseEnd()
+                }}
             />
         </div>
 

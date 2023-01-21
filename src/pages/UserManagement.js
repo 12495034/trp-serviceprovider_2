@@ -81,12 +81,12 @@ export default function UserManagement() {
     //for data security the name of the person is not shown but the id of the person is perhaps
     return (
       <tr key={item.id} onClick={() => handleClick(item.id)}>
-        <td>{item.id}</td>
         <td>{item.ProNouns}</td>
         <td>{item.FirstName}</td>
         <td>{item.LastName}</td>
         <td>{item.status}</td>
         <td>{item.Role}</td>
+        <td>{item.Email}</td>
       </tr>
     )
   })
@@ -121,15 +121,16 @@ export default function UserManagement() {
           </Form>
         </Row>
         <hr />
-        <Table striped bordered hover>
+        <Table responsive striped bordered hover>
           <thead>
             <tr>
-              <th>ID</th>
+            
               <th>Pro-Nouns</th>
               <th>First Name</th>
               <th>Last Name</th>
               <th>Status</th>
               <th>Role</th>
+              <th>Email</th>
             </tr>
           </thead>
           <tbody>

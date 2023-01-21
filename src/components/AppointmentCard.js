@@ -25,29 +25,32 @@ export default function AppointmentCard(props) {
   function handleClick() {
     if (props.userid) {
       navigate(`/Users/${props.userid}`);
-    } 
+    }
   }
 
   //appointment document must not only be deleted from the clinic appointments sub-collection
   //but the time slot must be added back into the available slots map
   //the appointment must also be deleted from the users appointments sub-collection
-  async function deleteAppointment(userid, clinicid, slot, time) {
+  async function deleteAppointment(userid, clinicid, slot, time, status) {
     const docRefAppointClinic = doc(firestore, `Clinics/${clinicid}/Appointments`, `${userid}`);
     const docRefAppointHistory = doc(firestore, `Users/${userid}/Appointments`, `${clinicid}`);
 
-    //run delete function at both locations in firestore database
-    await deleteDoc(docRefAppointClinic);
-    await deleteDoc(docRefAppointHistory);
+    if (status == "Active") {
+      //run delete function at both locations in firestore database
+      await deleteDoc(docRefAppointClinic);
+      await deleteDoc(docRefAppointHistory);
 
-    //modify slot map to make deleted appointment time available again
-    props.slotsUpdate(props.availableSlots, slot, time)
-
+      //modify slot map to make deleted appointment time available again
+      props.slotsUpdate(props.availableSlots, slot, time)
+    } else { 
+      console.log("Clinic is not active, therefore changes cannot be made")
+    }
   }
 
   return (
-    <Container fluid="md" className='appointment-card'>
+    <Container fluid="md" className='appointment-card' >
       <Row>
-        <Col md={1}>
+        <Col md={1} >
           <div onClick={handleClick} className='divider'>{props.slot}</div>
         </Col>
         <Col md={1}>
@@ -56,20 +59,19 @@ export default function AppointmentCard(props) {
         <Col md={2}>
           <div className='divider'>{props.userid ? "Booked" : "Slot Available"}</div>
         </Col>
-        <Col md={2}>
-          <div className='divider'>{props.calledBy}</div>
+        <Col md={4}>
+          <div className='divider'>{props.calledBy ? `Tester: ${props.calledBy}` : null}</div>
         </Col>
-        <Col md={1}>
-          <div className='divider' onClick={() => { handleUpdate("wasSeen", !props.wasSeen, props.userid, props.clinicid) }} ><TestCompleteIcon complete={props.wasSeen} checkedIn={props.checkedIn} /></div>
-        </Col>
-        <Col md={2}>
-          <div className='divider' onClick={() => { handleUpdate("checkedIn", !props.checkedIn, props.userid, props.clinicid) }}><CheckInIcon checkedIn={props.checkedIn} /></div>
-        </Col>
-        <Col md={1}>
-          <div className='divider' onClick={() => { handleCall("called", true, props.userid, props.clinicid, props.tester) }}><CallAppointmentIcon checkedIn={props.checkedIn} called={props.called} /></div>
-        </Col>
-        <Col md={2}>
-          <div onClick={() => { deleteAppointment(props.userid, props.clinicid, props.slot, props.time) }}><DeleteAppointmentIcon userid={props.userid} checkedIn={props.checkedIn} /> </div>
+        <Col md={4} className='appointment-card-icons'>
+          <div className='icon' onClick={() => { handleUpdate("checkedIn", !props.checkedIn, props.userid, props.clinicid, props.clinicStatus) }}><CheckInIcon checkedIn={props.checkedIn} /></div>
+          <div className='icon' onClick={() => { handleCall("called", true, props.userid, props.clinicid, props.tester, props.clinicStatus) }}><CallAppointmentIcon checkedIn={props.checkedIn} called={props.called} /></div>
+          <div className='icon' onClick={() => {
+            handleUpdate("wasSeen", !props.wasSeen, props.userid, props.clinicid, props.clinicStatus)
+          }}
+          >
+            <TestCompleteIcon complete={props.wasSeen} checkedIn={props.checkedIn} />
+          </div>
+          {props.checkedIn ? null : <div className='icon' onClick={() => { deleteAppointment(props.userid, props.clinicid, props.slot, props.time, props.clinicStatus) }}><DeleteAppointmentIcon userid={props.userid} checkedIn={props.checkedIn} /> </div>}
         </Col>
       </Row>
     </Container >

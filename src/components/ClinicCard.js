@@ -20,20 +20,23 @@ export default function ClinicCard(props) {
           <div>{props.date}</div>
         </Col>
         <Col md={2}>
+          <div>{props.time}</div>
+        </Col>
+        <Col md={2}>
           <div>{props.location}</div>
         </Col>
-        <Col md={3}>
+        <Col md={2}>
           <div>{props.center}</div>
         </Col>
-        <Col md={1}>
+        <Col md={2}>
           <div>{props.appointments}/{props.capacity}</div>
         </Col>
         <Col md={2}>
           <div>{props.status}</div>
         </Col>
-        <Col md={2}>
+        {/* <Col md={1}>
           <div>{props.active}</div>
-        </Col>
+        </Col> */}
       </Row>
     </Container>
   )

@@ -12,10 +12,13 @@ export default function ClinicInformationCard(props) {
       <Col md={2}>
         <div>{props.date}</div>
       </Col>
+      <Col md={1}>
+        <div>{props.time}</div>
+      </Col>
       <Col md={2}>
         <div>{props.location}</div>
       </Col>
-      <Col md={4}>
+      <Col md={3}>
         <div>{props.center}</div>
       </Col>
       <Col md={2}>

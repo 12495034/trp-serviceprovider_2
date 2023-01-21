@@ -1,5 +1,5 @@
 import React from 'react'
-import { Card } from 'react-bootstrap'
+import { Card, Stack } from 'react-bootstrap'
 import '../App.css'
 
 export default function StatisticElement(props) {
@@ -9,10 +9,8 @@ export default function StatisticElement(props) {
       {/* <Card.Img variant="top" src="holder.js/100px180" alt="Add image to indicate stat"/> */}
       <Card.Body className='Statistic-card-body'>
         <Card.Title><div className='Statistic-card-title'>{props.title}{props.icon}</div></Card.Title>
+        <Card.Text className='Statistic-card-description'>{props.description}</Card.Text>
         <Card.Text className='Statistic-card-count'>{props.number}</Card.Text>
-        <Card.Text className='Statistic-card-description'>
-          {props.description}
-        </Card.Text>
       </Card.Body>
     </Card>
   )

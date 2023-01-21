@@ -31,29 +31,33 @@ export const AuthContextProvider = ({ children }) => {
         return signOut(auth)
     }
 
-    //TODO: Function is currently un-used
     async function getUserInfo(id) {
-        console.log("Retrieving user details")
-        const docRef = doc(firestore, "Users", `${id}`);
-        const docSnap = await getDoc(docRef);
-        const data = docSnap.exists() ? docSnap.data() : null
-        if (data === null || data === undefined) return null
-        setUserDetails({ id, ...data })
+        //console.log(id)
+        if (id) {
+            const docRef = doc(firestore, "Users", `${id}`);
+            const docSnap = await getDoc(docRef);
+            const data = docSnap.exists() ? docSnap.data() : null
+            if (data === null || data === undefined) return null
+            setUserDetails({ id, ...data })
+        }
     }
 
     //runs once to determine the user state following render
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-            console.log(currentUser)
+            //console.log(currentUser)
             setUser(currentUser)
+            if(currentUser){
+                getUserInfo(currentUser.uid)
+            } 
         })
         return () => {
             unsubscribe();
         }
-    }, [])
+    }, [user])
 
     return (
-        <UserContext.Provider value={{ createUser, signIn, user, logOut }}>
+        <UserContext.Provider value={{ createUser, signIn, user, logOut, userDetails }}>
             {children}
         </UserContext.Provider>
     )

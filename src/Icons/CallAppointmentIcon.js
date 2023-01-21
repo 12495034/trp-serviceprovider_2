@@ -7,7 +7,7 @@ export default function CallAppointmentIcon(props) {
     } else if (props.checkedIn === true) {
         return <FaRegBell color='purple' size='20' />
     } else if(props.checkedIn===false){
-        return <FaRegBellSlash color='black' size='15' />
+        
     }
 
 }

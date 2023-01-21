@@ -13,7 +13,6 @@ import { UserAuth } from '../context/AuthContext'
 import { getDoc, doc, collection, query, onSnapshot } from "firebase/firestore";
 import { firestore } from '../Firebase'
 
-
 //TODO: Move signout from this page to the navbar as you should be able to signout from whatever screen you are on
 export default function UserProfileData() {
 
@@ -48,7 +47,6 @@ export default function UserProfileData() {
     } catch (e) {
       console.log(e.message)
     }
-
   }
 
   async function fetchUser(firestoreUserId) {
@@ -102,9 +100,14 @@ export default function UserProfileData() {
         checkedIn={item.checkedIn}
         wasSeen={item.wasSeen}
         called={item.called}
+        clinicStatus={item.clinicStatus}
+        appointmentStatus = {item.status}
       />
     )
   })
+
+  // const metadata = <><ListGroup.Item><strong>Created on:</strong> {user.metadata.creationTime}</ListGroup.Item>
+  //   <ListGroup.Item><strong>Last Signed In: </strong>{user.metadata.lastSignInTime}</ListGroup.Item></>
 
   return (
     <div className='page-body'>
@@ -132,13 +135,12 @@ export default function UserProfileData() {
                 <ListGroup.Item><strong>Role:</strong> {userData.Role}</ListGroup.Item>
                 <ListGroup.Item><strong>Status:</strong> {userData.status}</ListGroup.Item>
                 <ListGroup.Item><strong>Agreed to T&Cs:</strong> {userData.isAgreedTC ? "Yes" : "No"}</ListGroup.Item>
-                {/* <ListGroup.Item>Created on: {user.metadata.creationTime}</ListGroup.Item>
-                <ListGroup.Item>Last Signed In: {user.metadata.lastSignInTime}</ListGroup.Item> */}
+                {/* {userid === user.uid ?metadata : null} */}
               </ListGroup>
               <Card.Body className='user-card-buttons'>
                 <Button variant='warning' className='user-card-button' onClick={handleEditUser}>Edit</Button>
                 <Button variant='danger' className='user-card-button'>Delete</Button>
-                {userid === user.uid?<Button variant='primary' className='user-card-button' onClick={handleSignOut}>Logout</Button>:null}
+                {userid === user.uid ? <Button variant='primary' className='user-card-button' onClick={handleSignOut}>Logout</Button> : null}
               </Card.Body>
             </Card>
           </Col>
