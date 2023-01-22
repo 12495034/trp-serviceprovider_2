@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 
-import { Container, Table, Form, Button, Row} from 'react-bootstrap'
+import { Container, Table, Form, Button, Row } from 'react-bootstrap'
 import NavBarTRP from '../components/NavBarTRP'
 import Footer from '../components/Footer'
 
-import { collection, query, onSnapshot, where } from "firebase/firestore";
+import { collection, query, getDocs, where } from "firebase/firestore";
 import { firestore } from '../Firebase'
 
 //TODO: Add footer
@@ -30,7 +30,7 @@ export default function UserManagement() {
     navigate(`/Users/${userid}`);
   }
 
-  function searchUsers(e) {
+  async function searchUsers(e) {
     //prevent screen re-render
     e.preventDefault();
     var q = "";
@@ -47,18 +47,15 @@ export default function UserManagement() {
 
     }
 
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      let usersArray = []
-      querySnapshot.forEach((doc) => {
-        const id = { id: doc.id }
-        const data = doc.data()
-        const combine = Object.assign({}, id, data)
-        usersArray.push(combine)
-      })
-      setAllUsers(usersArray)
+    const querySnapshot = await getDocs(q)
+    let usersArray = []
+    querySnapshot.forEach((doc) => {
+      const id = { id: doc.id }
+      const data = doc.data()
+      const combine = Object.assign({}, id, data)
+      usersArray.push(combine)
     })
-    return () => unsubscribe();
-    //
+    setAllUsers(usersArray)
   }
 
   function handleSearchBar(e) {
@@ -66,10 +63,7 @@ export default function UserManagement() {
     setSearchBar(prev => {
       return {
         ...prev, [name]: value
-      }
-    }
-    )
-  }
+      }})}
 
 
   //-------------------------------------------------------------------------------------
@@ -124,7 +118,7 @@ export default function UserManagement() {
         <Table responsive striped bordered hover>
           <thead>
             <tr>
-            
+
               <th>Pro-Nouns</th>
               <th>First Name</th>
               <th>Last Name</th>

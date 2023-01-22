@@ -10,10 +10,8 @@ import { useNavigate } from 'react-router-dom';
 //TODO: User icon style needs adjusted to make it look better. It is currently overlayed over menu item, should be its own line item
 export default function NavBarTRP() {
 
-    const { user, userDetails } = UserAuth();
+    const { user } = UserAuth();
     const navigate = useNavigate()
-
-    const { Email } = userDetails
 
     function handleUserProfile() {
         navigate(`/Users/${user.uid}`);
@@ -46,7 +44,7 @@ export default function NavBarTRP() {
                     <Stack direction='horizontal' gap={3}>
                         <MdPerson onClick={handleUserProfile} size={20} color='purple' />
                         <Navbar.Text>
-                            Signed in as: {Email}
+                            Signed in as: {user.email}
                         </Navbar.Text>
                         </Stack>
                     </Nav>

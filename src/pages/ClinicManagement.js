@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react'
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import { Accordion, Form, Button } from 'react-bootstrap';
+import { Accordion, Form, Button } from 'react-bootstrap'
+import BreadCrumbCustom from '../components/BreadCrumbCustom';
 
 import Footer from '../components/Footer'
 import ClinicCard from '../components/ClinicCard'
@@ -11,7 +12,7 @@ import NavBarTRP from '../components/NavBarTRP';
 //import NewClinicForm from '../components/NewClinicForm';
 import ToolBar from '../components/ClinicToolBar';
 
-import { collection, addDoc, query, onSnapshot, where, doc, getDoc } from "firebase/firestore";
+import { collection, addDoc, query, onSnapshot, where, doc, getDoc, getDocs } from "firebase/firestore";
 import { firestore } from '../Firebase'
 
 export default function ClinicManagement() {
@@ -22,7 +23,6 @@ export default function ClinicManagement() {
   let mo = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d);
   let da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d);
   const today = `${ye}-${mo}-${da}`;
-  console.log(today)
 
   //define state
   //-----------------------------------------------------------------------------------------
@@ -45,16 +45,68 @@ export default function ClinicManagement() {
     full: true,
     space: true
   })
-  //----------------------------------------------------------------------------------------
 
-  //firebase firestore references
-  //-------------------------------------------------------------------------------------------
   //clinic collection
   const refClinics = collection(firestore, "Clinics")
+
+  useEffect(() => {
+    fetchClinicLocationData()
+    fetchCenterData()
+  }, [ClinicFormData.location])
+
+  //onSnapshot listeners in this useEffect
+  useEffect(() =>
+    onSnapshot(query(collection(firestore, 'Clinics'), where("clinicStatus", "==", `${filterRadio}`)), (querySnapshot) => {
+      let clinicArray = []
+      querySnapshot.forEach((doc) => {
+        const id = { id: doc.id }
+        const data = doc.data()
+        const combine = Object.assign({}, id, data)
+        clinicArray.push(combine)
+      })
+      setAllClinics(clinicArray)
+    })
+    , [filterRadio, filterCheck])
+
 
   //----------------------------------------------------------------------------------------
   // Functions
   //----------------------------------------------------------------------------------------
+  //fetch clinic list using onSnapShot listener
+
+
+  //function to get a list of locations 
+  async function fetchClinicLocationData() {
+    const q = collection(firestore, 'Location');
+    const querySnapshot = await getDocs(q)
+    let clinicLocations = []
+    querySnapshot.forEach((doc) => {
+      const id = { id: doc.id }
+      const data = doc.data()
+      const combine = Object.assign({}, id, data)
+      clinicLocations.push(combine)
+    })
+    setClinicLocations(clinicLocations)
+  }
+
+  //function get list of centers for the selected city location
+  async function fetchCenterData() {
+    const docRef = doc(firestore, "Location", `${ClinicFormData.location}`);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      var centerArray = []
+      //push stored centers for a selected location into array
+      Object.keys(docSnap.data()).forEach(function (key, index) {
+        centerArray.push(key)
+      });
+      setClinicCenters(centerArray)
+    } else {
+      // doc.data() will be undefined in this case
+      console.log("No such document!");
+    }
+  }
+
+
   //function that submits form data to firestore collection
   async function handleSubmit(event) {
     event.preventDefault()
@@ -111,64 +163,6 @@ export default function ClinicManagement() {
       }
     })
   }
-
-  //fetch clinic list using onSnapShot listener
-  function fetchClinics() {
-    const q = query(collection(firestore, 'Clinics'), where("clinicStatus", "==", `${filterRadio}`));
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      let clinicArray = []
-      querySnapshot.forEach((doc) => {
-        const id = { id: doc.id }
-        const data = doc.data()
-        const combine = Object.assign({}, id, data)
-        clinicArray.push(combine)
-      })
-      setAllClinics(clinicArray)
-    })
-    return () => unsubscribe();
-    //
-  }
-
-  //function to get a list of locations 
-  function fetchClinicLocationData() {
-    const q = query(collection(firestore, 'Location'));
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      let clinicLocations = []
-      querySnapshot.forEach((doc) => {
-        const id = { id: doc.id }
-        const data = doc.data()
-        const combine = Object.assign({}, id, data)
-        clinicLocations.push(combine)
-      })
-      setClinicLocations(clinicLocations)
-    })
-    return () => unsubscribe();
-    //
-  }
-
-  //function get list of centers for the selected city location
-  async function fetchCenterData() {
-    const docRef = doc(firestore, "Location", `${ClinicFormData.location}`);
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      var centerArray = []
-      //push stored centers for a selected location into array
-      Object.keys(docSnap.data()).forEach(function (key, index) {
-        centerArray.push(key)
-      });
-      setClinicCenters(centerArray)
-    } else {
-      // doc.data() will be undefined in this case
-      console.log("No such document!");
-    }
-  }
-
-  //use effect runs once after every render or when state is updated
-  useEffect(() => {
-    fetchClinics()
-    fetchClinicLocationData()
-    fetchCenterData()
-  }, [filterRadio, filterCheck, ClinicFormData.location])
 
   //----------------------------------------------------------------------------------------
   // Data Rendering
@@ -252,10 +246,11 @@ export default function ClinicManagement() {
                         required
                         as="select"
                         name="center"
+                        placeholder='Choose Location'
                         onChange={handleChange}
                         value={ClinicFormData.center}
                       >
-                        <option value="">Choose Location</option>
+                        <option value="">Choose Center</option>
                         {centers}
                       </Form.Control>
                     </Form.Group>
@@ -267,6 +262,7 @@ export default function ClinicManagement() {
                       <Form.Control
                         required
                         name="date"
+                        placeholder="Choose a Date"
                         type="date"
                         min={today}
                         onChange={handleChange}
@@ -285,7 +281,7 @@ export default function ClinicManagement() {
                     </Form.Group>
 
                     <Form.Group as={Col} controlId="formGridZip">
-                      <Form.Label>Capacity (30 min per appointment) </Form.Label>
+                      <Form.Label>Capacity (Max 8) </Form.Label>
                       <Form.Control
                         required
                         //added to prevent error caused by adding capacity before time

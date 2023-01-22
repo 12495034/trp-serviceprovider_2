@@ -11,11 +11,7 @@ export default function ProtectedRoute() {
     const { user } = UserAuth();
     const location = useLocation();
 
-    //console.log(user)
-    //console.log(userDetails)
-
     async function getUserInfo(id) {
-        //console.log(id)
         if (id) {
             const docRef = doc(firestore, "Users", `${id}`);
             const docSnap = await getDoc(docRef);
@@ -28,7 +24,6 @@ export default function ProtectedRoute() {
 
     //TODO: Role is retrieved here but the page is rendered before the data to check it made available
     //error is parked at present until a solution is found. 
-    //don't understand
     useEffect(() => {
         getUserInfo(user.uid)
     }, [user])

@@ -10,18 +10,18 @@ import Footer from '../components/Footer'
 import AppointmentHistoryCard from '../components/AppointmentHistoryCard'
 import { UserAuth } from '../context/AuthContext'
 
-import { getDoc, doc, collection, query, onSnapshot } from "firebase/firestore";
+import { getDoc, getDocs, doc, collection, deleteDoc } from "firebase/firestore";
 import { firestore } from '../Firebase'
 
 //TODO: Move signout from this page to the navbar as you should be able to signout from whatever screen you are on
 export default function UserProfileData() {
 
   const { user, logOut } = UserAuth();
+
   //Define State
   const [userData, setUserData] = useState({})
   const [userAppointmentHistory, setUserAppointmentHistory] = useState([])
 
-  console.log(userAppointmentHistory)
   //retrieve userid from URL parameter
   const { userid } = useParams()
   const navigate = useNavigate()
@@ -29,11 +29,8 @@ export default function UserProfileData() {
   useEffect(() => {
     fetchUser(userid)
     fetchUserAppointmentHistory()
-  }, [])
+  }, [user])
 
-  //firebase references
-  //TODO: profile is shown to be correct on the initial navigation. But if the page is refreshed the context is not updated 
-  //if the source code is altered and the page re-created then it works. Is this a demo built issue? No issue present after npm run build
 
   function handleEditUser() {
     navigate(`/Users/${userid}/edit`);
@@ -55,7 +52,6 @@ export default function UserProfileData() {
     const docRef = doc(firestore, "Users", firestoreUserId)
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
-      console.log("Document data:", docSnap.data());
       setUserData(docSnap.data())
     } else {
       // doc.data() will be undefined in this case
@@ -63,21 +59,25 @@ export default function UserProfileData() {
     }
   }
 
-  function fetchUserAppointmentHistory() {
+  async function fetchUserAppointmentHistory() {
     const docRef = collection(firestore, `Users/${userid}/Appointments`);
-    const q = query(docRef);
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      let appointmentHistoryArray = []
-      querySnapshot.forEach((doc) => {
-        const id = { id: doc.id }
-        const data = doc.data()
-        const combine = Object.assign({}, id, data)
-        appointmentHistoryArray.push(combine)
-      })
-      setUserAppointmentHistory(appointmentHistoryArray)
+    const querySnapshot = await getDocs(docRef);
+    let appointmentHistoryArray = []
+    querySnapshot.forEach((doc) => {
+      const id = { id: doc.id }
+      const data = doc.data()
+      const combine = Object.assign({}, id, data)
+      appointmentHistoryArray.push(combine)
     })
-    return () => unsubscribe();
-    //
+    setUserAppointmentHistory(appointmentHistoryArray)
+  }
+
+  async function handleDeleteUser() {
+    //delete Users Appointments Sub-collection is not recommended from the client side. Use a cloud function
+    //delete Users document
+    //await deleteDoc(doc(firestore, `Users`, `${userid}`));
+    //cloud function required to delete user from authentication table
+    
   }
 
   //-------------------------------------------------------------------------------------
@@ -85,11 +85,11 @@ export default function UserProfileData() {
   //-------------------------------------------------------------------------------------
 
   //create JSX elements based on stored state data
-  const appointmentHistory = userAppointmentHistory.map((item) => {
+  const appointmentHistory = userAppointmentHistory.map((item, index) => {
     //for data security the name of the person is not shown but the id of the person is perhaps
     return (
       <AppointmentHistoryCard
-        key={item.slot}
+        key={index}
         userid={userid}
         clinicid={item.id}
         slot={item.slot}
@@ -101,7 +101,7 @@ export default function UserProfileData() {
         wasSeen={item.wasSeen}
         called={item.called}
         clinicStatus={item.clinicStatus}
-        appointmentStatus = {item.status}
+        appointmentStatus={item.status}
       />
     )
   })
@@ -139,7 +139,7 @@ export default function UserProfileData() {
               </ListGroup>
               <Card.Body className='user-card-buttons'>
                 <Button variant='warning' className='user-card-button' onClick={handleEditUser}>Edit</Button>
-                <Button variant='danger' className='user-card-button'>Delete</Button>
+                <Button variant='danger' className='user-card-button' onClick={handleDeleteUser}>Delete</Button>
                 {userid === user.uid ? <Button variant='primary' className='user-card-button' onClick={handleSignOut}>Logout</Button> : null}
               </Card.Body>
             </Card>

@@ -8,6 +8,8 @@ import Footer from '../components/Footer'
 import { getDoc, doc, updateDoc } from "firebase/firestore";
 import { firestore } from '../Firebase'
 
+import { firestoreUpdate } from '../ApiFunctions/firestoreUpdate'
+
 export default function UserProfileEdit() {
 
     //Define State
@@ -35,15 +37,8 @@ export default function UserProfileEdit() {
     //Edit user details
     function updateUserDetails(userid, object) {
         //function to update user checkedIn status from false to true
-        const docRef = doc(firestore, `Users/${userid}`);
         const data = object
-        updateDoc(docRef, data)
-            .then(docRef => {
-                console.log("Value of an Existing Document Field has been updated");
-            })
-            .catch(error => {
-                console.log(error);
-            })
+        firestoreUpdate(`Users`, `${userid}`, data)
         //navigate back to user detail screen following update of information
         navigate(`/Users/${userid}`);
     }

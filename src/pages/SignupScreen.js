@@ -5,13 +5,14 @@ import { Container, Row, Col, Stack } from 'react-bootstrap'
 import { useNavigate, Link } from 'react-router-dom'
 import { UserAuth } from '../context/AuthContext'
 
-import {  setDoc, doc } from "firebase/firestore";
+import { setDoc, doc } from "firebase/firestore";
 import { firestore } from '../Firebase'
+import { updateProfile, getAuth } from 'firebase/auth'
 
 export default function SignupScreen() {
 
     const navigate = useNavigate()
-    const { createUser} = UserAuth()
+    const { createUser } = UserAuth()
     //console.log(user)
 
     const [validated, setValidated] = useState(false);
@@ -42,11 +43,26 @@ export default function SignupScreen() {
     function handlePasswordConfirmation() {
         var content;
         if (formData.Password === formData.ConfirmPassword) {
-            content = <Form.Text className = "text-success">Passwords Match!</Form.Text>
+            content = <Form.Text className="text-success">Passwords Match!</Form.Text>
         } else if (formData.Password !== formData.ConfirmPassword) {
-            content = <Form.Text className = "text-danger">Passwords do not Match!</Form.Text>
+            content = <Form.Text className="text-danger">Passwords do not Match!</Form.Text>
         }
         return content
+    }
+
+    function updateUserAuthProfile() {
+        const auth = getAuth();
+        updateProfile(auth.currentUser, {
+            displayName: `${formData.FirstName} ${formData.LastName}`,
+            phoneNumber: `${formData.PhoneNumber}`
+            //photoURL: "https://example.com/jane-q-user/profile.jpg"
+        }).then(() => {
+            // Profile updated!
+            console.log("Auth Profile Updated")
+        }).catch((error) => {
+            // An error occurred
+            // ...
+        });
     }
 
     async function handleFormSubmit(e) {
@@ -82,6 +98,7 @@ export default function SignupScreen() {
                             Role: formData.role,
                             status: "Active"
                         })
+                        updateUserAuthProfile(newUser)
                     })
                 navigate('/home')
             } catch (e) {

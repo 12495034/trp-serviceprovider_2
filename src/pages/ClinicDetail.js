@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Container, Row, Col, Button, Stack } from 'react-bootstrap'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+import Tooltip from 'react-bootstrap/Tooltip'
 
 import ClinicInformationCard from '../components/ClinicInformationCard'
 import NavBarTRP from '../components/NavBarTRP'
@@ -8,6 +10,8 @@ import ModalConfirmation from '../components/ModalConfirmation'
 import AppointmentCard from '../components/AppointmentCard'
 import { UserAuth } from '../context/AuthContext';
 import Footer from '../components/Footer'
+
+import BreadCrumbCustom from '../components/BreadCrumbCustom'
 
 import { firestore } from '../Firebase'
 import { doc, collection, updateDoc, query, onSnapshot, getDocs, where } from 'firebase/firestore'
@@ -30,7 +34,6 @@ export default function ClinicDetail() {
     const [appointments, setAppointments] = useState([]);
     const [error, setError] = useState("");
     const [cancelModalShow, setCancelModalShow] = useState(false);
-    const [currentUser, setCurrentUser] = useState({});
 
     const handleCloseCancel = () => setCancelModalShow(false);
     const handleShowCancel = () => setCancelModalShow(true);
@@ -51,37 +54,11 @@ export default function ClinicDetail() {
     // useEffect
     //-------------------------------------------------------------------------------------
     //use effect runs once after every render or when state is updated
-    useEffect(() => {
-        fetchClinicInfo()
-    }, [userDetails])
+    //different user effects to handle attaching an detaching of onsnapshot listeners
 
-    useEffect(() => {
-        fetchClinicAppointmentInfo()
-    }, [userDetails])
-
-    //-------------------------------------------------------------------------------------
-    // Functions
-    //-------------------------------------------------------------------------------------
-
-    //function to fetch high level clinic information
-    function fetchClinicInfo() {
-        const docRef = doc(firestore, "Clinics", `${clinicId}`);
-        const unsubscribe = onSnapshot(docRef, (doc) => {
-            if (doc.exists()) {
-                //console.log("Document data:", docSnap.data());
-                setClinic(doc.data())
-            } else {
-                // doc.data() will be undefined in this case
-                setError("Clinic with the chosen ID does not exist")
-            }
-        })
-        return () => unsubscribe();
-    }
-
-    function fetchClinicAppointmentInfo() {
-        const docRef = collection(firestore, `Clinics/${clinicId}/Appointments`);
-        const q = query(docRef);
-        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+    //provide real time data update on the appointment cards
+    useEffect(() =>
+        onSnapshot(query(collection(firestore, `Clinics/${clinicId}/Appointments`)), (querySnapshot) => {
             let appointmentArray = []
             querySnapshot.forEach((doc) => {
                 const id = { id: doc.id }
@@ -91,9 +68,22 @@ export default function ClinicDetail() {
             })
             setAppointments(appointmentArray)
         })
-        return () => unsubscribe();
-        //
-    }
+        , [])
+
+    //provide real time data update on the clinic information
+    useEffect(() =>
+        onSnapshot(doc(firestore, "Clinics", `${clinicId}`), (doc) => {
+            if (doc.exists()) {
+                setClinic(doc.data())
+            } else {
+                setError("Clinic with the chosen ID does not exist")
+            }
+        })
+        , [])
+
+    //-------------------------------------------------------------------------------------
+    // Functions
+    //-------------------------------------------------------------------------------------
 
     //function to update specified clinic fields
     function handleSlotsUpdate(availableSlots, newSlotNumber, time) {
@@ -101,15 +91,7 @@ export default function ClinicDetail() {
         const newSlot = { [newSlotNumber]: time }
         const newSlotsObject = Object.assign({}, availableSlots, newSlot)
         const docRef = doc(firestore, "Clinics", `${clinicId}`);
-        updateDoc(docRef, {
-            slots: newSlotsObject
-        })
-            .then(docRef => {
-                console.log("Value of an Existing Document Field has been updated");
-            })
-            .catch(error => {
-                console.log(error);
-            })
+        firestoreUpdate(`Clinics`, `${clinicId}`, { slots: newSlotsObject })
     }
 
     //function to update specified clinic fields
@@ -257,18 +239,20 @@ export default function ClinicDetail() {
     return (
         <div className='page-body'>
             <NavBarTRP />
+            <BreadCrumbCustom />
             <Container className='page-content'>
                 {/* //conditional rendering so that if the clinic is not active then it is assumed to be cancelled or complete
                 //actions can therefore not be performed on the clinic data */}
-                {clinic.clinicStatus !== "Active" ? null : <Stack direction='horizontal' gap={3}>
-                    <h1 className="Title">Clinic Information</h1>
+                {clinic.clinicStatus !== "Active" ? null : <div><Stack direction='horizontal' gap={3}>
+                    {/* <h1 className="Title">Clinic Information</h1> */}
                     {/* <h4 className='ms-auto'>Queue Size</h4><Badge text='light' bg="info">4</Badge> */}
-                    <Button className='ms-auto' onClick={handleShowCancel}>Cancel Clinic</Button>
-                    <Button variant='warning' onClick={handleShowEnd}>Close Clinic</Button>
-                </Stack>}
+                    <Button variant='danger' onClick={handleShowCancel}>Cancel Clinic</Button>
+                    <Button className='ms-auto' variant='warning' onClick={handleShowEnd}>Close Clinic</Button>
+                </Stack><br/></div>}
 
                 <Row className="justify-content-md-center">
                     <Col>
+                        {clinic.clinicStatus !== "Active" ? <h5 bg='danger'>This clinic is no longer active, changes cannot be made</h5> : null}
                         <ClinicInformationCard clinicid={clinicId} date={clinic.date} time={clinic.startTime} location={clinic.location} center={clinic.center} appointments={appointments.length} capacity={clinic.capacity} active={clinic.clinicStatus} />
                     </Col>
                 </Row>
@@ -281,8 +265,20 @@ export default function ClinicDetail() {
                 </Row>
                 <Row>
                     <div className='d-grid'>
-                        {/* {availslots === '{}' ? <Button onClick={handleAddSlot}>Add Additional Slot</Button> : <Button disabled >All slots must be allocated before adding more</Button>} */}
-                        {clinic.clinicStatus !== "Active" ? <Button disabled onClick={handleAddSlot}>Add Additional Slot</Button> : <Button onClick={handleAddSlot}>Add Additional Slot</Button>}
+                        {clinic.clinicStatus !== "Active" ?
+                            <Button disabled onClick={handleAddSlot}>Add Additional Slot</Button>
+                            :
+                            <OverlayTrigger
+                                key='bottom'
+                                placement='bottom'
+                                overlay={
+                                    <Tooltip>
+                                        test
+                                    </Tooltip>
+                                }
+                            >
+                                <Button onClick={handleAddSlot}>Add Additional Slot</Button>
+                            </OverlayTrigger>}
                     </div>
                 </Row>
             </Container>

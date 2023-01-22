@@ -20,8 +20,6 @@ export default function AppointmentCard(props) {
   //---------------------------------------------------------------
   // Functions
   //--------------------------------------------------------------
-
-  {/* //TODO:possible to click on a no booking item. If there is no booking clicking on such an item should spark a different action to a proper booking */ }
   function handleClick() {
     if (props.userid) {
       navigate(`/Users/${props.userid}`);

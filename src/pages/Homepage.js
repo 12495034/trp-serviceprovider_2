@@ -10,7 +10,9 @@ import {FaDoorOpen, FaDoorClosed} from 'react-icons/fa'
 
 //TODO: Add footer
 export default function Homepage() {
-  const {userDetails } = UserAuth()
+  const {user, userDetails } = UserAuth()
+
+  console.log(user.displayName)
 
   return (
     <div className='page-body'>
@@ -18,7 +20,7 @@ export default function Homepage() {
       <Container className='page-content'>
         <Row className='page-content-text'>
           <div className="Home-message">
-            <h1>Welcome {userDetails.FirstName}</h1>
+            <h1>Welcome {user.displayName}</h1>
             <h5>to the Rapid HIV & syphillis clinic management portal  </h5>
             <h5>you have {userDetails.Role} privileges  </h5>
             {/* <p>Statistics shown below shall be pulled from an online database and dynamically rendered</p> */}
