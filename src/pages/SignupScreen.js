@@ -7,7 +7,7 @@ import { UserAuth } from '../context/AuthContext'
 
 import { setDoc, doc } from "firebase/firestore";
 import { firestore } from '../Firebase'
-import { updateProfile, getAuth } from 'firebase/auth'
+import { updateProfile, getAuth, sendEmailVerification } from 'firebase/auth'
 
 export default function SignupScreen() {
 
@@ -65,6 +65,14 @@ export default function SignupScreen() {
         });
     }
 
+    function resetPassword() {
+        const auth = getAuth();
+        sendEmailVerification(auth.currentUser)
+            .then(() => {
+                console.log("Reset password email sent")
+            });
+    }
+
     async function handleFormSubmit(e) {
         const form = e.currentTarget;
         console.log(form.checkValidity())
@@ -98,7 +106,8 @@ export default function SignupScreen() {
                             Role: formData.role,
                             status: "Active"
                         })
-                        updateUserAuthProfile(newUser)
+                        updateUserAuthProfile()
+                        resetPassword()
                     })
                 navigate('/home')
             } catch (e) {
@@ -112,10 +121,9 @@ export default function SignupScreen() {
             <Container className='login-content'>
                 <Row md={1} sm={1} xs={1}>
                     <Col>
-                        <div>
-                            <h1>Create User Profile</h1>
-                            <hr />
-                        </div>
+                        <Row >
+                            <h1 className='text-center login-title '>Create a new Account</h1>
+                        </Row>
                         <div>
                             <Form noValidate validated={validated} onSubmit={handleFormSubmit}>
                                 <Form.Group className="mb-3" >
@@ -246,7 +254,7 @@ export default function SignupScreen() {
                         </div>
                     </Col>
                 </Row>
-                <h5 className='mt-3'>Already Signed up? <Link to='/'>Login</Link></h5>
+                <h6 className='mt-3'>Already Signed up? <Link to='/'>Login</Link></h6>
             </Container>
         </div>
 

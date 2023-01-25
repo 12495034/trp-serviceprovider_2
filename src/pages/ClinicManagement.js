@@ -14,6 +14,7 @@ import ToolBar from '../components/ClinicToolBar';
 
 import { collection, addDoc, query, onSnapshot, where, doc, getDoc, getDocs } from "firebase/firestore";
 import { firestore } from '../Firebase'
+import { UserAuth } from '../context/AuthContext'
 
 export default function ClinicManagement() {
 
@@ -45,6 +46,8 @@ export default function ClinicManagement() {
     full: true,
     space: true
   })
+
+  console.log(ClinicFormData)
 
   //clinic collection
   const refClinics = collection(firestore, "Clinics")
@@ -150,8 +153,6 @@ export default function ClinicManagement() {
     const dt = new Date(1970, 0, 1, hours, mins);
     const rc = {};
     for (var i = 1; i <= capacity; i++) {
-      // rc.push(dt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }));
-      // dt.setMinutes(dt.getMinutes() + inc);
       rc[i] = dt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
       dt.setMinutes(dt.getMinutes() + inc);
     }

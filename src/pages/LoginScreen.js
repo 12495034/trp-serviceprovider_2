@@ -68,7 +68,7 @@ export default function LoginScreen() {
                   onChange={handleChange}
                 />
               </Form.Group>
-              <Form.Text className="text-muted">
+              <Form.Text className="text-danger">
                 {error ? error : null}
               </Form.Text>
               <div className='d-grid mt-2'>
@@ -79,9 +79,13 @@ export default function LoginScreen() {
             </Form>
           </Col>
         </Row>
-        <Row md={1} className='text-center login-options mt-4'>
-          <h6>No login details? <Link to='/signup'>Signup</Link></h6>
-          <h6>Forgot Password? <Link to='/reset'>Reset</Link></h6>
+        <Row md={2} className='text-center login-options mt-4'>
+          <Col>
+            <h6>No login details? <Link to='/signup'>Signup</Link></h6>
+          </Col>
+          <Col>
+            <h6>Forgot Password? <Link to='/reset'>Reset</Link></h6>
+          </Col>
         </Row>
       </Container>
     </div>

@@ -3,7 +3,8 @@ import {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
     signOut,
-    onAuthStateChanged
+    onAuthStateChanged,
+    getAuth
 } from 'firebase/auth'
 import { auth } from "../Firebase";
 import { getDoc, doc } from "firebase/firestore";
@@ -14,6 +15,7 @@ const UserContext = createContext()
 export const AuthContextProvider = ({ children }) => {
     //define state and functions that we want available through the useContext hook
     const [user, setUser] = useState({})
+    const [userRole, setUserRole] = useState("")
     const [userDetails, setUserDetails] = useState({});
 
     const createUser = (email, password) => {
@@ -32,7 +34,6 @@ export const AuthContextProvider = ({ children }) => {
     }
 
     async function getUserInfo(id) {
-        //console.log(id)
         if (id) {
             const docRef = doc(firestore, "Users", `${id}`);
             const docSnap = await getDoc(docRef);
@@ -45,11 +46,26 @@ export const AuthContextProvider = ({ children }) => {
     //runs once to determine the user state following render
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-            //console.log(currentUser)
             setUser(currentUser)
-            if(currentUser){
+            //attempt to set details earlier for login
+            if (currentUser) {
                 getUserInfo(currentUser.uid)
-            } 
+                //retrieves the custom claims
+                getAuth().currentUser.getIdTokenResult()
+                    .then((idTokenResult) => {
+                        // Confirm the user is an Admin.
+                        if (!idTokenResult.claims.isAdmin) {
+                            setUserRole("Admin")
+                            console.log(idTokenResult)
+                        } else {
+                        }
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+            }
+
+
         })
         return () => {
             unsubscribe();
@@ -57,7 +73,7 @@ export const AuthContextProvider = ({ children }) => {
     }, [user])
 
     return (
-        <UserContext.Provider value={{ createUser, signIn, user, logOut, userDetails }}>
+        <UserContext.Provider value={{ createUser, signIn, user, logOut, userDetails, userRole }}>
             {children}
         </UserContext.Provider>
     )

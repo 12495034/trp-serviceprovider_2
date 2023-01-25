@@ -56,7 +56,7 @@
 
 .Home-message{
     margin-bottom:10px;
-    font-weight: 200;
+    /* font-weight: 200; */
     
 }
 
@@ -189,12 +189,12 @@
     }
 
     .Home-message>h5 {
-        font-size: 1.5rem; 
-        font-weight: 100;
+        /* font-size: 1.5rem; 
+        font-weight: 100; */
     }
 
     .Home-message>h1 {
-        font-size: 1.5rem; 
+        /* font-size: 1.5rem;  */
     }
 
     .Statistic-card-container{
@@ -388,6 +388,7 @@
 .office{
     font-size: small;
 }
+
 
 
 
