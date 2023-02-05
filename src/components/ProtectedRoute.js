@@ -12,9 +12,9 @@ export default function ProtectedRoute() {
     const { user, userRole } = UserAuth();
     const location = useLocation();
 
-    console.log(user)
+    //console.log(user)
     const role = userRole == "Admin"
-    console.log(role)
+    //console.log(role)
 
     async function getUserInfo(id) {
         if (id) {

@@ -54,7 +54,7 @@ export default function ClinicDetail() {
     // useEffect
     //-------------------------------------------------------------------------------------
     //use effect runs once after every render or when state is updated
-    //different user effects to handle attaching an detaching of onsnapshot listeners
+    //different use effects to handle attaching an detaching of onsnapshot listeners
 
     //provide real time data update on the appointment cards
     useEffect(() =>

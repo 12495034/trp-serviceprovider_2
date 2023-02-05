@@ -47,7 +47,8 @@ export default function ClinicManagement() {
     space: true
   })
 
-  console.log(ClinicFormData)
+  console.log(clinicLocations)
+  console.log(clinicCenters)
 
   //clinic collection
   const refClinics = collection(firestore, "Clinics")
@@ -82,31 +83,24 @@ export default function ClinicManagement() {
   async function fetchClinicLocationData() {
     const q = collection(firestore, 'Location');
     const querySnapshot = await getDocs(q)
-    let clinicLocations = []
+    let clinicLocationsArray = []
     querySnapshot.forEach((doc) => {
-      const id = { id: doc.id }
-      const data = doc.data()
-      const combine = Object.assign({}, id, data)
-      clinicLocations.push(combine)
+      const id = { id: doc.id}
+      clinicLocationsArray.push(id)
     })
-    setClinicLocations(clinicLocations)
+    setClinicLocations(clinicLocationsArray)
   }
 
   //function get list of centers for the selected city location
   async function fetchCenterData() {
-    const docRef = doc(firestore, "Location", `${ClinicFormData.location}`);
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      var centerArray = []
-      //push stored centers for a selected location into array
-      Object.keys(docSnap.data()).forEach(function (key, index) {
-        centerArray.push(key)
-      });
-      setClinicCenters(centerArray)
-    } else {
-      // doc.data() will be undefined in this case
-      console.log("No such document!");
-    }
+    const q = collection(firestore, `Location/${ClinicFormData.location}/Centers`);
+    const querySnapshot = await getDocs(q)
+    let clinicCentersArray = []
+    querySnapshot.forEach((doc) => {
+      console.log(doc.data())
+      clinicCentersArray.push(doc.data())
+    })
+    setClinicCenters(clinicCentersArray)
   }
 
 
@@ -208,7 +202,7 @@ export default function ClinicManagement() {
   //render list of centers available in the selected city
   const centers = clinicCenters.map((item) => {
     return (
-      <option key={item} value={item}>{item}</option>
+      <option key={item.id} value={item.name}>{item.name}</option>
     )
   })
 

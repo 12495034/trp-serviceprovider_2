@@ -56,7 +56,7 @@ export const AuthContextProvider = ({ children }) => {
                         // Confirm the user is an Admin.
                         if (!idTokenResult.claims.isAdmin) {
                             setUserRole("Admin")
-                            console.log(idTokenResult)
+                            //console.log(idTokenResult)
                         } else {
                         }
                     })
