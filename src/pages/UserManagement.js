@@ -1,14 +1,11 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-
 import { Container, Table, Form, Button, Row } from 'react-bootstrap'
 import NavBarTRP from '../components/NavBarTRP'
 import Footer from '../components/Footer'
-
 import { collection, query, getDocs, where } from "firebase/firestore";
 import { firestore } from '../Firebase'
 
-//TODO: Add footer
 export default function UserManagement() {
 
   //------------------------------------------------------------------------------------------------
@@ -19,16 +16,11 @@ export default function UserManagement() {
     FirstName: "",
     LastName: ""
   })
-
   const navigate = useNavigate()
 
   //------------------------------------------------------------------------------------------------
   //        FUNCTIONS
   //------------------------------------------------------------------------------------------------
-
-  function handleClick(userid) {
-    navigate(`/Users/${userid}`);
-  }
 
   async function searchUsers(e) {
     //prevent screen re-render
@@ -44,9 +36,9 @@ export default function UserManagement() {
     } else if (searchBar.FirstName !== "" && searchBar.LastName !== "") {
       q = query(collection(firestore, 'Users'), where("FirstName", "==", `${searchBar.FirstName}`), where("LastName", "==", `${searchBar.LastName}`));
     } else {
-
     }
 
+    //perform firestore query based on logic above
     const querySnapshot = await getDocs(q)
     let usersArray = []
     querySnapshot.forEach((doc) => {
@@ -63,8 +55,9 @@ export default function UserManagement() {
     setSearchBar(prev => {
       return {
         ...prev, [name]: value
-      }})}
-
+      }
+    })
+  }
 
   //-------------------------------------------------------------------------------------
   // Data rendering
@@ -74,7 +67,7 @@ export default function UserManagement() {
   const userList = allUsers.map((item) => {
     //for data security the name of the person is not shown but the id of the person is perhaps
     return (
-      <tr key={item.id} onClick={() => handleClick(item.id)}>
+      <tr key={item.id} onClick={() => navigate(`/Users/${item.id}`)}>
         <td>{item.ProNouns}</td>
         <td>{item.FirstName}</td>
         <td>{item.LastName}</td>

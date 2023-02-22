@@ -1,55 +1,19 @@
 import React from 'react'
 import { Container, Row, Col } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
-
 import CallAppointmentIcon from '../Icons/CallAppointmentIcon';
 import CheckInIcon from '../Icons/CheckInIcon';
 import TestCompleteIcon from '../Icons/TestCompleteIcon';
 import DeleteAppointmentIcon from '../Icons/DeleteAppointmentIcon';
-import { UserAuth } from '../context/AuthContext';
-
-import { handleUpdate, handleCall } from '../ApiFunctions/firestoreUpdate';
-import { doc, deleteDoc } from 'firebase/firestore';
-import { firestore } from '../Firebase';
-
+import { deleteAppointment } from '../FirestoreFunctions/firestoreDelete';
+import { handleUpdate, handleCall } from '../FirestoreFunctions/firestoreUpdate';
 
 export default function AppointmentCard(props) {
-
-  const navigate = useNavigate()
-
-  //---------------------------------------------------------------
-  // Functions
-  //--------------------------------------------------------------
-  function handleClick() {
-    if (props.userid) {
-      navigate(`/Users/${props.userid}`);
-    }
-  }
-
-  //appointment document must not only be deleted from the clinic appointments sub-collection
-  //but the time slot must be added back into the available slots map
-  //the appointment must also be deleted from the users appointments sub-collection
-  async function deleteAppointment(userid, clinicid, slot, time, status) {
-    const docRefAppointClinic = doc(firestore, `Clinics/${clinicid}/Appointments`, `${userid}`);
-    const docRefAppointHistory = doc(firestore, `Users/${userid}/Appointments`, `${clinicid}`);
-
-    if (status == "Active") {
-      //run delete function at both locations in firestore database
-      await deleteDoc(docRefAppointClinic);
-      await deleteDoc(docRefAppointHistory);
-
-      //modify slot map to make deleted appointment time available again
-      props.slotsUpdate(props.availableSlots, slot, time)
-    } else { 
-      console.log("Clinic is not active, therefore changes cannot be made")
-    }
-  }
-
   return (
     <Container fluid="md" className='appointment-card' >
       <Row>
         <Col md={1} >
-          <div onClick={handleClick} className='divider'>{props.slot}</div>
+          {/* if slot is booked, clicking on slot number will navigate to the users profile */}
+          <div onClick={() => props.userid ? props.handleUserDetail(props.userid) : null} className='divider'>{props.slot}</div>
         </Col>
         <Col md={1}>
           <div className='divider'>{props.time}</div>
@@ -69,7 +33,10 @@ export default function AppointmentCard(props) {
           >
             <TestCompleteIcon complete={props.wasSeen} checkedIn={props.checkedIn} />
           </div>
-          {props.checkedIn ? null : <div className='icon' onClick={() => { deleteAppointment(props.userid, props.clinicid, props.slot, props.time, props.clinicStatus) }}><DeleteAppointmentIcon userid={props.userid} checkedIn={props.checkedIn} /> </div>}
+          {props.checkedIn ? null : <div className='icon' onClick={() => {
+            deleteAppointment(props.userid, props.clinicid, props.slot, props.time, props.clinicStatus)
+            props.slotsUpdate(props.availableSlots, props.slot, props.time)
+          }}><DeleteAppointmentIcon userid={props.userid} checkedIn={props.checkedIn} /> </div>}
         </Col>
       </Row>
     </Container >

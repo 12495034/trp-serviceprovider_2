@@ -7,9 +7,7 @@ import { MdPerson } from "react-icons/md";
 import { UserAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
-//TODO: User icon style needs adjusted to make it look better. It is currently overlayed over menu item, should be its own line item
 export default function NavBarTRP() {
-
     const { user } = UserAuth();
     const navigate = useNavigate()
 

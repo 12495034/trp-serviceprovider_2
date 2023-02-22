@@ -1,36 +1,28 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Button, Container, Row, Col } from 'react-bootstrap'
-
 import { useNavigate, useParams } from 'react-router-dom'
 import Card from 'react-bootstrap/Card'
 import { ListGroup } from 'react-bootstrap'
-
 import NavBarTRP from '../components/NavBarTRP'
 import Footer from '../components/Footer'
 import AppointmentHistoryCard from '../components/AppointmentHistoryCard'
 import { UserAuth } from '../context/AuthContext'
+import useDoc from '../CustomHooks/UseDoc'
+import useCollection from '../CustomHooks/UseCollection'
 
-import { getDoc, getDocs, doc, collection, deleteDoc } from "firebase/firestore";
-import { firestore } from '../Firebase'
-
-//TODO: Move signout from this page to the navbar as you should be able to signout from whatever screen you are on
 export default function UserProfileData() {
-
   const { user, logOut } = UserAuth();
-
-  //Define State
-  const [userData, setUserData] = useState({})
-  const [userAppointmentHistory, setUserAppointmentHistory] = useState([])
-
   //retrieve userid from URL parameter
   const { userid } = useParams()
   const navigate = useNavigate()
 
-  useEffect(() => {
-    fetchUser(userid)
-    fetchUserAppointmentHistory()
-  }, [user])
+  //custom hook for standard firestore data retrieval
+  const { docData, isDocLoading, docError } = useDoc('Users', userid, null)
+  const { collectionData: appointmentHistoryData, isCollectionLoading: locationLoading, collectionError: appointmentHistoryError } = useCollection(`Users/${userid}/Appointments`, null)
 
+  function handleClinicDetail(clinicId) {
+    navigate(`/clinics/${clinicId}`);
+  }
 
   function handleEditUser() {
     navigate(`/Users/${userid}/edit`);
@@ -43,55 +35,23 @@ export default function UserProfileData() {
       navigate('/')
     } catch (e) {
       console.log(e.message)
-    }
-  }
-
-  async function fetchUser(firestoreUserId) {
-    //button has been setup to call the firestore database and get the user info if available
-    //This aspect of the code is functioning correctly, manually added document and the data imported
-    const docRef = doc(firestore, "Users", firestoreUserId)
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      setUserData(docSnap.data())
-    } else {
-      // doc.data() will be undefined in this case
-      console.log("No such document!");
-    }
-  }
-
-  async function fetchUserAppointmentHistory() {
-    const docRef = collection(firestore, `Users/${userid}/Appointments`);
-    const querySnapshot = await getDocs(docRef);
-    let appointmentHistoryArray = []
-    querySnapshot.forEach((doc) => {
-      const id = { id: doc.id }
-      const data = doc.data()
-      const combine = Object.assign({}, id, data)
-      appointmentHistoryArray.push(combine)
-    })
-    setUserAppointmentHistory(appointmentHistoryArray)
-  }
-
-  async function handleDeleteUser() {
-    //delete Users Appointments Sub-collection is not recommended from the client side. Use a cloud function
-    //delete Users document
-    //await deleteDoc(doc(firestore, `Users`, `${userid}`));
-    //cloud function required to delete user from authentication table
-    
-  }
+    }}
 
   //-------------------------------------------------------------------------------------
   // Data rendering
   //-------------------------------------------------------------------------------------
+  //sort appointment history by date prior to rendering
+  appointmentHistoryData.sort(
+    (p1, p2) => (p1.date < p2.date) ? -1 : (p1.date > p2.date) ? 1 : 0)
 
   //create JSX elements based on stored state data
-  const appointmentHistory = userAppointmentHistory.map((item, index) => {
-    //for data security the name of the person is not shown but the id of the person is perhaps
+  const appointmentHistory = appointmentHistoryData.map((item, index) => {
+    //for data security the name of the person is not shown but the id of person is perhaps
     return (
       <AppointmentHistoryCard
         key={index}
         userid={userid}
-        clinicid={item.id}
+        clinicId={item.id}
         slot={item.slot}
         date={item.date}
         time={item.time}
@@ -102,12 +62,8 @@ export default function UserProfileData() {
         called={item.called}
         clinicStatus={item.clinicStatus}
         appointmentStatus={item.status}
-      />
-    )
-  })
-
-  // const metadata = <><ListGroup.Item><strong>Created on:</strong> {user.metadata.creationTime}</ListGroup.Item>
-  //   <ListGroup.Item><strong>Last Signed In: </strong>{user.metadata.lastSignInTime}</ListGroup.Item></>
+        handleClinicDetail={handleClinicDetail}
+      />)})
 
   return (
     <div className='page-body'>
@@ -125,21 +81,21 @@ export default function UserProfileData() {
                 </Card.Text>
               </Card.Body>
               <ListGroup className="list-group-flush">
-                <ListGroup.Item><strong>Pro-Nouns:</strong> {userData.ProNouns} </ListGroup.Item>
-                <ListGroup.Item><strong>First Name:</strong> {userData.FirstName} </ListGroup.Item>
-                <ListGroup.Item><strong>Middle Name:</strong> {userData.MiddleName} </ListGroup.Item>
-                <ListGroup.Item><strong>Last Name:</strong> {userData.LastName} </ListGroup.Item>
-                <ListGroup.Item><strong>DOB:</strong> {userData.dob}</ListGroup.Item>
-                <ListGroup.Item><strong>Email:</strong> {userData.Email}</ListGroup.Item>
-                <ListGroup.Item><strong>Phone Number:</strong> {userData.PhoneNumber}</ListGroup.Item>
-                <ListGroup.Item><strong>Role:</strong> {userData.Role}</ListGroup.Item>
-                <ListGroup.Item><strong>Status:</strong> {userData.status}</ListGroup.Item>
-                <ListGroup.Item><strong>Agreed to T&Cs:</strong> {userData.isAgreedTC ? "Yes" : "No"}</ListGroup.Item>
+                <ListGroup.Item><strong>Pro-Nouns:</strong> {docData.ProNouns} </ListGroup.Item>
+                <ListGroup.Item><strong>First Name:</strong> {docData.FirstName} </ListGroup.Item>
+                <ListGroup.Item><strong>Middle Name:</strong> {docData.MiddleName} </ListGroup.Item>
+                <ListGroup.Item><strong>Last Name:</strong> {docData.LastName} </ListGroup.Item>
+                <ListGroup.Item><strong>DOB:</strong> {docData.dob}</ListGroup.Item>
+                <ListGroup.Item><strong>Email:</strong> {docData.Email}</ListGroup.Item>
+                <ListGroup.Item><strong>Phone Number:</strong> {docData.PhoneNumber}</ListGroup.Item>
+                <ListGroup.Item><strong>Role:</strong> {docData.Role}</ListGroup.Item>
+                <ListGroup.Item><strong>Status:</strong> {docData.status}</ListGroup.Item>
+                <ListGroup.Item><strong>Agreed to T&Cs:</strong> {docData.isAgreedTC ? "Yes" : "No"}</ListGroup.Item>
                 {/* {userid === user.uid ?metadata : null} */}
               </ListGroup>
               <Card.Body className='user-card-buttons'>
                 <Button variant='warning' className='user-card-button' onClick={handleEditUser}>Edit</Button>
-                <Button variant='danger' className='user-card-button' onClick={handleDeleteUser}>Delete</Button>
+                {/* <Button variant='danger' className='user-card-button' onClick={handleDeleteUser}>Delete</Button> */}
                 {userid === user.uid ? <Button variant='primary' className='user-card-button' onClick={handleSignOut}>Logout</Button> : null}
               </Card.Body>
             </Card>

@@ -10,14 +10,17 @@ import ModalConfirmation from '../components/ModalConfirmation'
 import AppointmentCard from '../components/AppointmentCard'
 import { UserAuth } from '../context/AuthContext';
 import Footer from '../components/Footer'
+import { useNavigate } from 'react-router-dom';
+import { currentDate } from '../Functions/GeneralFunctions'
 
 import BreadCrumbCustom from '../components/BreadCrumbCustom'
+import { appointInc } from '../Constants/Constants'
 
 import { firestore } from '../Firebase'
-import { doc, collection, updateDoc, query, onSnapshot, getDocs, where } from 'firebase/firestore'
+import { doc, collection, updateDoc, query, onSnapshot, getDocs, where, Timestamp } from 'firebase/firestore'
 
 //Firestore helper functions
-import { firestoreUpdate } from '../ApiFunctions/firestoreUpdate'
+import { firestoreUpdate } from '../FirestoreFunctions/firestoreUpdate'
 
 export default function ClinicDetail() {
 
@@ -25,6 +28,7 @@ export default function ClinicDetail() {
     const { clinicId } = useParams();
     //retrieve signed in Rainbow project user id
     const { userDetails } = UserAuth();
+    const navigate = useNavigate()
 
 
     //-------------------------------------------------------------------------------------
@@ -40,9 +44,6 @@ export default function ClinicDetail() {
     const [endModalshow, setEndModalShow] = useState(false);
     const handleCloseEnd = () => setEndModalShow(false);
     const handleShowEnd = () => setEndModalShow(true);
-
-    //console.log(attended)
-    //console.log(unattended)
 
     //initialise new array using appointments
     const combinedList = combinedSlotsAndAppointments()
@@ -84,6 +85,10 @@ export default function ClinicDetail() {
     //-------------------------------------------------------------------------------------
     // Functions
     //-------------------------------------------------------------------------------------
+
+    function handleUserDetail(userid) {
+        navigate(`/Users/${userid}`);
+    }
 
     //function to update specified clinic fields
     function handleSlotsUpdate(availableSlots, newSlotNumber, time) {
@@ -168,8 +173,7 @@ export default function ClinicDetail() {
 
 
     //TODO: Issues here in that I can't successfully add a new field to the slots object
-    function handleAddSlot() {
-        const inc = 30
+    function handleAddSlot(inc) {
         console.log("Adding a new slot")
         //get the number of slots currently in use from capacity
         //this is the most appointments the clinic can have
@@ -228,6 +232,7 @@ export default function ClinicDetail() {
                 slotsUpdate={handleSlotsUpdate}
                 availableSlots={clinic.slots}
                 clinicStatus={clinic.clinicStatus}
+                handleUserDetail={handleUserDetail}
             />
         )
     })
@@ -239,23 +244,33 @@ export default function ClinicDetail() {
     return (
         <div className='page-body'>
             <NavBarTRP />
-            <BreadCrumbCustom />
+            {/* <BreadCrumbCustom /> */}
             <Container className='page-content'>
+
                 {/* //conditional rendering so that if the clinic is not active then it is assumed to be cancelled or complete
                 //actions can therefore not be performed on the clinic data */}
-                {clinic.clinicStatus !== "Active" ? null : <div><Stack direction='horizontal' gap={3}>
-                    {/* <h1 className="Title">Clinic Information</h1> */}
-                    {/* <h4 className='ms-auto'>Queue Size</h4><Badge text='light' bg="info">4</Badge> */}
-                    <Button variant='danger' onClick={handleShowCancel}>Cancel Clinic</Button>
-                    <Button className='ms-auto' variant='warning' onClick={handleShowEnd}>Close Clinic</Button>
-                </Stack><br/></div>}
-
-                <Row className="justify-content-md-center">
+                {clinic.clinicStatus !== "Active" ?
+                    null
+                    :
+                    <div><Stack direction='horizontal' gap={3}>
+                        <Button variant='danger' onClick={handleShowCancel}>Cancel Clinic</Button>
+                        <Button className='ms-auto' variant='warning' onClick={handleShowEnd}>Close Clinic</Button>
+                    </Stack><br /></div>}
+                <Row>
+                    <Col>
+                        <p>Scheduled By: {clinic.createdBy} on ...date...</p>
+                    </Col>
+                    <Col>
+                        
+                    </Col>
+                </Row>
+                <Row>
                     <Col>
                         {clinic.clinicStatus !== "Active" ? <h5 bg='danger'>This clinic is no longer active, changes cannot be made</h5> : null}
                         <ClinicInformationCard clinicid={clinicId} date={clinic.date} time={clinic.startTime} location={clinic.location} center={clinic.center} appointments={appointments.length} capacity={clinic.capacity} active={clinic.clinicStatus} />
                     </Col>
                 </Row>
+
                 <hr />
                 <Row>
                     <Col>
@@ -266,7 +281,7 @@ export default function ClinicDetail() {
                 <Row>
                     <div className='d-grid'>
                         {clinic.clinicStatus !== "Active" ?
-                            <Button disabled onClick={handleAddSlot}>Add Additional Slot</Button>
+                            <Button disabled onClick={() => handleAddSlot(appointInc)}>Add Additional Slot</Button>
                             :
                             <OverlayTrigger
                                 key='bottom'
@@ -277,7 +292,7 @@ export default function ClinicDetail() {
                                     </Tooltip>
                                 }
                             >
-                                <Button onClick={handleAddSlot}>Add Additional Slot</Button>
+                                <Button onClick={() => handleAddSlot(appointInc)}>Add Additional Slot</Button>
                             </OverlayTrigger>}
                     </div>
                 </Row>

@@ -1,21 +1,10 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom';
-import {Col, Row, Container } from 'react-bootstrap';
+import { Col, Row, Container } from 'react-bootstrap';
 
 export default function ClinicCard(props) {
-
-  const navigate = useNavigate()
-
-  function handleClick() {
-    navigate(`${props.clinicId}`);
-  }
-
   return (
-    <Container className='clinic-card' onClick={handleClick}>
+    <Container className='clinic-card' onClick={() => props.handleClinicDetail(props.clinicId)}>
       <Row className="justify-content-md-center">
-        {/* <Col md={2}>
-          <div>{props.clinicId}</div>
-        </Col> */}
         <Col md={2}>
           <div>{props.date}</div>
         </Col>
@@ -34,9 +23,6 @@ export default function ClinicCard(props) {
         <Col md={2}>
           <div>{props.status}</div>
         </Col>
-        {/* <Col md={1}>
-          <div>{props.active}</div>
-        </Col> */}
       </Row>
     </Container>
   )

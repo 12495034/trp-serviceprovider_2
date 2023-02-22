@@ -2,13 +2,15 @@ import { createContext, useContext, useEffect, useState } from "react";
 import {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
+    sendEmailVerification,
+    sendPasswordResetEmail,
     signOut,
+    updateProfile,
     onAuthStateChanged,
     getAuth
 } from 'firebase/auth'
-import { auth } from "../Firebase";
+import { auth, firestore } from "../Firebase";
 import { getDoc, doc } from "firebase/firestore";
-import { firestore } from '../Firebase'
 
 const UserContext = createContext()
 
@@ -43,6 +45,29 @@ export const AuthContextProvider = ({ children }) => {
         }
     }
 
+    async function passwordReset(email) {
+        console.log("Resetting password")
+        return sendPasswordResetEmail(auth, email)
+    }
+
+    async function verifyEmail() {
+        return sendEmailVerification(auth.currentUser)
+            .then(() => {
+                console.log("Verification email sent")
+            });
+    }
+
+    async function updateUserAuthProfile(firstName, lastName, phoneNumber) {
+        updateProfile(auth.currentUser, {
+            displayName: `${firstName} ${lastName}`,
+            phoneNumber: `${phoneNumber}`
+        }).then(() => {
+            console.log("Auth Profile Updated")
+        }).catch((error) => {
+
+        });
+    }
+
     //runs once to determine the user state following render
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -73,7 +98,7 @@ export const AuthContextProvider = ({ children }) => {
     }, [user])
 
     return (
-        <UserContext.Provider value={{ createUser, signIn, user, logOut, userDetails, userRole }}>
+        <UserContext.Provider value={{ createUser, signIn, user, logOut, userDetails, userRole, passwordReset, verifyEmail, updateUserAuthProfile }}>
             {children}
         </UserContext.Provider>
     )

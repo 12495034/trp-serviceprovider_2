@@ -5,20 +5,23 @@ import { UserAuth } from "../context/AuthContext"
 
 export default function LoginScreen() {
 
+  //useNavigate hook from react router DOM
   const navigate = useNavigate()
+  //functions passed to screen by context
   const { signIn } = UserAuth()
+//state
   const [formData, setformData] = useState({
     email: "",
     password: "",
   })
   const [error, setError] = useState('')
 
+  
   function handleChange(event) {
-    // console.log(event.target.type)
-    const { name, value, type, checked } = event.target
+    const { name, value } = event.target
     setformData(prevState => {
       return {
-        ...prevState, [name]: type === "checkbox" ? checked : value
+        ...prevState, [name]: value
       }
     })
   }
@@ -31,7 +34,6 @@ export default function LoginScreen() {
       navigate('/home')
     } catch (e) {
       setError(e.message)
-
     }
   }
 

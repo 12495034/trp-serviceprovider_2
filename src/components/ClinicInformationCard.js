@@ -2,7 +2,6 @@ import React from 'react'
 import { Col, Row, Container } from 'react-bootstrap';
 
 export default function ClinicInformationCard(props) {
-
   return (
     <Container className='clinic-information'>
     <Row>

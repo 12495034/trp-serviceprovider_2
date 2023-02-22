@@ -1,20 +1,19 @@
 import React, { useState } from 'react'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
-import { Container, Row, Col, Stack } from 'react-bootstrap'
+import { Container, Row, Col} from 'react-bootstrap'
 import { useNavigate, Link } from 'react-router-dom'
 import { UserAuth } from '../context/AuthContext'
-
+import { handlePasswordConfirmation } from '../Functions/GeneralFunctions'
 import { setDoc, doc } from "firebase/firestore";
 import { firestore } from '../Firebase'
-import { updateProfile, getAuth, sendEmailVerification } from 'firebase/auth'
 
 export default function SignupScreen() {
-
+    //useNavigate hook from react router dom
     const navigate = useNavigate()
-    const { createUser } = UserAuth()
-    //console.log(user)
-
+    //functions passed to screen by context
+    const { createUser, verifyEmail, updateUserAuthProfile } = UserAuth()
+    //state
     const [validated, setValidated] = useState(false);
     const [formData, setformData] = useState({
         pronouns: "",
@@ -27,7 +26,6 @@ export default function SignupScreen() {
         Password: "",
         ConfirmPassword: "",
         isAgreedTC: false,
-        role: "Service-User"
     })
     const [error, setError] = useState('');
 
@@ -40,46 +38,11 @@ export default function SignupScreen() {
         })
     }
 
-    function handlePasswordConfirmation() {
-        var content;
-        if (formData.Password === formData.ConfirmPassword) {
-            content = <Form.Text className="text-success">Passwords Match!</Form.Text>
-        } else if (formData.Password !== formData.ConfirmPassword) {
-            content = <Form.Text className="text-danger">Passwords do not Match!</Form.Text>
-        }
-        return content
-    }
-
-    function updateUserAuthProfile() {
-        const auth = getAuth();
-        updateProfile(auth.currentUser, {
-            displayName: `${formData.FirstName} ${formData.LastName}`,
-            phoneNumber: `${formData.PhoneNumber}`
-            //photoURL: "https://example.com/jane-q-user/profile.jpg"
-        }).then(() => {
-            // Profile updated!
-            console.log("Auth Profile Updated")
-        }).catch((error) => {
-            // An error occurred
-            // ...
-        });
-    }
-
-    function resetPassword() {
-        const auth = getAuth();
-        sendEmailVerification(auth.currentUser)
-            .then(() => {
-                console.log("Reset password email sent")
-            });
-    }
-
     async function handleFormSubmit(e) {
         const form = e.currentTarget;
         console.log(form.checkValidity())
         if (form.checkValidity() === false) {
-            //stop page re-rendering after form is submitted
             e.preventDefault();
-            //stop current event from propogating
             e.stopPropagation();
             setValidated(true);
         } else {
@@ -88,9 +51,6 @@ export default function SignupScreen() {
             setError('')
             setValidated(true);
             try {
-                //create new user auth profile, then add details of user to the database using the uid as a key
-                //TODO: Issue here in that it does not seem to be possible to get the uid immediatley after creating the account. Fix was UserCredential needed to be used to retrieve the user data at the time of account creation
-
                 await createUser(formData.Email, formData.Password)
                     .then(async (userCredential) => {
                         const newUser = userCredential.user
@@ -106,8 +66,8 @@ export default function SignupScreen() {
                             Role: formData.role,
                             status: "Active"
                         })
-                        updateUserAuthProfile()
-                        resetPassword()
+                        updateUserAuthProfile(formData.FirstName, formData.LastName, formData.PhoneNumber)
+                        verifyEmail()
                     })
                 navigate('/home')
             } catch (e) {
@@ -226,7 +186,7 @@ export default function SignupScreen() {
                                 <Form.Group className="mb-3" controlId="formConfirmPassword">
                                     <Form.Label>Confirm Password</Form.Label>
                                     <Form.Control required minLength={formData.Password.length} type="password" placeholder="Confirm previously entered password" name="ConfirmPassword" onChange={handleChange} value={formData.ConfirmPassword} />
-                                    {handlePasswordConfirmation()}
+                                    {handlePasswordConfirmation(formData.Password, formData.ConfirmPassword)}
                                 </Form.Group>
                                 <Form.Group className="mb-3">
                                     <Form.Check
@@ -239,17 +199,12 @@ export default function SignupScreen() {
                                     />
                                 </Form.Group>
                                 <hr />
-
-                                <Stack direction='horizontal' gap={3}>
-                                    <Button variant="primary" type="submit" className='form--submit'>
+                                <Form.Group>
+                                    <Form.Text className="text-danger">{error}</Form.Text>
+                                    <Button style={{ width: '100%', marginBottom: '5px' }} variant="primary" type="submit" className='form--submit'>
                                         Create User Profile
                                     </Button>
-                                    <Form.Group>
-                                        <Form.Text className="font-weight-bold">
-                                            {error}
-                                        </Form.Text>
-                                    </Form.Group>
-                                </Stack>
+                                </Form.Group>
                             </Form>
                         </div>
                     </Col>

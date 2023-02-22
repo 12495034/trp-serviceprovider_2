@@ -4,7 +4,6 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import {
   Routes,
   Route,
-  useLocation
 } from 'react-router-dom'
 //import pages for react-router-dom routes
 import Homepage from './pages/Homepage'
@@ -34,7 +33,6 @@ function App() {
           <Route path="/users" element={<UserManagement />} />
           <Route path="/users/:userid" element={<UserProfileData />} />
           <Route path="/users/:userid/edit" element={<UserProfileEdit />} />
-         
         </Route>
 
         {/* //un-protected routed */}

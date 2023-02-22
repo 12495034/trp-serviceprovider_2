@@ -1,34 +1,30 @@
 import React, { useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { Button, Container, Row, Col, Image, Form } from 'react-bootstrap'
-import { getAuth, sendPasswordResetEmail } from 'firebase/auth'
-
+import { UserAuth } from '../context/AuthContext'
 
 export default function ResetScreen() {
 
+  //functions passed to screen by context
+  const { passwordReset } = UserAuth()
+  //state
   const [formData, setformData] = useState({
     email: "",
   })
-
   const [error, setError] = useState('')
   const [sent, setSent] = useState(false)
 
   function resetPassword(e) {
     setSent(false)
     e.preventDefault();
-    const auth = getAuth();
-    sendPasswordResetEmail(auth, formData.email)
+    passwordReset(formData.email)
       .then(() => {
-        console.log("Password reset email sent")
         setError('')
         setSent(true)
       })
       .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
         setError(error.message)
       });
-
   }
 
   function handleChange(event) {
@@ -66,13 +62,15 @@ export default function ResetScreen() {
                   {error ? error : null}
                 </Form.Text>
               </Form.Group>
-              {sent ? <Form.Text className="text-success">
-                Reset Email sent, please check your inbox!
-              </Form.Text> : <Button variant="primary" type="submit">
-                Reset Password
-              </Button>}
+              {sent ?
+                <Form.Text className="text-success">
+                  Reset Email sent, please check your inbox!
+                </Form.Text>
+                :
+                <Button style={{ width: '100%' }} variant="primary" type="submit">
+                  Reset Password
+                </Button>}
             </Form>
-
           </Col>
         </Row>
         <Row>
