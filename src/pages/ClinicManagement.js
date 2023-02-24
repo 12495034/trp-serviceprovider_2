@@ -16,9 +16,8 @@ import { createSlotsList } from '../Functions/SpecialFunctions';
 import { UserAuth } from '../context/AuthContext';
 
 export default function ClinicManagement() {
-
   //functions or state provided to screen by context
-  const { user } = UserAuth();
+  const { user, isAdmin } = UserAuth();
   const navigate = useNavigate()
 
   //define state
@@ -44,7 +43,6 @@ export default function ClinicManagement() {
   const { collectionData: centerData, isCollectionLoading: centerLoading, collectionError: centerError } = useCollection(`Location/${ClinicFormData.location}/Centers`, ClinicFormData.location)
   //retrieve clinic data based on radio button selection
   const { collectionData: clinicData, isCollectionLoading: clinicDataLoading, collectionError: clinicDataError } = useCollectionSnapshot('Clinics', 'clinicStatus', filterRadio)
-
   //----------------------------------------------------------------------------------------
   // Functions
   //----------------------------------------------------------------------------------------

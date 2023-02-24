@@ -17,7 +17,7 @@ const UserContext = createContext()
 export const AuthContextProvider = ({ children }) => {
     //define state and functions that we want available through the useContext hook
     const [user, setUser] = useState({})
-    const [userRole, setUserRole] = useState("")
+    const [isAdmin, setIsAdmin] = useState(undefined)
     const [userDetails, setUserDetails] = useState({});
 
     const createUser = (email, password) => {
@@ -71,23 +71,25 @@ export const AuthContextProvider = ({ children }) => {
     //runs once to determine the user state following render
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-            setUser(currentUser)
             //attempt to set details earlier for login
             if (currentUser) {
-                getUserInfo(currentUser.uid)
+                setUser(currentUser)
                 //retrieves the custom claims
                 getAuth().currentUser.getIdTokenResult()
                     .then((idTokenResult) => {
                         // Confirm the user is an Admin.
                         if (!idTokenResult.claims.isAdmin) {
-                            setUserRole("Admin")
-                            //console.log(idTokenResult)
+                            setIsAdmin(true)
+                            console.log(idTokenResult)
                         } else {
+                            setIsAdmin(false)
                         }
                     })
                     .catch((error) => {
                         console.log(error);
                     });
+            } else { 
+                setUser(null)
             }
 
 
@@ -98,7 +100,7 @@ export const AuthContextProvider = ({ children }) => {
     }, [user])
 
     return (
-        <UserContext.Provider value={{ createUser, signIn, user, logOut, userDetails, userRole, passwordReset, verifyEmail, updateUserAuthProfile }}>
+        <UserContext.Provider value={{ createUser, signIn, user, logOut, userDetails, isAdmin, passwordReset, verifyEmail, updateUserAuthProfile }}>
             {children}
         </UserContext.Provider>
     )

@@ -1,47 +1,29 @@
-import React, { useEffect, useState, useRef } from 'react'
-import { Outlet, Navigate, useLocation, useHistory } from 'react-router-dom'
+import React from 'react'
+import { Outlet, Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { UserAuth } from '../context/AuthContext'
-import { firestore } from '../Firebase';
-import { doc, getDoc } from 'firebase/firestore';
-import { render } from 'react-dom';
-import { getAuth, getIdToken, getIdTokenResult } from 'firebase/auth';
 
 export default function ProtectedRoute() {
-
-    const [loaded, setLoaded] = useState(false);
-    const { user, userRole } = UserAuth();
+    const { user, isAdmin, logOut } = UserAuth();
+    const navigate = useNavigate()
     const location = useLocation();
 
-    //console.log(user)
-    const role = userRole == "Admin"
-    //console.log(role)
+    console.log(user)
+    console.log(isAdmin)
 
-    async function getUserInfo(id) {
-        if (id) {
-            const docRef = doc(firestore, "Users", `${id}`);
-            const docSnap = await getDoc(docRef)
-            return docSnap.data().Role
+    async function handleSignOut() {
+        console.log("un-authorised user, signing out....")
+        try {
+            await logOut()
+        } catch (e) {
+            console.log(e.message)
         }
     }
 
-    //TODO: Role is retrieved here but the page is rendered before the data to check it made available
-    //error is parked at present until a solution is found. 
-
-    //-------------------------------------------------------------
-    // render
-    //-------------------------------------------------------------
-
-    // getUserInfo(user.uid).then(userRole => {
-    //     setUserRole(userRole)
-    // })
-
     //if user is logged in and has admin privileges then allow them access to the web application
-    //still an issue here 
-
-    if (user) {
+    if (user !== null && isAdmin !== false) {
         return <Outlet />
     } else {
+        handleSignOut()
         return <Navigate to='/unauthorised' state={{ from: location }} replace />
     }
-
 }

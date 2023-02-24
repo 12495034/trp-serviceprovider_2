@@ -25,7 +25,7 @@ export default function SignupScreen() {
         PhoneNumber: "",
         Password: "",
         ConfirmPassword: "",
-        isAgreedTC: false,
+        isAgreedTC: "",
     })
     const [error, setError] = useState('');
 
@@ -63,8 +63,6 @@ export default function SignupScreen() {
                             Email: formData.Email,
                             PhoneNumber: formData.PhoneNumber,
                             isAgreedTC: formData.isAgreedTC,
-                            Role: formData.role,
-                            status: "Active"
                         })
                         updateUserAuthProfile(formData.FirstName, formData.LastName, formData.PhoneNumber)
                         verifyEmail()
