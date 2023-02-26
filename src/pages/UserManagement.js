@@ -12,6 +12,7 @@ export default function UserManagement() {
   //        DEFINE STATE
   //------------------------------------------------------------------------------------------------
   const [allUsers, setAllUsers] = useState([])
+  const [error, setError] = useState('')
   const [searchBar, setSearchBar] = useState({
     FirstName: "",
     LastName: ""
@@ -41,13 +42,17 @@ export default function UserManagement() {
     //perform firestore query based on logic above
     const querySnapshot = await getDocs(q)
     let usersArray = []
-    querySnapshot.forEach((doc) => {
-      const id = { id: doc.id }
-      const data = doc.data()
-      const combine = Object.assign({}, id, data)
-      usersArray.push(combine)
-    })
-    setAllUsers(usersArray)
+    try {
+      querySnapshot.forEach((doc) => {
+        const id = { id: doc.id }
+        const data = doc.data()
+        const combine = Object.assign({}, id, data)
+        usersArray.push(combine)
+      })
+      setAllUsers(usersArray)
+    } catch (e) {
+      setError(e.message)
+    }
   }
 
   function handleSearchBar(e) {
@@ -71,8 +76,6 @@ export default function UserManagement() {
         <td>{item.ProNouns}</td>
         <td>{item.FirstName}</td>
         <td>{item.LastName}</td>
-        <td>{item.status}</td>
-        <td>{item.Role}</td>
         <td>{item.Email}</td>
       </tr>
     )
@@ -111,12 +114,9 @@ export default function UserManagement() {
         <Table responsive striped bordered hover>
           <thead>
             <tr>
-
               <th>Pro-Nouns</th>
               <th>First Name</th>
               <th>Last Name</th>
-              <th>Status</th>
-              <th>Role</th>
               <th>Email</th>
             </tr>
           </thead>
@@ -124,6 +124,7 @@ export default function UserManagement() {
             {userList}
           </tbody>
         </Table>
+        {error? <h4><code>{error}</code></h4>:null}
       </Container>
       <Footer />
     </div>

@@ -9,17 +9,18 @@ import {
     onAuthStateChanged,
     getAuth
 } from 'firebase/auth'
-import { auth, firestore } from "../Firebase";
-import { getDoc, doc } from "firebase/firestore";
+import { auth} from "../Firebase";
 
 const UserContext = createContext()
 
 export const AuthContextProvider = ({ children }) => {
     //define state and functions that we want available through the useContext hook
     const [user, setUser] = useState({})
-    const [isAdmin, setIsAdmin] = useState(undefined)
-    const [userDetails, setUserDetails] = useState({});
+    const [role, setRole] = useState(undefined)
+    const [accountStatus, setAccountStatus] = useState(undefined)
 
+    console.log("Role:",role,"Status:",accountStatus)
+    
     const createUser = (email, password) => {
         console.log("Auth context create user function")
         return createUserWithEmailAndPassword(auth, email, password)
@@ -33,16 +34,6 @@ export const AuthContextProvider = ({ children }) => {
     const logOut = () => {
         console.log("Auth context signOut function")
         return signOut(auth)
-    }
-
-    async function getUserInfo(id) {
-        if (id) {
-            const docRef = doc(firestore, "Users", `${id}`);
-            const docSnap = await getDoc(docRef);
-            const data = docSnap.exists() ? docSnap.data() : null
-            if (data === null || data === undefined) return null
-            setUserDetails({ id, ...data })
-        }
     }
 
     async function passwordReset(email) {
@@ -64,7 +55,6 @@ export const AuthContextProvider = ({ children }) => {
         }).then(() => {
             console.log("Auth Profile Updated")
         }).catch((error) => {
-
         });
     }
 
@@ -77,18 +67,13 @@ export const AuthContextProvider = ({ children }) => {
                 //retrieves the custom claims
                 getAuth().currentUser.getIdTokenResult()
                     .then((idTokenResult) => {
-                        // Confirm the user is an Admin.
-                        if (!idTokenResult.claims.isAdmin) {
-                            setIsAdmin(true)
-                            console.log(idTokenResult)
-                        } else {
-                            setIsAdmin(false)
-                        }
+                        setRole(idTokenResult.claims.role)
+                        setAccountStatus(idTokenResult.claims.accountStatus)
                     })
                     .catch((error) => {
                         console.log(error);
                     });
-            } else { 
+            } else {
                 setUser(null)
             }
 
@@ -100,7 +85,7 @@ export const AuthContextProvider = ({ children }) => {
     }, [user])
 
     return (
-        <UserContext.Provider value={{ createUser, signIn, user, logOut, userDetails, isAdmin, passwordReset, verifyEmail, updateUserAuthProfile }}>
+        <UserContext.Provider value={{ createUser, signIn, user, logOut, role, accountStatus, passwordReset, verifyEmail, updateUserAuthProfile }}>
             {children}
         </UserContext.Provider>
     )

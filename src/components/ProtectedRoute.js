@@ -3,12 +3,8 @@ import { Outlet, Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { UserAuth } from '../context/AuthContext'
 
 export default function ProtectedRoute() {
-    const { user, isAdmin, logOut } = UserAuth();
-    const navigate = useNavigate()
+    const { user, role, accountStatus, logOut } = UserAuth();
     const location = useLocation();
-
-    console.log(user)
-    console.log(isAdmin)
 
     async function handleSignOut() {
         console.log("un-authorised user, signing out....")
@@ -20,7 +16,8 @@ export default function ProtectedRoute() {
     }
 
     //if user is logged in and has admin privileges then allow them access to the web application
-    if (user !== null && isAdmin !== false) {
+    //otherwise the user is logged out and directed to a page indicating they are unauthorised to acess the web app
+    if (role !== "Service-User" && accountStatus !== "Suspended") {
         return <Outlet />
     } else {
         handleSignOut()

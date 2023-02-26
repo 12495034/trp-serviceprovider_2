@@ -4,51 +4,54 @@ const functions = require("firebase-functions");
 const admin = require('firebase-admin');
 admin.initializeApp();
 
-// uppercase version of the message to /messages/:documentId/uppercase
-// exports.makeUppercase = functions.firestore.document('/Users/{userId}')
-//     .onUpdate((snap, context) => {
-//         // Grab the current value of what was written to Firestore.
-//         const status = snap.data().status;
-
-//         // Access the parameter `{documentId}` with `context.params`
-//         functions.logger.log('Uppercasing', context.params.userId, status);
-
-//         const uppercase = status.toUpperCase();
-
-//         // You must return a Promise when performing asynchronous tasks inside a Functions such as
-//         // writing to Firestore.
-//         // Setting an 'uppercase' field in Firestore document returns a Promise.
-//         return snap.ref.set({ uppercase }, { merge: true });
-//     });
-
-//create custom claim on user creation
+//create custom claim and firestore restricted data on initial user creation (default - service user with an active account)
 exports.addDefaultUserClaims = functions.firestore.document('/Users/{userId}')
     .onCreate((change, context) => {
-        
+
         const customClaims = {
-            isAdmin: true,
-            isActive: false,
+            role: "Service-User",
+            accountStatus: "Active",
         }
 
-        // Set custom user claims on doc create.
-        return admin.auth().setCustomUserClaims(
+        // Set default custom user claims on doc create.
+        admin.auth().setCustomUserClaims(
             context.params.userId, customClaims)
             .then(() => {
-                console.log("Done!")
+                console.log("Default custom claims created for new user")
+            })
+            .catch(error => {
+                console.log(error);
+            });
+
+        //create subcollection and document on document creation
+        admin.firestore().doc(`/Users/${context.params.userId}/Restricted/Details`).set(customClaims)
+            .then(() => {
+                console.log("Restricted User data created in firestore")
             })
             .catch(error => {
                 console.log(error);
             });
     });
 
-//create subcollection and document on document creation
-// exports.createSecureData = functions.firestore.document('/Users/{userId}')
-//     .onUpdate((snap, context) => {
+//Edit custom claims when document is modified (WIP)
+exports.modifyUserClaims = functions.firestore.document('/Users/{userId}/Restricted/Details')
+    .onUpdate((change, context) => {
 
-//     });
+        const newData = change.after.data();
 
-// //create custom claim if document is modified
-// exports.createCustomClaims = functions.firestore.document('/Users/{userId}')
-//     .onUpdate((snap, context) => {
+        //custom claims are overwritten each time they are updated. Therefore all custom claims must be included with each update
+        const customClaims = {
+            role: newData.role,
+            accountStatus: newData.accountStatus,
+        }
 
-//     });
+        // Set custom user claims on doc create.
+        return admin.auth().setCustomUserClaims(
+            context.params.userId, customClaims)
+            .then(() => {
+                console.log("Custom claims updated")
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    });

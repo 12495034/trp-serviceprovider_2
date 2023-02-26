@@ -56,9 +56,9 @@ export default function SignupScreen() {
                         const newUser = userCredential.user
                         await setDoc(doc(firestore, "Users", newUser.uid), {
                             ProNouns: formData.pronouns,
-                            FirstName: formData.FirstName,
-                            MiddleName: formData.MiddleName,
-                            LastName: formData.LastName,
+                            FirstName: formData.FirstName.charAt(0).toUpperCase() + formData.FirstName.slice(1),
+                            MiddleName: formData.MiddleName.charAt(0).toUpperCase() + formData.MiddleName.slice(1),
+                            LastName: formData.LastName.charAt(0).toUpperCase() + formData.LastName.slice(1),
                             dob: formData.dob,
                             Email: formData.Email,
                             PhoneNumber: formData.PhoneNumber,

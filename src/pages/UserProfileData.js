@@ -17,7 +17,8 @@ export default function UserProfileData() {
   const navigate = useNavigate()
 
   //custom hook for standard firestore data retrieval
-  const { docData, isDocLoading, docError } = useDoc('Users', userid, null)
+  const { docData, isDocLoading, docError } = useDoc('Users', userid, userid)
+  const { docData: restrictedData, isDocLoading: restrictedDataLoading, docError: restrictedDataError } = useDoc(`Users/${userid}/Restricted`, 'Details', null)
   const { collectionData: appointmentHistoryData, isCollectionLoading: locationLoading, collectionError: appointmentHistoryError } = useCollection(`Users/${userid}/Appointments`, null)
 
   function handleClinicDetail(clinicId) {
@@ -35,7 +36,8 @@ export default function UserProfileData() {
       navigate('/')
     } catch (e) {
       console.log(e.message)
-    }}
+    }
+  }
 
   //-------------------------------------------------------------------------------------
   // Data rendering
@@ -63,7 +65,8 @@ export default function UserProfileData() {
         clinicStatus={item.clinicStatus}
         appointmentStatus={item.status}
         handleClinicDetail={handleClinicDetail}
-      />)})
+      />)
+  })
 
   return (
     <div className='page-body'>
@@ -76,26 +79,24 @@ export default function UserProfileData() {
             <Card className='user-card'>
               {/* <Card.Img variant="top" src={require('../images/user_test.jpg')} /> */}
               <Card.Body>
-                <Card.Title>User ID: {userid}</Card.Title>
+                <Card.Title>User Profile Data</Card.Title>
                 <Card.Text>
                 </Card.Text>
               </Card.Body>
               <ListGroup className="list-group-flush">
-                <ListGroup.Item><strong>Pro-Nouns:</strong> {docData.ProNouns} </ListGroup.Item>
-                <ListGroup.Item><strong>First Name:</strong> {docData.FirstName} </ListGroup.Item>
-                <ListGroup.Item><strong>Middle Name:</strong> {docData.MiddleName} </ListGroup.Item>
-                <ListGroup.Item><strong>Last Name:</strong> {docData.LastName} </ListGroup.Item>
-                <ListGroup.Item><strong>DOB:</strong> {docData.dob}</ListGroup.Item>
-                <ListGroup.Item><strong>Email:</strong> {docData.Email}</ListGroup.Item>
-                <ListGroup.Item><strong>Phone Number:</strong> {docData.PhoneNumber}</ListGroup.Item>
-                <ListGroup.Item><strong>Role:</strong> {docData.Role}</ListGroup.Item>
-                <ListGroup.Item><strong>Status:</strong> {docData.status}</ListGroup.Item>
-                <ListGroup.Item><strong>Agreed to T&Cs:</strong> {docData.isAgreedTC ? "Yes" : "No"}</ListGroup.Item>
-                {/* {userid === user.uid ?metadata : null} */}
+                <ListGroup.Item><Row><Col><strong>Pro-Nouns:</strong></Col><Col>{docData.ProNouns} </Col></Row> </ListGroup.Item>
+                <ListGroup.Item><Row><Col><strong>First Name:</strong></Col><Col> {docData.FirstName} </Col></Row> </ListGroup.Item>
+                <ListGroup.Item><Row><Col><strong>Middle Name:</strong></Col><Col> {docData.MiddleName}</Col></Row> </ListGroup.Item>
+                <ListGroup.Item><Row><Col><strong>Last Name:</strong></Col><Col> {docData.LastName}</Col></Row> </ListGroup.Item>
+                <ListGroup.Item><Row><Col><strong>DOB:</strong></Col><Col> {docData.dob}</Col></Row></ListGroup.Item>
+                <ListGroup.Item><Row><Col><strong>Email:</strong></Col><Col> {docData.Email}</Col></Row></ListGroup.Item>
+                <ListGroup.Item><Row><Col><strong>Phone Number:</strong></Col><Col>  {docData.PhoneNumber}</Col></Row></ListGroup.Item>
+                <ListGroup.Item><Row><Col><strong>Role:</strong></Col><Col> {restrictedData.role}</Col></Row></ListGroup.Item>
+                <ListGroup.Item><Row><Col><strong>Status:</strong> </Col><Col> {restrictedData.accountStatus}</Col></Row></ListGroup.Item>
+                <ListGroup.Item><Row><Col><strong>Agreed to T&Cs:</strong> </Col><Col> {docData.isAgreedTC ? "Yes" : "No"}</Col></Row></ListGroup.Item>
               </ListGroup>
               <Card.Body className='user-card-buttons'>
                 <Button variant='warning' className='user-card-button' onClick={handleEditUser}>Edit</Button>
-                {/* <Button variant='danger' className='user-card-button' onClick={handleDeleteUser}>Delete</Button> */}
                 {userid === user.uid ? <Button variant='primary' className='user-card-button' onClick={handleSignOut}>Logout</Button> : null}
               </Card.Body>
             </Card>

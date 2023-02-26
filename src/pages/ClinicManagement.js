@@ -17,13 +17,13 @@ import { UserAuth } from '../context/AuthContext';
 
 export default function ClinicManagement() {
   //functions or state provided to screen by context
-  const { user, isAdmin } = UserAuth();
+  const { user, role } = UserAuth();
   const navigate = useNavigate()
 
   //define state
   //-----------------------------------------------------------------------------------------
   const [ClinicFormData, setClinicFormData] = useState({
-    //default location to belfast to avoid error being thrown due to undefined location
+    //default location set to belfast to avoid error being thrown due to undefined location
     location: "Belfast",
     center: "",
     date: "",
@@ -37,12 +37,15 @@ export default function ClinicManagement() {
   const [filterRadio, setFilterRadio] = useState("Active")
   const [message, setMessage] = useState('')
 
+  console.log(ClinicFormData)
+
   //custom hookes for standard data retrieval
   //Create clinic dropdown menu data
   const { collectionData: locationData, isCollectionLoading: locationLoading, collectionError: locationError } = useCollection('Location', null)
   const { collectionData: centerData, isCollectionLoading: centerLoading, collectionError: centerError } = useCollection(`Location/${ClinicFormData.location}/Centers`, ClinicFormData.location)
   //retrieve clinic data based on radio button selection
   const { collectionData: clinicData, isCollectionLoading: clinicDataLoading, collectionError: clinicDataError } = useCollectionSnapshot('Clinics', 'clinicStatus', filterRadio)
+
   //----------------------------------------------------------------------------------------
   // Functions
   //----------------------------------------------------------------------------------------
@@ -53,6 +56,7 @@ export default function ClinicManagement() {
 
   //function that submits form data to firestore collection
   async function handleSubmit(event) {
+    console.log("Submitting new clinic details....")
     event.preventDefault()
     try {
       //create clinic document that stores high level clinic information
@@ -156,6 +160,7 @@ export default function ClinicManagement() {
                     <Form.Label>Location</Form.Label>
                     <Form.Control
                       required
+                      disabled={role !== "Admin" ? true : false}
                       as="select"
                       name="location"
                       onChange={handleChange}
@@ -169,6 +174,7 @@ export default function ClinicManagement() {
                     <Form.Label>Center</Form.Label>
                     <Form.Control
                       required
+                      disabled={role !== "Admin" ? true : false}
                       as="select"
                       name="center"
                       placeholder='Choose Location'
@@ -186,6 +192,7 @@ export default function ClinicManagement() {
                     <Form.Label>Date</Form.Label>
                     <Form.Control
                       required
+                      disabled={role !== "Admin" ? true : false}
                       name="date"
                       placeholder="Choose a Date"
                       type="date"
@@ -198,6 +205,7 @@ export default function ClinicManagement() {
                     <Form.Label>Start Time</Form.Label>
                     <Form.Control
                       required
+                      disabled={role !== "Admin" ? true : false}
                       name="startTime"
                       type="time"
                       placeholder="Enter time"
@@ -237,7 +245,7 @@ export default function ClinicManagement() {
         </Row>
         <Row>
           <Col >
-            {clinicData.length > 0 ? clinicCards : <h4>There are no clinics that match the selected criteria</h4>}
+            {clinicData.length > 0 ? clinicCards : <h4>There are no clinics that match the selected criteria, <code>{message}</code></h4>}
           </Col>
         </Row>
       </Container>
