@@ -3,12 +3,10 @@ import NavBarTRP from '../components/NavBarTRP'
 import Footer from '../components/Footer'
 import { Container, Row, Col, ListGroup, Badge, Accordion } from 'react-bootstrap'
 import { UserAuth } from '../context/AuthContext'
-import useDoc from '../CustomHooks/UseDoc'
 
 export default function Homepage() {
   //functions passed to screen through context
   const { user, role } = UserAuth()
-  const { docData, isDocLoading, docError } = useDoc('Users', user.uid, user)
 
   return (
     <div className='page-body'>
@@ -16,7 +14,7 @@ export default function Homepage() {
       <Container className='page-content'>
         <Row className='page-content-text'>
           <div className="Home-message">
-            <h2>Welcome {docData.FirstName}</h2>
+            <h2>Welcome {user.displayName}</h2>
             <h4>to the Rapid HIV & syphillis clinic management portal you have {role} privileges</h4>
           </div>
         </Row>

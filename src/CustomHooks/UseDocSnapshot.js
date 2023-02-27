@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react'
-import { collection, getDoc, doc } from "firebase/firestore"
+import { collection, query, doc, onSnapshot } from "firebase/firestore"
 import { firestore } from "../Firebase"
 
-export default function useDoc(collectionName, docName, dependency) {
+export default function useDocSnapshot(collectionName, docName, dependency) {
     //Hook state
-    const [docData, setDocData] = useState({});
+    const [docData, setDocData] = useState([]);
     const [isDocLoading, setIsDocLoading] = useState(true);
     const [docError, setDocError] = useState('');
 
@@ -19,13 +19,14 @@ export default function useDoc(collectionName, docName, dependency) {
     async function fetchDocData(collectionName, docId) {
         //button has been setup to call the firestore database and get the user info if available
         //This aspect of the code is functioning correctly, manually added document and the data imported
-        try {
-            const docRef = doc(firestore, `${collectionName}`, `${docId}`)
-            const docSnap = await getDoc(docRef);
-            setDocData(docSnap.data())
-        } catch (e) {
-            setDocError(e.message)
-        }
+
+        onSnapshot(doc(firestore, `${collectionName}`, `${docId}`), (doc) => {
+            if (doc.exists()) {
+                setDocData(doc.data())
+            } else {
+                setDocError("Clinic with the chosen ID does not exist")
+            }
+        })
     }
 
     return {
@@ -35,3 +36,4 @@ export default function useDoc(collectionName, docName, dependency) {
     }
 
 }
+

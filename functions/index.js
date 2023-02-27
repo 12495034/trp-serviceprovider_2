@@ -55,3 +55,27 @@ exports.modifyUserClaims = functions.firestore.document('/Users/{userId}/Restric
                 console.log(error);
             });
     });
+
+//Edit displayName on user auth details if details are modified in the firestore database
+//at present cloud function will run if there is any change to the document, not just the users name
+exports.updateUserAuthDetails = functions.firestore.document('/Users/{userId}')
+    .onUpdate((change, context) => {
+
+        const newData = change.after.data();
+
+        //custom claims are overwritten each time they are updated. Therefore all custom claims must be included with each update
+        const userDetails = {
+            displayName: `${newData.FirstName} ${newData.LastName}`,
+        }
+
+        // Set custom user claims on doc create.
+        return admin.auth().updateUser(
+            context.params.userId, userDetails)
+            .then(() => {
+                console.log("User Auth details updated")
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    });
+

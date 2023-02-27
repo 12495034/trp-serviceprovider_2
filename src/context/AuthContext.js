@@ -18,8 +18,6 @@ export const AuthContextProvider = ({ children }) => {
     const [user, setUser] = useState({})
     const [role, setRole] = useState(undefined)
     const [accountStatus, setAccountStatus] = useState(undefined)
-
-    console.log("Role:",role,"Status:",accountStatus)
     
     const createUser = (email, password) => {
         console.log("Auth context create user function")

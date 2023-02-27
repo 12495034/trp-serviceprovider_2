@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Container, Row, Col, Button, Stack } from 'react-bootstrap'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Tooltip from 'react-bootstrap/Tooltip'
-
 import ClinicInformationCard from '../components/ClinicInformationCard'
 import NavBarTRP from '../components/NavBarTRP'
 import ModalConfirmation from '../components/ModalConfirmation'
@@ -11,34 +10,30 @@ import AppointmentCard from '../components/AppointmentCard'
 import { UserAuth } from '../context/AuthContext';
 import Footer from '../components/Footer'
 import { useNavigate } from 'react-router-dom';
-import { currentDate } from '../Functions/GeneralFunctions'
-
-import BreadCrumbCustom from '../components/BreadCrumbCustom'
 import { appointInc } from '../Constants/Constants'
-
 import { firestore } from '../Firebase'
-import { doc, collection, updateDoc, query, onSnapshot, getDocs, where, Timestamp } from 'firebase/firestore'
-
-//Firestore helper functions
+import { doc, collection, query, getDocs, where } from 'firebase/firestore'
+import useCollectionSnapshot from '../CustomHooks/UseCollectionSnapshot'
 import { firestoreUpdate } from '../FirestoreFunctions/firestoreUpdate'
+import useDocSnapshot from '../CustomHooks/UseDocSnapshot'
+import { combineSlotsAndAppointments } from '../Functions/SpecialFunctions'
+import { getListOfAppointmentsByStatus } from '../FirestoreFunctions/firestoreRead'
 
 export default function ClinicDetail() {
-
     //react-router-dom params that are passed through navigate
     const { clinicId } = useParams();
-    //retrieve signed in Rainbow project user id
-    const { userDetails } = UserAuth();
     const navigate = useNavigate()
-
-
+    const { user } = UserAuth();
+    //Custom hookes for standard data retrievel
+    const { collectionData: appointments, isCollectionLoading: isAppointmentDataLoading, collectionError: appointmentDataError } = useCollectionSnapshot('Clinics/${clinicId}/Appointments', null)
+    const { docData:clinic, isDocLoading, docError } = useDocSnapshot("Clinics", clinicId, null)
+    
     //-------------------------------------------------------------------------------------
     // Define State
     //-------------------------------------------------------------------------------------
-    const [clinic, setClinic] = useState({});
-    const [appointments, setAppointments] = useState([]);
     const [error, setError] = useState("");
     const [cancelModalShow, setCancelModalShow] = useState(false);
-
+    //modal state handling
     const handleCloseCancel = () => setCancelModalShow(false);
     const handleShowCancel = () => setCancelModalShow(true);
     const [endModalshow, setEndModalShow] = useState(false);
@@ -46,45 +41,9 @@ export default function ClinicDetail() {
     const handleShowEnd = () => setEndModalShow(true);
 
     //initialise new array using appointments
-    const combinedList = combinedSlotsAndAppointments()
-    //Array is sorted using a compare method in an arrow function
-    const sortedAppointments = combinedList.sort(
-        (p1, p2) => (p1.slot > p2.slot) ? 1 : (p1.slot < p2.slot) ? -1 : 0)
-
-    //-------------------------------------------------------------------------------------
-    // useEffect
-    //-------------------------------------------------------------------------------------
-    //use effect runs once after every render or when state is updated
-    //different use effects to handle attaching an detaching of onsnapshot listeners
-
-    //provide real time data update on the appointment cards
-    useEffect(() =>
-        onSnapshot(query(collection(firestore, `Clinics/${clinicId}/Appointments`)), (querySnapshot) => {
-            let appointmentArray = []
-            querySnapshot.forEach((doc) => {
-                const id = { id: doc.id }
-                const data = doc.data()
-                const combine = Object.assign({}, id, data)
-                appointmentArray.push(combine)
-            })
-            setAppointments(appointmentArray)
-        })
-        , [])
-
-    //provide real time data update on the clinic information
-    useEffect(() =>
-        onSnapshot(doc(firestore, "Clinics", `${clinicId}`), (doc) => {
-            if (doc.exists()) {
-                setClinic(doc.data())
-            } else {
-                setError("Clinic with the chosen ID does not exist")
-            }
-        })
-        , [])
-
-    //-------------------------------------------------------------------------------------
-    // Functions
-    //-------------------------------------------------------------------------------------
+    const combinedList = combineSlotsAndAppointments(appointments, clinic.slots)
+    //Array is sorted starting with earliest appointment slot time using a compare method in an arrow function
+    const sortedAppointments = combinedList.sort((p1, p2) => (p1.slot > p2.slot) ? 1 : (p1.slot < p2.slot) ? -1 : 0)
 
     function handleUserDetail(userid) {
         navigate(`/Users/${userid}`);
@@ -116,30 +75,8 @@ export default function ClinicDetail() {
         return listArray
     }
 
-    async function getAttendedList() {
-        //console.log("Running get Attended list function...")
-        let attendedArray = []
-        const q = query(collection(firestore, `Clinics/${clinicId}/Appointments`), where("wasSeen", "==", true));
-        const querySnapshot = await getDocs(q);
-        querySnapshot.forEach((doc) => {
-            attendedArray.push({ id: doc.id })
-        });
-        return attendedArray
-    }
-
-    async function getUnAttendedList() {
-        let unAttendedArray = []
-        //console.log("Running get unAttended list function...")
-        const q = query(collection(firestore, `Clinics/${clinicId}/Appointments`), where("wasSeen", "==", false));
-        const querySnapshot = await getDocs(q);
-        querySnapshot.forEach((doc) => {
-            unAttendedArray.push({ id: doc.id })
-        });
-        return unAttendedArray
-    }
-
     async function updateAttendedAppointments() {
-        const attendedList = await getAttendedList()
+        const attendedList = await getListOfAppointmentsByStatus("wasSeen",true,clinicId)
         if (attendedList.length > 0) {
             for (var i = 0; i < attendedList.length; i++) {
                 const data = { status: "Attended" }
@@ -150,7 +87,7 @@ export default function ClinicDetail() {
     }
 
     async function updateUnAttendedAppointments() {
-        const unAttendedList = await getUnAttendedList()
+        const unAttendedList = await getListOfAppointmentsByStatus("wasSeen",false,clinicId)
         if (unAttendedList.length > 0) {
             for (var i = 0; i < unAttendedList.length; i++) {
                 const data = { status: "Un-Attended" }
@@ -171,10 +108,7 @@ export default function ClinicDetail() {
         }
     }
 
-
-    //TODO: Issues here in that I can't successfully add a new field to the slots object
     function handleAddSlot(inc) {
-        console.log("Adding a new slot")
         //get the number of slots currently in use from capacity
         //this is the most appointments the clinic can have
         const currentCapacity = parseInt(clinic.capacity)
@@ -195,25 +129,9 @@ export default function ClinicDetail() {
         handleSlotsUpdate(clinic.slots, newCapacity, newTime)
     }
 
-    //function to combined the available slots and booked appointments into a single list for screen display purposes
-    function combinedSlotsAndAppointments() {
-        //take a copy of the appointments list
-        const combinedList = appointments.slice()
-        //loop throough object fields and add as a new object to the combinedList array
-        for (const key in clinic.slots) {
-            if (clinic.slots.hasOwnProperty(key)) {
-                //parse string to int to enable correct sorting
-                const newSlot = { slot: parseInt(key), time: clinic.slots[key] }
-                combinedList.push(newSlot)
-            }
-        }
-        return combinedList
-    }
-
     //-------------------------------------------------------------------------------------
     // Data rendering
     //-------------------------------------------------------------------------------------
-
     //create JSX elements based on stored state data
     const appointmentList = sortedAppointments.map((item) => {
         //for data security the name of the person is not shown but the id of the person is perhaps
@@ -228,7 +146,7 @@ export default function ClinicDetail() {
                 called={item.called}
                 calledBy={item.calledBy}
                 wasSeen={item.wasSeen}
-                tester={`${userDetails.FirstName} ${userDetails.LastName}`}
+                tester={`${user.displayName}`}
                 slotsUpdate={handleSlotsUpdate}
                 availableSlots={clinic.slots}
                 clinicStatus={clinic.clinicStatus}
@@ -236,7 +154,6 @@ export default function ClinicDetail() {
             />
         )
     })
-
 
     //-------------------------------------------------------------------------------------
     // Page Content
@@ -261,7 +178,7 @@ export default function ClinicDetail() {
                         <p>Scheduled By: {clinic.createdBy} on ...date...</p>
                     </Col>
                     <Col>
-                        
+
                     </Col>
                 </Row>
                 <Row>
@@ -270,11 +187,9 @@ export default function ClinicDetail() {
                         <ClinicInformationCard clinicid={clinicId} date={clinic.date} time={clinic.startTime} location={clinic.location} center={clinic.center} appointments={appointments.length} capacity={clinic.capacity} active={clinic.clinicStatus} />
                     </Col>
                 </Row>
-
                 <hr />
                 <Row>
                     <Col>
-                        {/* <AppointmentTable /> */}
                         {appointmentList}
                     </Col>
                 </Row>

@@ -10,7 +10,7 @@ import { collection, addDoc, Timestamp } from "firebase/firestore";
 import { firestore } from '../Firebase'
 import { currentDate } from '../Functions/GeneralFunctions';
 import useCollection from '../CustomHooks/UseCollection';
-import useCollectionSnapshot from '../CustomHooks/UseCollectionSnapshot';
+import useCollectionSnapshot from '../CustomHooks/UseCollectionSnapshotQuery';
 import { appointInc } from '../Constants/Constants';
 import { createSlotsList } from '../Functions/SpecialFunctions';
 import { UserAuth } from '../context/AuthContext';
@@ -20,6 +20,7 @@ export default function ClinicManagement() {
   const { user, role } = UserAuth();
   const navigate = useNavigate()
 
+  console.log(user)
   //define state
   //-----------------------------------------------------------------------------------------
   const [ClinicFormData, setClinicFormData] = useState({
@@ -32,13 +33,11 @@ export default function ClinicManagement() {
     slots: {},
     clinicStatus: "Active",
     timeStamp: Timestamp.fromDate(new Date()),
-    createdBy: user.displayName
   })
   const [filterRadio, setFilterRadio] = useState("Active")
   const [message, setMessage] = useState('')
 
   console.log(ClinicFormData)
-
   //custom hookes for standard data retrieval
   //Create clinic dropdown menu data
   const { collectionData: locationData, isCollectionLoading: locationLoading, collectionError: locationError } = useCollection('Location', null)
@@ -56,11 +55,13 @@ export default function ClinicManagement() {
 
   //function that submits form data to firestore collection
   async function handleSubmit(event) {
-    console.log("Submitting new clinic details....")
     event.preventDefault()
     try {
+      //add current user to clinic data to record the creator
+      const clinicData = {}
+      Object.assign(clinicData, ClinicFormData, { createdBy: user.displayName })
       //create clinic document that stores high level clinic information
-      await addDoc(collection(firestore, "Clinics"), ClinicFormData)
+      await addDoc(collection(firestore, "Clinics"), clinicData)
       //clear form following clinic creation
       setClinicFormData({
         location: "Belfast",
@@ -245,7 +246,8 @@ export default function ClinicManagement() {
         </Row>
         <Row>
           <Col >
-            {clinicData.length > 0 ? clinicCards : <h4>There are no clinics that match the selected criteria, <code>{message}</code></h4>}
+            {clinicData.length > 0 ? clinicCards : <h4>There are no clinics that match the selected criteria</h4>}
+            {message ? <h4><code>{message}</code></h4> : null}
           </Col>
         </Row>
       </Container>

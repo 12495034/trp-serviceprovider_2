@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button, Container, Row, Col } from 'react-bootstrap'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, useLocation } from 'react-router-dom'
 import Card from 'react-bootstrap/Card'
 import { ListGroup } from 'react-bootstrap'
 import NavBarTRP from '../components/NavBarTRP'
@@ -102,7 +102,7 @@ export default function UserProfileData() {
             </Card>
           </Col>
           <Col className='user-appointments'>
-            {appointmentHistory}
+            {appointmentHistory.length > 0 ? appointmentHistory : <h5>No appointment History found</h5>}
           </Col>
         </Row>
       </Container>
