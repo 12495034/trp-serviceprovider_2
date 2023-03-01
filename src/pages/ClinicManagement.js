@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
-import { Row, Col, Accordion, Form, Button } from 'react-bootstrap'
+import { Row, Col, Accordion, Form, Button, Stack } from 'react-bootstrap'
 import Footer from '../components/Footer'
 import ClinicCard from '../components/ClinicCard'
 import NavBarTRP from '../components/NavBarTRP';
@@ -20,7 +20,6 @@ export default function ClinicManagement() {
   const { user, role } = UserAuth();
   const navigate = useNavigate()
 
-  console.log(user)
   //define state
   //-----------------------------------------------------------------------------------------
   const [ClinicFormData, setClinicFormData] = useState({
@@ -35,9 +34,9 @@ export default function ClinicManagement() {
     timeStamp: Timestamp.fromDate(new Date()),
   })
   const [filterRadio, setFilterRadio] = useState("Active")
+  const [errorMessage, setErrorMessage] = useState('')
   const [message, setMessage] = useState('')
 
-  console.log(ClinicFormData)
   //custom hookes for standard data retrieval
   //Create clinic dropdown menu data
   const { collectionData: locationData, isCollectionLoading: locationLoading, collectionError: locationError } = useCollection('Location', null)
@@ -56,26 +55,27 @@ export default function ClinicManagement() {
   //function that submits form data to firestore collection
   async function handleSubmit(event) {
     event.preventDefault()
-    try {
-      //add current user to clinic data to record the creator
-      const clinicData = {}
-      Object.assign(clinicData, ClinicFormData, { createdBy: user.displayName })
-      //create clinic document that stores high level clinic information
-      await addDoc(collection(firestore, "Clinics"), clinicData)
-      //clear form following clinic creation
-      setClinicFormData({
-        location: "Belfast",
-        center: "",
-        date: "",
-        startTime: "",
-        capacity: 0,
-        slots: {},
-        clinicStatus: "Active",
+    //add current user to clinic data to record the creator
+    const clinicData = {}
+    Object.assign(clinicData, ClinicFormData, { createdBy: user.displayName })
+    //create clinic document that stores high level clinic information
+    await addDoc(collection(firestore, "Clinics"), clinicData)
+      .then(() => {
+        setMessage("A New Clinic has been created")
       })
-    } catch (e) {
-      //TODO: Test that if the document cannot be added that this error is logged to the console
-      setMessage(e.message)
-    }
+      .catch((e) => {
+        setErrorMessage(e.message)
+      })
+    //clear form following clinic creation
+    setClinicFormData({
+      location: "Belfast",
+      center: "",
+      date: "",
+      startTime: "",
+      capacity: 0,
+      slots: {},
+      clinicStatus: "Active",
+    })
   }
 
   //function that updates state as the form fields are compiled
@@ -87,6 +87,17 @@ export default function ClinicManagement() {
         [event.target.name]: event.target.value
       }
     })
+    //resets capacity to 0 if time is altered after capacity, which is outside the valid data range.
+    //prevents slots data map from becoming out of sync with start time and capacity
+    if (event.target.name == "startTime") {
+      setClinicFormData(prevFormData => {
+        return {
+          ...prevFormData,
+          capacity: 0
+        }
+      })
+    }
+    //creates slots map based on start time and capacity
     if (event.target.name === "capacity") {
       const slots = createSlotsList(ClinicFormData.date, ClinicFormData.startTime, event.target.value, appointInc)
       setClinicFormData(prevFormData => {
@@ -102,9 +113,9 @@ export default function ClinicManagement() {
   // Data Rendering
   //----------------------------------------------------------------------------------------
 
-  //sort clinics by date prior to rendering
+  //sort clinics by date prior to rendering, nearest clinic at the top
   clinicData.sort(
-    (p1, p2) => (p1.date > p2.date) ? -1 : (p1.date < p2.date) ? 1 : 0)
+    (p1, p2) => (p1.date < p2.date) ? -1 : (p1.date > p2.date) ? 1 : 0)
 
   //create Cards object that can be listed on the screen
   const clinicCards = clinicData.map((item) => {
@@ -150,7 +161,7 @@ export default function ClinicManagement() {
     <div className='page-body'>
       <NavBarTRP />
       <Container className='page-content'>
-        <h1 className="Title">Clinic Management</h1>
+        <h1 className="Title">Clinic Management  {locationError ? <code>{locationError}</code> : null}</h1>
         <Accordion>
           <Accordion.Item eventKey="0">
             <Accordion.Header>Create New Clinic</Accordion.Header>
@@ -241,13 +252,13 @@ export default function ClinicManagement() {
         </Accordion>
 
         <Row>
-          <ToolBar radioState={filterRadio} setRadioState={setFilterRadio} />
+          <Stack><ToolBar radioState={filterRadio} setRadioState={setFilterRadio} /><h4><code>{message}</code></h4></Stack>
           <hr />
         </Row>
         <Row>
           <Col >
             {clinicData.length > 0 ? clinicCards : <h4>There are no clinics that match the selected criteria</h4>}
-            {message ? <h4><code>{message}</code></h4> : null}
+            {errorMessage ? <h4><code>{errorMessage}</code></h4> : null}
           </Col>
         </Row>
       </Container>

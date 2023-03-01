@@ -1,11 +1,13 @@
 import React from 'react'
 import { Container, Row, Col } from 'react-bootstrap';
+//Icons
 import CallAppointmentIcon from '../Icons/CallAppointmentIcon';
 import CheckInIcon from '../Icons/CheckInIcon';
 import TestCompleteIcon from '../Icons/TestCompleteIcon';
 import DeleteAppointmentIcon from '../Icons/DeleteAppointmentIcon';
+//helper functions
 import { deleteAppointment } from '../FirestoreFunctions/firestoreDelete';
-import { handleUpdate, handleCall } from '../FirestoreFunctions/firestoreUpdate';
+import { handleUpdate, handleCall } from '../Functions/SpecialFunctions';
 
 export default function AppointmentCard(props) {
   return (
@@ -35,7 +37,7 @@ export default function AppointmentCard(props) {
           </div>
           {props.checkedIn ? null : <div className='icon' onClick={() => {
             deleteAppointment(props.userid, props.clinicid, props.slot, props.time, props.clinicStatus)
-            props.slotsUpdate(props.availableSlots, props.slot, props.time)
+            props.slotsUpdate(props.clinicid, props.availableSlots, props.slot, props.time)
           }}><DeleteAppointmentIcon userid={props.userid} checkedIn={props.checkedIn} /> </div>}
         </Col>
       </Row>

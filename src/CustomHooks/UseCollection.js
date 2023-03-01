@@ -20,18 +20,22 @@ export default function useCollection(collectionName, dependency) {
     const q = collection(firestore, `${collectionName}`);
     const querySnapshot = await getDocs(q)
     let collectionArray = []
-    querySnapshot.forEach((doc) => {
-      let data = Object.assign({ id: doc.id }, doc.data())
-      collectionArray.push(data)
-    })
-  setCollectionData(collectionArray)
-}
+    try {
+      querySnapshot.forEach((doc) => {
+        let data = Object.assign({ id: doc.id }, doc.data())
+        collectionArray.push(data)
+      })
+      setCollectionData(collectionArray)
+    } catch (e) {
+      setCollectionError(e.message)
+    }
+  }
 
-return {
-  collectionData,
-  isCollectionLoading,
-  collectionError
-}
+  return {
+    collectionData,
+    isCollectionLoading,
+    collectionError
+  }
 
 }
 

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { collection, query, onSnapshot} from "firebase/firestore"
+import { collection, query, onSnapshot } from "firebase/firestore"
 import { firestore } from "../Firebase"
 
 export default function useCollectionSnapshot(collectionName, dependency) {
@@ -20,7 +20,6 @@ export default function useCollectionSnapshot(collectionName, dependency) {
             setCollectionData(collectionArray)
         })
         , [dependency])
-
     return {
         collectionData,
         isCollectionLoading,

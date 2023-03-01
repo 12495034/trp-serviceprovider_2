@@ -1,11 +1,12 @@
 import React from 'react'
 import { FaCalendarCheck, FaCalendarWeek } from "react-icons/fa";
+import { iconSize } from '../Constants/Constants';
 
 export default function ClinicStatusIcon(props) {
     if (props.checkedIn) {
-        return <FaCalendarCheck size={20} color='green' />
+        return <FaCalendarCheck size={iconSize} color='green' />
     } else {
-        return <FaCalendarWeek size={20} color='orange' />
+        return <FaCalendarWeek size={iconSize} color='orange' />
     }
 
 }

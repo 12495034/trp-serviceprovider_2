@@ -1,5 +1,6 @@
 import { doc, deleteDoc } from 'firebase/firestore';
 import { firestore } from '../Firebase';
+
 //appointment document must not only be deleted from the clinic appointments sub-collection
 //but the time slot must be added back into the available slots map
 //the appointment must also be deleted from the users appointments sub-collection

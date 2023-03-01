@@ -1,11 +1,12 @@
 import React from 'react'
-import { FaRegBell, FaRegBellSlash, FaBell } from "react-icons/fa";
+import { FaRegBell, FaBell } from "react-icons/fa";
+import { iconSize } from '../Constants/Constants';
 
 export default function CallAppointmentIcon(props) {
     if (props.checkedIn === true && props.called === true) {
-        return <FaBell color='purple' size='20' />
+        return <FaBell color='purple' size={iconSize} />
     } else if (props.checkedIn === true) {
-        return <FaRegBell color='purple' size='20' />
+        return <FaRegBell color='purple' size={iconSize} />
     } else if(props.checkedIn===false){
         
     }
