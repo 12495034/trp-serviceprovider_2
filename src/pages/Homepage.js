@@ -32,6 +32,7 @@ export default function Homepage() {
                         <ListGroup.Item>View and manage the appointment list in real time</ListGroup.Item>
                         <ListGroup.Item>Check in users, call the next appointment and mark users as tested</ListGroup.Item>
                         <ListGroup.Item>When everything is wrapped up close the clinic</ListGroup.Item>
+                        <ListGroup.Item>If the unforseen happens cancel the clinic</ListGroup.Item>
                       </ListGroup>
                     </ListGroup.Item>
                     <ListGroup.Item variant='info flush'>User Management</ListGroup.Item>

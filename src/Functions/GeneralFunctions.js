@@ -21,5 +21,12 @@ export function currentDate() {
     return today
 }
 
+export function createDateString(date) {
+    //convert firestore timestamp to date and time string for display purposes
+    const dateObject = new Date(`${date}T09:00:00`);
+    const dateString = dateObject.toDateString();
+    return dateString
+}
+
 
 

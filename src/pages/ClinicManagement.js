@@ -14,6 +14,7 @@ import useCollectionSnapshot from '../CustomHooks/UseCollectionSnapshotQuery';
 import { appointInc } from '../Constants/Constants';
 import { createSlotsList } from '../Functions/SpecialFunctions';
 import { UserAuth } from '../context/AuthContext';
+import { createDateString } from '../Functions/GeneralFunctions';
 
 export default function ClinicManagement() {
   //functions or state provided to screen by context
@@ -80,6 +81,8 @@ export default function ClinicManagement() {
 
   //function that updates state as the form fields are compiled
   function handleChange(event) {
+    //clear message when creating a new clinic
+    setMessage(null)
     //when the capacity is set the state needs to add or remove as required
     setClinicFormData(prevFormData => {
       return {
@@ -128,7 +131,7 @@ export default function ClinicManagement() {
         key={item.id}
         location={item.location}
         center={item.center}
-        date={item.date}
+        date={createDateString(item.date)}
         capacity={item.capacity}
         time={item.startTime}
         appointments={appointments}

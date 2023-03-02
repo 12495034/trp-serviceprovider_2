@@ -13,7 +13,9 @@ import { appointInc } from '../Constants/Constants'
 import useCollectionSnapshot from '../CustomHooks/UseCollectionSnapshot'
 import useDocSnapshot from '../CustomHooks/UseDocSnapshot'
 import { firestoreUpdate } from '../FirestoreFunctions/firestoreUpdate'
-import { updateAppointmentStatus, handleAddSlot, handleReleaseSlot, combineSlotsAndAppointments } from '../Functions/SpecialFunctions'
+import { updateAppointmentStatus, handleAddSlot, handleReleaseSlot, combineSlotsAndAppointments, convertFirestoreTimeStamp } from '../Functions/SpecialFunctions'
+import { createDateString } from '../Functions/GeneralFunctions'
+
 
 
 export default function ClinicDetail() {
@@ -24,7 +26,6 @@ export default function ClinicDetail() {
     //Custom hookes for standard data retrievel
     const { collectionData: appointments, isCollectionLoading: isAppointmentDataLoading, collectionError: appointmentDataError } = useCollectionSnapshot(`Clinics/${clinicId}/Appointments`, null)
     const { docData: clinic, isDocLoading, docError } = useDocSnapshot("Clinics", clinicId, null)
-
     //-------------------------------------------------------------------------------------
     // Define State
     //-------------------------------------------------------------------------------------
@@ -87,21 +88,19 @@ export default function ClinicDetail() {
                     null
                     :
                     <div><Stack direction='horizontal'>
-                            <Button variant='danger' onClick={handleShowCancel}>Cancel Clinic</Button>
-                            <Button className='ms-auto' variant='warning' onClick={handleShowEnd}>Close Clinic</Button>
+                        <Button variant='danger' onClick={handleShowCancel}>Cancel Clinic</Button>
+                        <Button className='ms-auto' variant='warning' onClick={handleShowEnd}>Close Clinic</Button>
                     </Stack><br /></div>}
                 <Row>
-                    <Col>
-                        <p>Scheduled By: {clinic.createdBy} on ...date...</p>
-                    </Col>
-                    <Col>
-
-                    </Col>
+                    <Stack direction="horizontal" gap={3}>
+                        <div><p>Scheduled By: {clinic.createdBy}</p></div>
+                        <div className="ms-auto"><p>Scheduled on: {convertFirestoreTimeStamp(clinic.timeStamp)}</p></div>
+                    </Stack>
                 </Row>
                 <Row>
                     <Col>
                         {clinic.clinicStatus !== "Active" ? <h5 bg='danger'>This clinic is no longer active, changes cannot be made</h5> : null}
-                        <ClinicInformationCard clinicid={clinicId} date={clinic.date} time={clinic.startTime} location={clinic.location} center={clinic.center} appointments={appointments.length} capacity={clinic.capacity} active={clinic.clinicStatus} />
+                        <ClinicInformationCard clinicid={clinicId} date={createDateString(clinic.date)} time={clinic.startTime} location={clinic.location} center={clinic.center} appointments={appointments.length} capacity={clinic.capacity} active={clinic.clinicStatus} />
                     </Col>
                 </Row>
                 <hr />

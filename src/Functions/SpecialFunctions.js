@@ -1,18 +1,20 @@
 import { firestoreUpdate } from '../FirestoreFunctions/firestoreUpdate';
 import { getListOfAppointmentsByStatus } from '../FirestoreFunctions/firestoreRead';
+import { timeZones } from '../Constants/Constants';
+import { Timestamp, toDate } from "firebase/firestore";
 
 //function to create a slots array of times based on the start time and number of slots selected
 //return the slots map, which is then used to set the state at a higher level
 export function createSlotsList(date, startTime, capacity, inc) {
   console.log("variables:", date, startTime, capacity, inc)
   //error here with code that is causing clinic start times and slot times to be created incorrectly
-  const dt = new Date(`${date}T${startTime}:00Z`);
+  const dt = new Date(`${date}T${startTime}:00`);
   console.log(dt)
   //create empty object to store appointment slots
   const slots = {};
   //loop from 1 to the selected capacity
   for (var i = 1; i <= capacity; i++) {
-    slots[i] = dt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    slots[i] = dt.toLocaleTimeString(timeZones, { hour: "2-digit", minute: "2-digit" });
     dt.setMinutes(dt.getMinutes() + inc);
   }
   console.log("slots map:", slots)
@@ -57,8 +59,8 @@ export function handleAddSlot(clinicId, availableSlots, appointmentsData, date, 
   const newCapacity = parseInt(capacity) + 1
   const newSlot = { [newCapacity]: newTime }
   const newSlotsObject = Object.assign({}, availableSlots, newSlot)
-  const capacityUpdate = firestoreUpdate('Clinics', clinicId, { "capacity": newCapacity })
-  const slotsUpdate = firestoreUpdate('Clinics', clinicId, { slots: newSlotsObject })
+  firestoreUpdate('Clinics', clinicId, { "capacity": newCapacity })
+  firestoreUpdate('Clinics', clinicId, { slots: newSlotsObject })
 }
 
 //function to add a new slot to the list of available slots
@@ -102,3 +104,15 @@ export function handleCall(field, value, userid, clinicid, tester, status) {
   }
 }
 
+//convert firestore timestamp to date and time string for display purposes
+export function convertFirestoreTimeStamp(timeStamp){
+  if(timeStamp){
+    const fireBaseTime = new Date(
+      timeStamp.seconds * 1000 + timeStamp.nanoseconds / 1000000,
+    );
+    const date = fireBaseTime.toDateString();
+    const atTime = fireBaseTime.toLocaleTimeString();
+    return `${date}, ${atTime}`
+  }
+  return "Unknown Time"
+  }

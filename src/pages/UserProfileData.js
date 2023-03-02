@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Button, Container, Row, Col } from 'react-bootstrap'
 import { useNavigate, useParams, useLocation } from 'react-router-dom'
 import Card from 'react-bootstrap/Card'
@@ -11,10 +11,15 @@ import useDoc from '../CustomHooks/UseDoc'
 import useCollection from '../CustomHooks/UseCollection'
 
 export default function UserProfileData() {
-  const { user, logOut } = UserAuth();
+  const { user, logOut, passwordReset } = UserAuth();
   //retrieve userid from URL parameter
   const { userid } = useParams()
   const navigate = useNavigate()
+
+  //Define State
+  const [sent, setSent] = useState(true)
+  const [message, setMessage] = useState('')
+  const [error, setError] = useState('')
 
   //custom hook for standard firestore data retrieval
   const { docData, isDocLoading, docError } = useDoc('Users', userid, userid)
@@ -27,6 +32,18 @@ export default function UserProfileData() {
 
   function handleEditUser() {
     navigate(`/Users/${userid}/edit`);
+  }
+
+  function resetPassword(e) {
+    e.preventDefault();
+    passwordReset(docData.Email)
+      .then(() => {
+        setSent(true)
+        setMessage(`Password Rest Email sent to ${docData.Email}`)
+      })
+      .catch((error) => {
+        setError(error.message)
+      });
   }
 
   async function handleSignOut() {
@@ -79,7 +96,7 @@ export default function UserProfileData() {
             <Card className='user-card'>
               {/* <Card.Img variant="top" src={require('../images/user_test.jpg')} /> */}
               <Card.Body>
-                <Card.Title>User Profile Data</Card.Title>
+                <Card.Title>User Profile Data <code>{docError ? docError : null}</code></Card.Title>
                 <Card.Text>
                 </Card.Text>
               </Card.Body>
@@ -91,17 +108,22 @@ export default function UserProfileData() {
                 <ListGroup.Item><Row><Col><strong>DOB:</strong></Col><Col> {docData.dob}</Col></Row></ListGroup.Item>
                 <ListGroup.Item><Row><Col><strong>Email:</strong></Col><Col> {docData.Email}</Col></Row></ListGroup.Item>
                 <ListGroup.Item><Row><Col><strong>Phone Number:</strong></Col><Col>  {docData.PhoneNumber}</Col></Row></ListGroup.Item>
-                <ListGroup.Item><Row><Col><strong>Role:</strong></Col><Col> {restrictedData.role}</Col></Row></ListGroup.Item>
-                <ListGroup.Item><Row><Col><strong>Status:</strong> </Col><Col> {restrictedData.accountStatus}</Col></Row></ListGroup.Item>
+                <ListGroup.Item><Row><Col><strong>Role:</strong></Col><Col>{restrictedDataError ? <code>{restrictedDataError}</code> : restrictedData.role}</Col></Row></ListGroup.Item>
+                <ListGroup.Item><Row><Col><strong>Status:</strong> </Col><Col> {restrictedDataError ? <code>{restrictedDataError}</code> : restrictedData.accountStatus}</Col></Row></ListGroup.Item>
                 <ListGroup.Item><Row><Col><strong>Agreed to T&Cs:</strong> </Col><Col> {docData.isAgreedTC ? "Yes" : "No"}</Col></Row></ListGroup.Item>
               </ListGroup>
               <Card.Body className='user-card-buttons'>
                 <Button variant='warning' className='user-card-button' onClick={handleEditUser}>Edit</Button>
+                {userid === user.uid ? <Button variant='secondary' className='user-card-button' onClick={resetPassword}>Reset Password</Button> : null}
                 {userid === user.uid ? <Button variant='primary' className='user-card-button' onClick={handleSignOut}>Logout</Button> : null}
               </Card.Body>
             </Card>
+            <Row>
+              <Col>{error ? <p className='mt-3 text-danger'>{error}</p> : null}{sent ? <p className='mt-3 text-success'>{message}</p> : null}</Col>
+            </Row>
           </Col>
           <Col className='user-appointments'>
+            {appointmentHistoryError ? <h4><code> {appointmentHistoryError}</code></h4> : null}
             {appointmentHistory.length > 0 ? appointmentHistory : <h5>No appointment History found</h5>}
           </Col>
         </Row>

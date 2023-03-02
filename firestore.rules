@@ -1,18 +1,67 @@
 rules_version = '2';
-// service cloud.firestore {
-//   match /databases/{database}/documents {
-//     match /{document=**} {
-//       allow read, write: if
-//           request.time < timestamp.date(2022, 11, 29);
-//     }
-//   }
-// }
 
-// Allow read/write access on all documents to any user signed in to the application
 service cloud.firestore {
-  match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if request.auth != null;
-    }
+   match /databases/{database}/documents {
+   		match /Questions/{questionId}{
+      // Allow any signed in user to read question documents only
+      	allow read: if request.auth !=null && request.auth.token.accountStatus == "Active";
+        //Allow Admins full control over question documents
+        allow create,read,update,delete: if request.auth.token.role == "Admin" && request.auth !=null;
+      }
+   		match /Location/{locationId}{
+      	// Allow any signed in user to read Location documents only
+      	allow read: if request.auth !=null && request.auth.token.accountStatus == "Active";
+        //Allow Admins full control over Location documents
+        allow create,read,update,delete: if request.auth.token == "Admin" && request.auth !=null;
+        match /Centers/{centerId} {
+        // Allow any signed in user to read Center documents only
+        allow read: if request.auth !=null;
+        //Allow Admins full control over Center documents
+        allow read,update,delete: if request.auth.token.role == "Admin" && request.auth !=null;
+        }
+      }
+      match /Clinics/{clinicId}{
+        // Allow Admin CRU control over clinic creation, creation is conditional on all the required fields being present
+      	allow create: if request.resource.data.keys().hasAll(['capacity', 'center', 'clinicStatus', 'createdBy','date','location','slots','startTime'])
+        allow read,update: if request.auth.token.role == "Admin" && request.auth !=null;
+        // Allow Support CRU control over clinic creation
+      	allow read,update: if request.auth.token.role == "Support" && request.auth !=null;
+      	// Allow any signed in user to read and update the clinic document
+        allow read,update: if request.auth !=null && request.auth.token.accountStatus == "Active";
+        
+        match /Appointments/{userId} {
+          // Allow data owner CRUD control over their own data
+          allow create,read,update,delete: if request.auth.uid == userId;
+          // Allow Admins RUD control over clinic appointment data
+          allow read,update,delete: if request.auth.token.role == "Admin";
+          // Allow Support RUD control over clinic appointment data
+          allow read,update,delete: if request.auth.token.role == "Support";
+        }
+      }
+      match /Users/{userId}{
+        //Allow Admins RU control over User documents
+        allow read,update: if request.auth.token.role == "Admin" && request.auth !=null;
+         //Allow Admins RU control over User documents
+        allow read,update: if request.auth.token.role == "Support" && request.auth !=null && request.auth.token.accountStatus == "Active";
+        //Allow Users CRUD control over their own User documents
+        allow create: if request.resource.data.keys().hasAll(['Email', 'FirstName', 'LastName', 'PhoneNumber','ProNouns','dob','isAgreedTC']);
+        allow read,update,delete: if request.auth.uid == userId && request.auth !=null && request.auth.token.accountStatus == "Active"; 
+        match /Appointments/{clinicId} {
+         //Allow Admins R control over User appointment information
+          allow read,update: if request.auth.token.role == "Admin";
+          //Allow Admins R control over User appointment information
+          allow read,update: if request.auth.token.role == "Support";
+         //Allow Users CRUD control over their own User appointment information
+          allow create,read,update,delete: if request.auth.uid == userId; 
+        }
+        match /Restricted/Details {
+          //Allow Users R control over their restricted information
+          allow read: if request.auth != null && request.auth.token.accountStatus == "Active"; 
+          //Allow Users CRUD control over user restricted information
+          allow read,update: if request.auth.token.role == "Support";
+          //Allow Users CRUD control over user restricted information
+          allow read,update: if request.auth.token.role == "Admin";
+        }
+      }
   }
 }

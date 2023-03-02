@@ -47,7 +47,7 @@ export default function UserProfileEdit() {
         //function to update user checkedIn status from false to true
         firestoreUpdate(`Users/${userid}/Restricted`, `Details`, data)
         //navigate back to user detail screen following update of information
-        navigate(`/Users/${userid}`, { state: { message: "User Details Updated" } });
+        navigate(`/Users/${userid}`, { state: { message: "Message" } });
     }
 
     function handleUserDataChange(event) {
