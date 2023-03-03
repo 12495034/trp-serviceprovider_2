@@ -13,8 +13,12 @@ import { appointInc } from '../Constants/Constants'
 import useCollectionSnapshot from '../CustomHooks/UseCollectionSnapshot'
 import useDocSnapshot from '../CustomHooks/UseDocSnapshot'
 import { firestoreUpdate } from '../FirestoreFunctions/firestoreUpdate'
-import { updateAppointmentStatus, handleAddSlot, handleReleaseSlot, combineSlotsAndAppointments, convertFirestoreTimeStamp } from '../Functions/SpecialFunctions'
-import { createDateString } from '../Functions/GeneralFunctions'
+import { convertFirestoreTimeStamp } from '../Functions/SpecialFunctions/convertFirestoreTimeStamp'
+import { handleReleaseSlot } from '../Functions/SpecialFunctions/handleReleaseSlot'
+import { handleAddSlot } from '../Functions/SpecialFunctions/handleAddSlot'
+import { createDateString } from '../Functions/GeneralFunctions/createDateString'
+import { combineSlotsAndAppointments } from '../Functions/SpecialFunctions/combineSlotsAndAppointments'
+import { updateAppointmentStatus } from '../Functions/SpecialFunctions/updateAppointmentStatus'
 
 
 

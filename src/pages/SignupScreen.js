@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button'
 import { Container, Row, Col} from 'react-bootstrap'
 import { useNavigate, Link } from 'react-router-dom'
 import { UserAuth } from '../context/AuthContext'
-import { handlePasswordConfirmation } from '../Functions/GeneralFunctions'
+import { handlePasswordConfirmation } from '../Functions/SpecialFunctions/handlePasswordConfirmation'
 import { setDoc, doc } from "firebase/firestore";
 import { firestore } from '../Firebase'
 

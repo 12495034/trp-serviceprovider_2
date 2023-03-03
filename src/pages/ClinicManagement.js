@@ -8,13 +8,13 @@ import NavBarTRP from '../components/NavBarTRP';
 import ToolBar from '../components/ClinicToolBar';
 import { collection, addDoc, Timestamp } from "firebase/firestore";
 import { firestore } from '../Firebase'
-import { currentDate } from '../Functions/GeneralFunctions';
 import useCollection from '../CustomHooks/UseCollection';
 import useCollectionSnapshot from '../CustomHooks/UseCollectionSnapshotQuery';
 import { appointInc } from '../Constants/Constants';
-import { createSlotsList } from '../Functions/SpecialFunctions';
+import { createSlotsList } from '../Functions/SpecialFunctions/createSlotsList';
 import { UserAuth } from '../context/AuthContext';
-import { createDateString } from '../Functions/GeneralFunctions';
+import { createDateString } from '../Functions/GeneralFunctions/createDateString';
+import { currentDate } from '../Functions/GeneralFunctions/currentDate';
 
 export default function ClinicManagement() {
   //functions or state provided to screen by context

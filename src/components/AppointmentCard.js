@@ -7,7 +7,8 @@ import TestCompleteIcon from '../Icons/TestCompleteIcon';
 import DeleteAppointmentIcon from '../Icons/DeleteAppointmentIcon';
 //helper functions
 import { deleteAppointment } from '../FirestoreFunctions/firestoreDelete';
-import { handleUpdate, handleCall } from '../Functions/SpecialFunctions';
+import { handleCall } from '../Functions/SpecialFunctions/handleCall';
+import { handleUpdate } from '../Functions/SpecialFunctions/handleUpdate';
 
 export default function AppointmentCard(props) {
   return (
