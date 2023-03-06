@@ -4,9 +4,9 @@ import { iconSize } from '../Constants/Constants';
 
 export default function CheckInIcon(props) {
     if (props.checkedIn === true) {
-        return <FaUserCheck color='green' size={iconSize} />
+        return <FaUserCheck color='green' size={iconSize} title="checkedIn" />
     } else if (props.checkedIn === false) {
-        return <FaUserClock color='red' size={iconSize} />
+        return <FaUserClock color='red' size={iconSize} title="notCheckedIn"/>
     } else {
         return null
     }

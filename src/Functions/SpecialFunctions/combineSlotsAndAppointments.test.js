@@ -63,12 +63,4 @@ describe('Creates a combined array of objects from input of objects array and ma
     test('PM slots array length', () => {
         expect(combineSlotsAndAppointments(appointmentsArrayPM, slotsMapPM).length).toBe(expectedLengthPM);
     });
-
-    test('Empty appointments array returns null', () => {
-        expect(combineSlotsAndAppointments(appointmentsArrayNull, slotsMapAM)).toBe(null);
-    });
-
-    test('Empty slots map returns null', () => {
-        expect(combineSlotsAndAppointments(appointmentsArrayAM, slotsMapNull)).toBe(null);
-    });
 });

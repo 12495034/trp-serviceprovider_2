@@ -21,7 +21,7 @@ export default function SignupScreen() {
         MiddleName: "",
         LastName: "",
         dob: "",
-        Email: "",
+        email: "",
         PhoneNumber: "",
         Password: "",
         ConfirmPassword: "",
@@ -51,7 +51,7 @@ export default function SignupScreen() {
             setError('')
             setValidated(true);
             try {
-                await createUser(formData.Email, formData.Password)
+                await createUser(formData.email, formData.Password)
                     .then(async (userCredential) => {
                         const newUser = userCredential.user
                         await setDoc(doc(firestore, "Users", newUser.uid), {
@@ -60,7 +60,7 @@ export default function SignupScreen() {
                             MiddleName: formData.MiddleName.charAt(0).toUpperCase() + formData.MiddleName.slice(1),
                             LastName: formData.LastName.charAt(0).toUpperCase() + formData.LastName.slice(1),
                             dob: formData.dob,
-                            Email: formData.Email,
+                            email: formData.email,
                             PhoneNumber: formData.PhoneNumber,
                             isAgreedTC: formData.isAgreedTC,
                         })
@@ -150,7 +150,7 @@ export default function SignupScreen() {
                                 </Form.Group>
                                 <Form.Group className="mb-3" controlId="formEmail">
                                     <Form.Label>Email</Form.Label>
-                                    <Form.Control required type="email" placeholder="Enter a valid email address" name="Email" onChange={handleChange} />
+                                    <Form.Control required type="email" placeholder="Enter a valid email address" name="email" onChange={handleChange} />
                                     <Form.Control.Feedback type="valid">
                                         Email format is correct
                                     </Form.Control.Feedback>

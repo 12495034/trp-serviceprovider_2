@@ -18,7 +18,7 @@ export default function UserProfileEdit() {
         PhoneNumber: '',
         dob: '',
         isAgreed: '',
-        Email: '',
+        email: '',
         createdAt: '',
     })
     const [restrictedUserData, setRestrictedUserData] = useState({
@@ -140,7 +140,7 @@ export default function UserProfileEdit() {
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formEmail">
                             <Form.Label>Email</Form.Label>
-                            <Form.Control disabled={true} required type="email" placeholder="Enter a valid email address" name="Email" value={userData.Email} />
+                            <Form.Control disabled={true} required type="email" placeholder="Enter a valid email address" name="email" value={userData.email} />
                             <Form.Control.Feedback type="valid">
                                 Email format is correct
                             </Form.Control.Feedback>

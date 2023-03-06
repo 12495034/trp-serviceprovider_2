@@ -62,7 +62,7 @@ export default function ClinicManagement() {
     //create clinic document that stores high level clinic information
     await addDoc(collection(firestore, "Clinics"), clinicData)
       .then(() => {
-        setMessage("A New Clinic has been created")
+        setMessage(`A New Clinic has been created at ${ClinicFormData.location},${ClinicFormData.center},${ClinicFormData.date}, ${ClinicFormData.startTime}`)
       })
       .catch((e) => {
         setErrorMessage(e.message)

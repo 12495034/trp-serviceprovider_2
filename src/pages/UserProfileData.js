@@ -106,7 +106,7 @@ export default function UserProfileData() {
                 <ListGroup.Item><Row><Col><strong>Middle Name:</strong></Col><Col> {docData.MiddleName}</Col></Row> </ListGroup.Item>
                 <ListGroup.Item><Row><Col><strong>Last Name:</strong></Col><Col> {docData.LastName}</Col></Row> </ListGroup.Item>
                 <ListGroup.Item><Row><Col><strong>DOB:</strong></Col><Col> {docData.dob}</Col></Row></ListGroup.Item>
-                <ListGroup.Item><Row><Col><strong>Email:</strong></Col><Col> {docData.Email}</Col></Row></ListGroup.Item>
+                <ListGroup.Item><Row><Col><strong>Email:</strong></Col><Col> {docData.email}</Col></Row></ListGroup.Item>
                 <ListGroup.Item><Row><Col><strong>Phone Number:</strong></Col><Col>  {docData.PhoneNumber}</Col></Row></ListGroup.Item>
                 <ListGroup.Item><Row><Col><strong>Role:</strong></Col><Col>{restrictedDataError ? <code>{restrictedDataError}</code> : restrictedData.role}</Col></Row></ListGroup.Item>
                 <ListGroup.Item><Row><Col><strong>Status:</strong> </Col><Col> {restrictedDataError ? <code>{restrictedDataError}</code> : restrictedData.accountStatus}</Col></Row></ListGroup.Item>
