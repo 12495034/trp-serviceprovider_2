@@ -6,15 +6,12 @@ const admin = require('firebase-admin');
 admin.initializeApp();
 
 //send notification email to All App users if a new clinic is created
-//to opt out of this there would need to be a flag in the Users document with boolean
-//a query could then be made on the collection to get only those opted in and create the array
 exports.sendNotificationEmail = functions.firestore.document('/Clinics/{clinicId}')
     .onCreate(async (snap) => {
-
         //get the data from the newly created document
         const newClinicData = snap.data();
-        //get the list of users from the Users collection
-        const userSnapshots = await admin.firestore().collection('Users').get();
+        //get the list of users from the Users collection who have opted in for email communications
+        const userSnapshots = await admin.firestore().collection('Users').where('emailOptIn', '==', true).get();
         //create an array of document Id's from the Users collection
         const userIdArray = userSnapshots.docs.map(snap => snap.id);
         //if there are registered users
@@ -41,7 +38,7 @@ exports.sendNotificationEmail = functions.firestore.document('/Clinics/{clinicId
                             </div>
                             <div>
                                 <h4>You are recieving this email because you are a registered user with The Rainbow Projects Rapid HIV testing mobile App</h3>
-                                <h4>To opt out of further communications please delete your user account using the mobile App profile screen</h3>
+                                <h4>To opt out of further communications please update your notification settings in your User profile</h3>
                             </div>
                         </div>`
                     ,

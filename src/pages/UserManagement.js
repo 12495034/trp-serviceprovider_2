@@ -76,7 +76,7 @@ export default function UserManagement() {
         <td>{item.ProNouns}</td>
         <td>{item.FirstName}</td>
         <td>{item.LastName}</td>
-        <td>{item.Email}</td>
+        <td>{item.email}</td>
       </tr>
     )
   })

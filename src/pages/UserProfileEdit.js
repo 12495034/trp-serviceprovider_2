@@ -20,12 +20,14 @@ export default function UserProfileEdit() {
         isAgreed: '',
         email: '',
         createdAt: '',
+        emailOptIn: undefined,
     })
     const [restrictedUserData, setRestrictedUserData] = useState({
         role: undefined,
         accountStatus: undefined,
     })
 
+    console.log(userData)
     //custom hook for standard data retrieval from firestore
     const { docData, isDocLoading, docError } = useDoc('Users', userid)
     const { docData: restrictedData, isDocLoading: isRestrictedDataLoading, docError: restrictedDataError } = useDoc(`Users/${userid}/Restricted`, 'Details')
@@ -52,10 +54,10 @@ export default function UserProfileEdit() {
 
     function handleUserDataChange(event) {
         // console.log(event.target.type)
-        const { name, value } = event.target
+        const { name, value, type, checked } = event.target
         setUserData(prevState => {
             return {
-                ...prevState, [name]: value
+                ...prevState, [name]: type === "checkbox" ? checked : value
             }
         })
     }
@@ -157,6 +159,18 @@ export default function UserProfileEdit() {
                             <Form.Text className="text-muted">
                                 It is important to keep contact details up to date incase direct contact is required
                             </Form.Text>
+                        </Form.Group>
+                        <Form.Group className="mb-3" >
+                            <Form.Check
+                                // required
+                                label="Recieve Emails Notifications"
+                                // feedback="You must agree before submitting."
+                                // feedbackType="invalid"
+                                checked={userData.emailOptIn}
+                                controlid="emailOptIn"
+                                name="emailOptIn" 
+                                onChange={handleUserDataChange}
+                            />
                         </Form.Group>
                         <hr />
                         <Button style={{ width: '100%' }} variant="success" type='submit' className='form--submit'>

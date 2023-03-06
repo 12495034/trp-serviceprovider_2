@@ -20,8 +20,6 @@ import { createDateString } from '../Functions/GeneralFunctions/createDateString
 import { combineSlotsAndAppointments } from '../Functions/SpecialFunctions/combineSlotsAndAppointments'
 import { updateAppointmentStatus } from '../Functions/SpecialFunctions/updateAppointmentStatus'
 
-
-
 export default function ClinicDetail() {
     //react-router-dom params that are passed through navigate
     const { clinicId } = useParams();

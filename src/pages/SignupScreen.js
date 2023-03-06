@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
-import { Container, Row, Col} from 'react-bootstrap'
+import { Container, Row, Col } from 'react-bootstrap'
 import { useNavigate, Link } from 'react-router-dom'
 import { UserAuth } from '../context/AuthContext'
 import { handlePasswordConfirmation } from '../Functions/SpecialFunctions/handlePasswordConfirmation'
@@ -26,6 +26,7 @@ export default function SignupScreen() {
         Password: "",
         ConfirmPassword: "",
         isAgreedTC: "",
+        emailOptIn: false,
     })
     const [error, setError] = useState('');
 
@@ -63,6 +64,7 @@ export default function SignupScreen() {
                             email: formData.email,
                             PhoneNumber: formData.PhoneNumber,
                             isAgreedTC: formData.isAgreedTC,
+                            emailOptIn: formData.emailOptIn,
                         })
                         updateUserAuthProfile(formData.FirstName, formData.LastName, formData.PhoneNumber)
                         verifyEmail()
@@ -189,11 +191,21 @@ export default function SignupScreen() {
                                 <Form.Group className="mb-3">
                                     <Form.Check
                                         required
+                                        checked={formData.isAgreedTC}
                                         label="Agree to terms and conditions"
                                         feedback="You must agree before submitting."
                                         feedbackType="invalid"
                                         controlid="isAgreedTC"
-                                        name="isAgreedTC" onChange={handleChange}
+                                        name="isAgreedTC"
+                                        onChange={handleChange}
+                                    />
+                                    <Form.Check
+                                        checked={formData.emailOptIn}
+                                        value={formData.emailOptIn}
+                                        label="Recieve Emails about new Clinics"
+                                        controlid="emailOptIn"
+                                        name="emailOptIn"
+                                        onChange={handleChange}
                                     />
                                 </Form.Group>
                                 <hr />

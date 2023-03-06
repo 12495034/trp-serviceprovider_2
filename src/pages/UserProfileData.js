@@ -111,6 +111,7 @@ export default function UserProfileData() {
                 <ListGroup.Item><Row><Col><strong>Role:</strong></Col><Col>{restrictedDataError ? <code>{restrictedDataError}</code> : restrictedData.role}</Col></Row></ListGroup.Item>
                 <ListGroup.Item><Row><Col><strong>Status:</strong> </Col><Col> {restrictedDataError ? <code>{restrictedDataError}</code> : restrictedData.accountStatus}</Col></Row></ListGroup.Item>
                 <ListGroup.Item><Row><Col><strong>Agreed to T&Cs:</strong> </Col><Col> {docData.isAgreedTC ? "Yes" : "No"}</Col></Row></ListGroup.Item>
+                <ListGroup.Item><Row><Col><strong>Email Notifications On:</strong> </Col><Col> {docData.emailOptIn? "Yes":"No"}</Col></Row></ListGroup.Item>
               </ListGroup>
               <Card.Body className='user-card-buttons'>
                 <Button variant='warning' className='user-card-button' onClick={handleEditUser}>Edit</Button>
