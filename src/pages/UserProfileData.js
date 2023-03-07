@@ -87,7 +87,7 @@ export default function UserProfileData() {
 
   return (
     <div className='page-body'>
-      <NavBarTRP />
+     <NavBarTRP userId={user.uid} email={user.email}/>
       {/* conditional rendering to ensure user details are not shown unless a user is logged in
       will be made redundant when protected routes are introduced */}
       <Container className='page-content'>

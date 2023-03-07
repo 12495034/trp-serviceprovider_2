@@ -29,6 +29,7 @@ exports.sendNotificationEmail = functions.firestore.document('/Clinics/{clinicId
                             <div>
                                 <h3>Location: ${newClinicData.location}</h3>
                                 <h3>Center: ${newClinicData.center}</h3>
+                                <h3>Room: ${newClinicData.addDetails}</h3>
                                 <h3>Date: ${newClinicData.date}</h3>
                                 <h3>Start Time: ${newClinicData.startTime}</h3>
                                 <h3>Capacity: ${newClinicData.capacity}</h3>

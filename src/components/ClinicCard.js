@@ -8,14 +8,15 @@ export default function ClinicCard(props) {
         <Col md={2}>
           <div>{props.date}</div>
         </Col>
-        <Col md={2}>
+        <Col md={1}>
           <div>{props.time}</div>
         </Col>
-        <Col md={2}>
+        <Col md={1}>
           <div>{props.location}</div>
         </Col>
-        <Col md={2}>
+        <Col md={4}>
           <div>{props.center}</div>
+          <div>{props.addDetails}</div>
         </Col>
         <Col md={2}>
           <div>{props.appointments}/{props.capacity}</div>

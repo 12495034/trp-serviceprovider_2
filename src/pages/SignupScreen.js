@@ -12,7 +12,7 @@ export default function SignupScreen() {
     //useNavigate hook from react router dom
     const navigate = useNavigate()
     //functions passed to screen by context
-    const { createUser, verifyEmail, updateUserAuthProfile } = UserAuth()
+    const { createUser, verifyEmail, updateUserAuthProfile, logOut} = UserAuth()
     //state
     const [validated, setValidated] = useState(false);
     const [formData, setformData] = useState({
@@ -68,6 +68,8 @@ export default function SignupScreen() {
                         })
                         updateUserAuthProfile(formData.FirstName, formData.LastName, formData.PhoneNumber)
                         verifyEmail()
+                        handleSignOut()
+
                     })
                 navigate('/home')
             } catch (e) {
@@ -75,6 +77,16 @@ export default function SignupScreen() {
             }
         }
     }
+
+    async function handleSignOut() {
+        console.log("Sign out")
+        try {
+          await logOut()
+          navigate('/')
+        } catch (e) {
+          console.log(e.message)
+        }
+      }
 
     return (
         <div className='login-body'>

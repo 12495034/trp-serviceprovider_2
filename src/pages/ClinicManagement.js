@@ -32,6 +32,7 @@ export default function ClinicManagement() {
     capacity: 0,
     slots: {},
     clinicStatus: "Active",
+    addDetails:"",
     timeStamp: Timestamp.fromDate(new Date()),
   })
   const [filterRadio, setFilterRadio] = useState("Active")
@@ -60,6 +61,7 @@ export default function ClinicManagement() {
     const clinicData = {}
     Object.assign(clinicData, ClinicFormData, { createdBy: user.displayName })
     //create clinic document that stores high level clinic information
+    console.log(clinicData)
     await addDoc(collection(firestore, "Clinics"), clinicData)
       .then(() => {
         setMessage(`A New Clinic has been created at ${ClinicFormData.location},${ClinicFormData.center},${ClinicFormData.date}, ${ClinicFormData.startTime}`)
@@ -76,6 +78,7 @@ export default function ClinicManagement() {
       capacity: 0,
       slots: {},
       clinicStatus: "Active",
+      addDetails:"",
     })
   }
 
@@ -131,6 +134,7 @@ export default function ClinicManagement() {
         key={item.id}
         location={item.location}
         center={item.center}
+        addDetails={item.addDetails}
         date={createDateString(item.date)}
         capacity={item.capacity}
         time={item.startTime}
@@ -162,7 +166,7 @@ export default function ClinicManagement() {
 
   return (
     <div className='page-body'>
-      <NavBarTRP />
+      <NavBarTRP userId={user.uid} email={user.email}/>
       <Container className='page-content'>
         <h1 className="Title">Clinic Management  {locationError ? <code>{locationError}</code> : null}</h1>
         <Accordion>
@@ -181,7 +185,6 @@ export default function ClinicManagement() {
                       onChange={handleChange}
                       value={ClinicFormData.location}
                     >
-                      {/* <option value="">Choose Location</option> */}
                       {locations}
                     </Form.Control>
                   </Form.Group>
@@ -199,6 +202,18 @@ export default function ClinicManagement() {
                       <option value="">Choose Center</option>
                       {centers}
                     </Form.Control>
+                  </Form.Group>
+                </Row>
+                <Row>
+                  <Form.Group className="mb-3" controlId="formBasicEmail">
+                    <Form.Label>Additional Details</Form.Label>
+                    <Form.Control 
+                    required
+                    name="addDetails" 
+                    onChange={handleChange} 
+                    type="text" 
+                    placeholder="Describe where the tests are being conducted" 
+                    value={ClinicFormData.addDetails} />
                   </Form.Group>
                 </Row>
 

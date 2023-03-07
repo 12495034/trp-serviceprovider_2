@@ -2,11 +2,14 @@ import React, { useState, useEffect } from 'react'
 import { Container, Row, Col, Form, Button } from 'react-bootstrap'
 import { useNavigate, useParams } from 'react-router-dom'
 import NavBarTRP from '../components/NavBarTRP'
+import { UserAuth } from '../context/AuthContext';
 import Footer from '../components/Footer'
 import useDoc from '../CustomHooks/UseDoc'
 import { firestoreUpdate } from '../FirestoreFunctions/firestoreUpdate'
 
+
 export default function UserProfileEdit() {
+    const { user } = UserAuth();
     const navigate = useNavigate()
     const { userid } = useParams()
     //define State
@@ -73,7 +76,7 @@ export default function UserProfileEdit() {
 
     return (
         <div className='page-body'>
-            <NavBarTRP />
+            <NavBarTRP userId={user.uid} email={user.email}/>
             <Container className='page-content'>
                 <Row>
                     <Form onSubmit={() => {

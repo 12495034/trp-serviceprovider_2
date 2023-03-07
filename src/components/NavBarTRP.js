@@ -4,16 +4,10 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { Stack } from 'react-bootstrap';
 import { MdPerson } from "react-icons/md";
-import { UserAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
-export default function NavBarTRP() {
-    const { user } = UserAuth();
+export default function NavBarTRP(props) {
     const navigate = useNavigate()
-
-    function handleUserProfile() {
-        navigate(`/Users/${user.uid}`);
-    }
 
     return (
         <Navbar className='NavBar' expand="lg">
@@ -39,11 +33,11 @@ export default function NavBarTRP() {
 
                     </Nav>
                     <Nav>
-                    <Stack direction='horizontal' gap={3}>
-                        <MdPerson onClick={handleUserProfile} size={20} color='purple' />
-                        <Navbar.Text>
-                            Signed in as: {user.email}
-                        </Navbar.Text>
+                        <Stack direction='horizontal' gap={3}>
+                            <MdPerson onClick={() => navigate(`/Users/${props.userId}`)} size={20} color='purple' />
+                            <Navbar.Text>
+                                {/* Signed in as: {props.email} */}
+                            </Navbar.Text>
                         </Stack>
                     </Nav>
                 </Navbar.Collapse>

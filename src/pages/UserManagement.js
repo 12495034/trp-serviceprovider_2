@@ -5,9 +5,11 @@ import NavBarTRP from '../components/NavBarTRP'
 import Footer from '../components/Footer'
 import { collection, query, getDocs, where } from "firebase/firestore";
 import { firestore } from '../Firebase'
+import { UserAuth } from '../context/AuthContext';
 
 export default function UserManagement() {
 
+  const { user } = UserAuth();
   //------------------------------------------------------------------------------------------------
   //        DEFINE STATE
   //------------------------------------------------------------------------------------------------
@@ -83,7 +85,7 @@ export default function UserManagement() {
 
   return (
     <div className='page-body'>
-      <NavBarTRP />
+      <NavBarTRP userId={user.uid} email={user.email}/>
       <Container className='page-content'>
         <h1>User Management</h1>
         {/* Insert toolbar */}

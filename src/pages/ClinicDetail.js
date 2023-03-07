@@ -37,8 +37,11 @@ export default function ClinicDetail() {
     const handleCloseCancel = () => setCancelModalShow(false);
     const handleShowCancel = () => setCancelModalShow(true);
     const [endModalshow, setEndModalShow] = useState(false);
+    const [deleteModalShow, setDeleteModalShow] = useState(false)
     const handleCloseEnd = () => setEndModalShow(false);
     const handleShowEnd = () => setEndModalShow(true);
+    const handleCloseDelete = () => setDeleteModalShow(false);
+    const handleShowDelete = () => setDeleteModalShow(true);
 
     //initialise new array using appointments
     const combinedList = combineSlotsAndAppointments(appointments, clinic.slots)
@@ -81,7 +84,7 @@ export default function ClinicDetail() {
     //-------------------------------------------------------------------------------------
     return (
         <div className='page-body'>
-            <NavBarTRP />
+            <NavBarTRP userId={user.uid} email={user.email}/>
             {/* <BreadCrumbCustom /> */}
             <Container className='page-content'>
                 {/* //conditional rendering so that if the clinic is not active then it is assumed to be cancelled or complete
@@ -102,7 +105,16 @@ export default function ClinicDetail() {
                 <Row>
                     <Col>
                         {clinic.clinicStatus !== "Active" ? <h5 bg='danger'>This clinic is no longer active, changes cannot be made</h5> : null}
-                        <ClinicInformationCard clinicid={clinicId} date={createDateString(clinic.date)} time={clinic.startTime} location={clinic.location} center={clinic.center} appointments={appointments.length} capacity={clinic.capacity} active={clinic.clinicStatus} />
+                        <ClinicInformationCard
+                            clinicid={clinicId}
+                            date={createDateString(clinic.date)}
+                            time={clinic.startTime}
+                            location={clinic.location}
+                            center={clinic.center}
+                            addDetails={clinic.addDetails}
+                            appointments={appointments.length}
+                            capacity={clinic.capacity}
+                            active={clinic.clinicStatus} />
                     </Col>
                 </Row>
                 <hr />
@@ -143,6 +155,16 @@ export default function ClinicDetail() {
                     handleCloseCancel()
                 }}
             />
+
+            {/* <ModalConfirmation
+                show={deleteModalShow}
+                close={handleCloseDelete}
+                header="Are you sure you want to Delete this Users appointment?"
+                body="The user will loose their appointment"
+                updatefunction={() => {
+                    handleCloseDelete()
+                }}
+            /> */}
 
             <ModalConfirmation
                 show={endModalshow}
