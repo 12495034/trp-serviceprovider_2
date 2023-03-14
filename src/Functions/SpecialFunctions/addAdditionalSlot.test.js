@@ -16,16 +16,36 @@ const dataAM = [
 ]
 const dataPM = [
     {
-        slot: 1, time: "15:00",
+        slot: 1, time: "18:00",
     },
     {
-        slot: 2, time: "15:30",
+        slot: 2, time: "18:30",
     },
+    {
+        slot: 3, time: "19:00",
+    },
+    {
+        slot: 4, time: "19:30",
+    },
+    {
+        slot: 5, time: "20:00",
+    },
+    {
+        slot: 6, time: "20:30",
+    },
+    {
+        slot: 7, time: "21:00",
+    },
+    {
+        slot: 8, time: "21:30",
+    },
+
+
 ]
 
-const expectedNull = "No appointments Data provided"
+const expectedNull = "Input error - Check function arguments"
 const expectedAM = "10:00"
-const expectedPM = "16:00"
+const expectedPM = "22:00"
 
 describe('creates a time slot a specified number of minutes after the last row of data', () => {
     test('test of AM time slot', () => {

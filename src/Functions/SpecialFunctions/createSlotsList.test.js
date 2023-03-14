@@ -31,6 +31,8 @@ const expectedObjectPM30 = {
     4:"18:30",
 }
 
+const expectedNull = "Input error - Check function arguments"
+
 
 describe('Creates a map of available appointments', () => {
 
@@ -53,7 +55,7 @@ describe('Creates a map of available appointments', () => {
     });
 
     test('PM appointments, 20minute increments, null capacity', () => {
-        expect(createSlotsList(date, startTimePM, capacityNull, inc20)).toBe(null);
+        expect(createSlotsList(date, startTimePM, capacityNull, inc20)).toBe(expectedNull);
     });
 
 });

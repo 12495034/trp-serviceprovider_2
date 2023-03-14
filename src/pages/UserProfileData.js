@@ -23,7 +23,7 @@ export default function UserProfileData() {
 
   //custom hook for standard firestore data retrieval
   const { docData, isDocLoading, docError } = useDoc('Users', userid, userid)
-  const { docData: restrictedData, isDocLoading: restrictedDataLoading, docError: restrictedDataError } = useDoc(`Users/${userid}/Restricted`, 'Details', null)
+  const { docData: restrictedData, isDocLoading: restrictedDataLoading, docError: restrictedDataError } = useDoc(`Users/${userid}/Restricted`, 'Details')
   const { collectionData: appointmentHistoryData, isCollectionLoading: locationLoading, collectionError: appointmentHistoryError } = useCollection(`Users/${userid}/Appointments`, null)
 
   function handleClinicDetail(clinicId) {
@@ -36,10 +36,10 @@ export default function UserProfileData() {
 
   function resetPassword(e) {
     e.preventDefault();
-    passwordReset(docData.Email)
+    passwordReset(docData.email)
       .then(() => {
         setSent(true)
-        setMessage(`Password Rest Email sent to ${docData.Email}`)
+        setMessage(`Password Rest Email sent to ${docData.email}`)
       })
       .catch((error) => {
         setError(error.message)
@@ -61,7 +61,7 @@ export default function UserProfileData() {
   //-------------------------------------------------------------------------------------
   //sort appointment history by date prior to rendering
   appointmentHistoryData.sort(
-    (p1, p2) => (p1.date < p2.date) ? -1 : (p1.date > p2.date) ? 1 : 0)
+    (p1, p2) => (p1.date > p2.date) ? -1 : (p1.date < p2.date) ? 1 : 0)
 
   //create JSX elements based on stored state data
   const appointmentHistory = appointmentHistoryData.map((item, index) => {

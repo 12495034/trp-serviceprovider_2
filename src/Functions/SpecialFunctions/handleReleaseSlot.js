@@ -1,10 +1,14 @@
 import { firestoreUpdate } from "../../FirestoreFunctions/firestoreUpdate"
 
 //function to update specified clinic fields
-export function handleReleaseSlot(clinicId, availableSlots, newSlotNumber, time) {
-    if (clinicId != null && availableSlots != null && newSlotNumber != null && newSlotNumber > 0 && time != null) {
+export function handleReleaseSlot(clinicId, availableSlots, newSlotNumber, time, clinicStatus, setState) {
+    if (clinicStatus == "Active") {
         const newSlotsObject = Object.assign({}, availableSlots, { [newSlotNumber]: time })
-        return firestoreUpdate(`Clinics`, `${clinicId}`, { slots: newSlotsObject })
+         firestoreUpdate(`Clinics`, `${clinicId}`, { slots: newSlotsObject })
+         .then(()=>{
+         })
+         .catch((error)=>{
+         })
     } else {
         console.log("Input Error - check function arguments")
     }

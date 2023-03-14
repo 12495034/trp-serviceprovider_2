@@ -23,16 +23,16 @@ export default function UserProfileEdit() {
         isAgreed: '',
         email: '',
         createdAt: '',
-        emailOptIn: undefined,
+        emailOptIn: '',
     })
     const [restrictedUserData, setRestrictedUserData] = useState({
-        role: undefined,
-        accountStatus: undefined,
+        role: '',
+        accountStatus: '',
     })
 
-    console.log(userData)
     //custom hook for standard data retrieval from firestore
     const { docData, isDocLoading, docError } = useDoc('Users', userid)
+    //const { docData: dropDowns, isDocLoading: dropDownsLoading, docError: dropDownsError } = useDoc('DropDownData', 'Information')
     const { docData: restrictedData, isDocLoading: isRestrictedDataLoading, docError: restrictedDataError } = useDoc(`Users/${userid}/Restricted`, 'Details')
 
     //Initialise form using data retrieved using useDoc custom hook
@@ -74,9 +74,20 @@ export default function UserProfileEdit() {
         })
     }
 
+    //-------------------------------------------------------------------------------------------------
+    //  Data Rendering
+    //-------------------------------------------------------------------------------------------------
+    // const userStatusArray = dropDowns.userStatus
+    // const userStatusList = userStatusArray.map((item, index) => {
+    //     //for data security the name of the person is not shown but the id of the person is perhaps
+    //     return (
+    //         <option key={index.toString()} value={item}>{item}</option>
+    //     )
+    // })
+
     return (
         <div className='page-body'>
-            <NavBarTRP userId={user.uid} email={user.email}/>
+            <NavBarTRP userId={user.uid} email={user.email} />
             <Container className='page-content'>
                 <Row>
                     <Form onSubmit={() => {
@@ -171,7 +182,7 @@ export default function UserProfileEdit() {
                                 // feedbackType="invalid"
                                 checked={userData.emailOptIn}
                                 controlid="emailOptIn"
-                                name="emailOptIn" 
+                                name="emailOptIn"
                                 onChange={handleUserDataChange}
                             />
                         </Form.Group>

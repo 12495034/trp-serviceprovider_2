@@ -1,18 +1,25 @@
-import { firestoreUpdate } from "../../FirestoreFunctions/firestoreUpdate"
 import { getListOfAppointmentsByStatus } from "../../FirestoreFunctions/firestoreRead"
+import { firestore } from "../../Firebase";
+import { runTransaction, doc } from "firebase/firestore"
 
-//update appointment status when a clinic is cancelled or closed
-export async function updateAppointmentStatus(field, value, clinicId, updateStatus) {
-    if (field != null && value != null && clinicId != null && updateStatus != null) {
-        const List = await getListOfAppointmentsByStatus(field, value, clinicId)
-        if (List.length > 0) {
-            for (var i = 0; i < List.length; i++) {
-                const data = { status: updateStatus }
-                firestoreUpdate(`Clinics/${clinicId}/Appointments`, `${List[i].id}`, data)
-                firestoreUpdate(`Users/${List[i].id}/Appointments`, `${clinicId}`, data)
+//update the status of all appointment documents when a clinic is cancelled or closed
+//In security rules for transactions or batched writes, there is a limit of 20 document access calls for the 
+//entire atomic operation in addition to the normal 10 call limit for each single document operation in the batch.
+export async function updateAppointmentStatus(field, value, clinicId, updateStatus,setState) {
+    try {
+        await runTransaction(firestore, async (transaction) => {
+            const List = await getListOfAppointmentsByStatus(field, value, clinicId)
+            if (List.length > 0) {
+                for (var i = 0; i < List.length; i++) {
+                    const data = { status: updateStatus }
+                    transaction.update(doc(firestore, `Clinics/${clinicId}/Appointments`, `${List[i].id}`), data);
+                    transaction.update(doc(firestore, `Users/${List[i].id}/Appointments`, `${clinicId}`), data);
+                }
             }
-        }
-    } else {
-        console.log("Input Error - check function arguments")
+        });
+        setState("")
+    } catch (e) {
+        setState(e.message)
     }
+
 }

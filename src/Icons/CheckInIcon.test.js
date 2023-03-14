@@ -16,10 +16,6 @@ describe('Appointment Card', () => {
         const {getByTitle} = render(<CheckInIcon
             checkedIn={false}
         />);
-
-        //renders the HTML in the console window
-        screen.debug();
-        //test rendering of icons
         expect(getByTitle("notCheckedIn")).toBeTruthy();   
     });
 });

@@ -1,17 +1,26 @@
 import { firestoreUpdate } from "../../FirestoreFunctions/firestoreUpdate"
 import { addAdditionalSlot } from "./addAdditionalSlot"
+import { maxClinicCapacity } from "../../Constants/Constants"
 
-//add additional slot to clinic
-export function handleAddSlot(clinicId, availableSlots, appointmentsData, date, capacity, inc) {
-    if (clinicId != null && availableSlots != null && appointmentsData != null && date != null && capacity != null && inc != null) {
-        const newTime = addAdditionalSlot(appointmentsData, date, inc)
+//add additional slot to clinic map
+export function handleAddSlot(clinicId, availableSlots, appointmentsData, date, capacity, timeInc, setState) {
+
+    if (capacity < maxClinicCapacity) {
+        const newTime = addAdditionalSlot(appointmentsData, date, timeInc)
         const newCapacity = parseInt(capacity) + 1
         const newSlot = { [newCapacity]: newTime }
         const newSlotsObject = Object.assign({}, availableSlots, newSlot)
 
-        firestoreUpdate('Clinics', clinicId, { "capacity": newCapacity })
+        //update slots map with additional slot and return result
         firestoreUpdate('Clinics', clinicId, { slots: newSlotsObject })
-    } else {
-        console.log("Input Error - please check function arguments")
+            .then(() => {
+                
+            })
+            .catch((error) => {
+                setState(error.message)
+            })
+    } else { 
+        setState("The maximum number of slots that can be added is 20")
     }
+
 }

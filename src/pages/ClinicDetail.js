@@ -19,6 +19,7 @@ import { handleAddSlot } from '../Functions/SpecialFunctions/handleAddSlot'
 import { createDateString } from '../Functions/GeneralFunctions/createDateString'
 import { combineSlotsAndAppointments } from '../Functions/SpecialFunctions/combineSlotsAndAppointments'
 import { updateAppointmentStatus } from '../Functions/SpecialFunctions/updateAppointmentStatus'
+import { handleUpdateCapacity } from '../Functions/SpecialFunctions/handleUpdateCapacity'
 
 export default function ClinicDetail() {
     //react-router-dom params that are passed through navigate
@@ -44,7 +45,7 @@ export default function ClinicDetail() {
     const handleShowDelete = () => setDeleteModalShow(true);
 
     //initialise new array using appointments
-    const combinedList = combineSlotsAndAppointments(appointments, clinic.slots)
+    const combinedList = combineSlotsAndAppointments(appointments, clinic.slots, setError)
     //Array is sorted starting with earliest appointment slot time using a compare method in an arrow function
     const sortedAppointments = combinedList.sort((p1, p2) => (p1.slot > p2.slot) ? 1 : (p1.slot < p2.slot) ? -1 : 0)
 
@@ -84,7 +85,7 @@ export default function ClinicDetail() {
     //-------------------------------------------------------------------------------------
     return (
         <div className='page-body'>
-            <NavBarTRP userId={user.uid} email={user.email}/>
+            <NavBarTRP userId={user.uid} email={user.email} />
             {/* <BreadCrumbCustom /> */}
             <Container className='page-content'>
                 {/* //conditional rendering so that if the clinic is not active then it is assumed to be cancelled or complete
@@ -118,6 +119,7 @@ export default function ClinicDetail() {
                     </Col>
                 </Row>
                 <hr />
+                <h4><code>{error ? error : null}</code></h4>
                 <Row>
                     <Col>
                         {appointmentList}
@@ -137,7 +139,11 @@ export default function ClinicDetail() {
                                     </Tooltip>
                                 }
                             >
-                                <Button onClick={() => handleAddSlot(clinicId, clinic.slots, sortedAppointments, clinic.date, clinic.capacity, appointInc)}>Add Additional Slot</Button>
+                                <Button onClick={() => {
+                                    handleAddSlot(clinicId, clinic.slots, sortedAppointments, clinic.date, clinic.capacity, appointInc, setError)
+                                    handleUpdateCapacity(clinicId, clinic.capacity, setError)
+                                }}
+                                >Add Additional Slot</Button>
                             </OverlayTrigger>}
                     </div>
                 </Row>

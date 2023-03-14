@@ -1,20 +1,21 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
-import { Row, Col, Accordion, Form, Button, Stack } from 'react-bootstrap'
+import { Row, Col, Accordion, Stack } from 'react-bootstrap'
 import Footer from '../components/Footer'
 import ClinicCard from '../components/ClinicCard'
 import NavBarTRP from '../components/NavBarTRP';
-import ToolBar from '../components/ClinicToolBar';
-import { collection, addDoc, Timestamp } from "firebase/firestore";
-import { firestore } from '../Firebase'
-import useCollection from '../CustomHooks/UseCollection';
+import ClinicToolBar from '../components/ClinicToolBar';
+import { Timestamp } from "firebase/firestore";
 import useCollectionSnapshot from '../CustomHooks/UseCollectionSnapshotQuery';
 import { appointInc } from '../Constants/Constants';
 import { createSlotsList } from '../Functions/SpecialFunctions/createSlotsList';
 import { UserAuth } from '../context/AuthContext';
 import { createDateString } from '../Functions/GeneralFunctions/createDateString';
 import { currentDate } from '../Functions/GeneralFunctions/currentDate';
+import NewClinicForm from '../components/NewClinicForm';
+import { firestoreAddDoc } from '../FirestoreFunctions/firestoreWrite';
+import useCollection from '../CustomHooks/UseCollection';
 
 export default function ClinicManagement() {
   //functions or state provided to screen by context
@@ -32,11 +33,10 @@ export default function ClinicManagement() {
     capacity: 0,
     slots: {},
     clinicStatus: "Active",
-    addDetails:"",
+    addDetails: "",
     timeStamp: Timestamp.fromDate(new Date()),
   })
   const [filterRadio, setFilterRadio] = useState("Active")
-  const [errorMessage, setErrorMessage] = useState('')
   const [message, setMessage] = useState('')
 
   //custom hookes for standard data retrieval
@@ -50,6 +50,7 @@ export default function ClinicManagement() {
   // Functions
   //----------------------------------------------------------------------------------------
 
+  //When a user clicks on the
   function handleClinicDetail(clinicId) {
     navigate(`${clinicId}`);
   }
@@ -60,14 +61,13 @@ export default function ClinicManagement() {
     //add current user to clinic data to record the creator
     const clinicData = {}
     Object.assign(clinicData, ClinicFormData, { createdBy: user.displayName })
-    //create clinic document that stores high level clinic information
-    console.log(clinicData)
-    await addDoc(collection(firestore, "Clinics"), clinicData)
+    //create clinic document that stores high level clinic information, includes call back to set success/error message
+    firestoreAddDoc("Clinics", clinicData)
       .then(() => {
-        setMessage(`A New Clinic has been created at ${ClinicFormData.location},${ClinicFormData.center},${ClinicFormData.date}, ${ClinicFormData.startTime}`)
+        setMessage(`A New Clinic has been created at ${clinicData.location},${clinicData.center},${clinicData.date}, ${clinicData.startTime}`)
       })
       .catch((e) => {
-        setErrorMessage(e.message)
+        setMessage(e.message)
       })
     //clear form following clinic creation
     setClinicFormData({
@@ -78,7 +78,7 @@ export default function ClinicManagement() {
       capacity: 0,
       slots: {},
       clinicStatus: "Active",
-      addDetails:"",
+      addDetails: "",
     })
   }
 
@@ -146,137 +146,39 @@ export default function ClinicManagement() {
     )
   })
 
-  //render list of locations (cities) that tests take place in
-  const locations = locationData.map((item) => {
-    return (
-      <option key={item.id} value={item.id}>{item.id}</option>
-    )
-  })
-
-  //render list of centers available in the selected city
-  const centers = centerData.map((item) => {
-    return (
-      <option key={item.id} value={item.name}>{item.name}</option>
-    )
-  })
-
   //----------------------------------------------------------------------------------------
   // Page content
   //----------------------------------------------------------------------------------------
 
   return (
     <div className='page-body'>
-      <NavBarTRP userId={user.uid} email={user.email}/>
+      <NavBarTRP userId={user.uid} email={user.email} />
       <Container className='page-content'>
-        <h1 className="Title">Clinic Management  {locationError ? <code>{locationError}</code> : null}</h1>
+        <h1 className="Title">Clinic Management</h1>
         <Accordion>
           <Accordion.Item eventKey="0">
             <Accordion.Header>Create New Clinic</Accordion.Header>
             <Accordion.Body>
-              <Form onSubmit={handleSubmit} className="mt-3 background">
-                <Row>
-                  <Form.Group className="mb-3" as={Col} controlId="formGridState">
-                    <Form.Label>Location</Form.Label>
-                    <Form.Control
-                      required
-                      disabled={role !== "Admin" ? true : false}
-                      as="select"
-                      name="location"
-                      onChange={handleChange}
-                      value={ClinicFormData.location}
-                    >
-                      {locations}
-                    </Form.Control>
-                  </Form.Group>
-                  <Form.Group className="mb-3" as={Col} controlId="formGridState">
-                    <Form.Label>Center</Form.Label>
-                    <Form.Control
-                      required
-                      disabled={role !== "Admin" ? true : false}
-                      as="select"
-                      name="center"
-                      placeholder='Choose Location'
-                      onChange={handleChange}
-                      value={ClinicFormData.center}
-                    >
-                      <option value="">Choose Center</option>
-                      {centers}
-                    </Form.Control>
-                  </Form.Group>
-                </Row>
-                <Row>
-                  <Form.Group className="mb-3" controlId="formBasicEmail">
-                    <Form.Label>Additional Details</Form.Label>
-                    <Form.Control 
-                    required
-                    name="addDetails" 
-                    onChange={handleChange} 
-                    type="text" 
-                    placeholder="Describe where the tests are being conducted" 
-                    value={ClinicFormData.addDetails} />
-                  </Form.Group>
-                </Row>
-
-                <Row className="mb-3">
-                  <Form.Group as={Col} controlId="formGridCity">
-                    <Form.Label>Date</Form.Label>
-                    <Form.Control
-                      required
-                      disabled={role !== "Admin" ? true : false}
-                      name="date"
-                      placeholder="Choose a Date"
-                      type="date"
-                      min={currentDate()}
-                      onChange={handleChange}
-                      value={ClinicFormData.date} />
-                  </Form.Group>
-
-                  <Form.Group as={Col} controlId="formGridZip">
-                    <Form.Label>Start Time</Form.Label>
-                    <Form.Control
-                      required
-                      disabled={role !== "Admin" ? true : false}
-                      name="startTime"
-                      type="time"
-                      placeholder="Enter time"
-                      onChange={handleChange}
-                      value={ClinicFormData.startTime} />
-                  </Form.Group>
-
-                  <Form.Group as={Col} controlId="formGridZip">
-                    <Form.Label>Capacity (Max 8) </Form.Label>
-                    <Form.Control
-                      required
-                      //added to prevent error caused by adding capacity before time
-                      disabled={ClinicFormData.startTime !== "" ? false : true}
-                      name="capacity"
-                      type="number"
-                      max={8}
-                      min={1}
-                      placeholder="Enter clinic capacity"
-                      onChange={handleChange}
-                      value={ClinicFormData.capacity} />
-                  </Form.Group>
-                </Row>
-                <div className='d-grid'>
-                  <Button variant="primary" type="submit">
-                    Create Clinic
-                  </Button>
-                </div>
-
-              </Form>
+              <NewClinicForm
+                locationData = {locationData}
+                centerData = {centerData}
+                currentFormState={ClinicFormData}
+                onChange={handleChange}
+                currentDate={currentDate()}
+                role={role}
+                handleSubmit={handleSubmit}
+              />
             </Accordion.Body>
           </Accordion.Item>
         </Accordion>
 
         <Row>
-          <Stack><ToolBar radioState={filterRadio} setRadioState={setFilterRadio} /><h4><code>{message}</code></h4></Stack>
+          <Stack><ClinicToolBar radioState={filterRadio} setRadioState={setFilterRadio} /><h4><code>{message ? message : null}</code></h4></Stack>
           <hr />
         </Row>
         <Row>
           <Col >
             {clinicData.length > 0 ? clinicCards : <h4>There are no clinics that match the selected criteria</h4>}
-            {errorMessage ? <h4><code>{errorMessage}</code></h4> : null}
           </Col>
         </Row>
       </Container>

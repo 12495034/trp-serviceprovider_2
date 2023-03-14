@@ -5,4 +5,3 @@ export function createDateString(date) {
     return dateString
 }
 
-//module.export = createDateString;
