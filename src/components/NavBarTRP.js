@@ -34,9 +34,9 @@ export default function NavBarTRP(props) {
                     </Nav>
                     <Nav>
                         <Stack direction='horizontal' gap={3}>
-                            <MdPerson onClick={() => navigate(`/Users/${props.userId}`)} size={20} color='purple' />
+                        <Nav.Link href={`/Users/${props.userId}`}><MdPerson size={20} color='purple' /></Nav.Link>
                             <Navbar.Text>
-                                {/* Signed in as: {props.email} */}
+                                Signed in as: {props.email}
                             </Navbar.Text>
                         </Stack>
                     </Nav>

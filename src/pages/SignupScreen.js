@@ -7,12 +7,18 @@ import { UserAuth } from '../context/AuthContext'
 import { handlePasswordConfirmation } from '../Functions/SpecialFunctions/handlePasswordConfirmation'
 import { setDoc, doc } from "firebase/firestore";
 import { firestore } from '../Firebase'
+import ModalTAC from '../components/ModalTAC'
 
 export default function SignupScreen() {
     //useNavigate hook from react router dom
     const navigate = useNavigate()
+    //state management
+    const [modalShow, setModalShow] = useState(false);
+    //modal state handling
+    const handleClose = () => setModalShow(false);
+    const handleShow = () => setModalShow(true);
     //functions passed to screen by context
-    const { createUser, verifyEmail, updateUserAuthProfile, logOut} = UserAuth()
+    const { createUser, verifyEmail, updateUserAuthProfile, logOut } = UserAuth()
     //state
     const [validated, setValidated] = useState(false);
     const [formData, setformData] = useState({
@@ -37,6 +43,15 @@ export default function SignupScreen() {
                 ...prevState, [name]: type === "checkbox" ? checked : value
             }
         })
+    }
+
+    function agreeTAC() {
+        setformData(prevState => {
+            return {
+                ...prevState, isAgreedTC: true
+            }
+        })
+        setModalShow(false)
     }
 
     async function handleFormSubmit(e) {
@@ -67,7 +82,9 @@ export default function SignupScreen() {
                             emailOptIn: formData.emailOptIn,
                         })
                         updateUserAuthProfile(formData.FirstName, formData.LastName, formData.PhoneNumber)
+                        //sends verification email to users email address
                         verifyEmail()
+                        //signout following account creation so that users token is refreshed with their updated role
                         handleSignOut()
 
                     })
@@ -81,12 +98,12 @@ export default function SignupScreen() {
     async function handleSignOut() {
         console.log("Sign out")
         try {
-          await logOut()
-          navigate('/')
+            await logOut()
+            navigate('/')
         } catch (e) {
-          console.log(e.message)
+            console.log(e.message)
         }
-      }
+    }
 
     return (
         <div className='login-body'>
@@ -109,7 +126,7 @@ export default function SignupScreen() {
                                         <option value="Not Specified">Prefer not to say</option>
                                         <option value="he/him">He/Him</option>
                                         <option value="she/her">She/Her</option>
-                                        <option value="they/them">They/Them select</option>
+                                        <option value="they/them">They/Them</option>
                                     </Form.Select>
                                     <Form.Control.Feedback type="valid">
                                         Looks Good!
@@ -209,7 +226,8 @@ export default function SignupScreen() {
                                         feedbackType="invalid"
                                         controlid="isAgreedTC"
                                         name="isAgreedTC"
-                                        onChange={handleChange}
+                                        value={formData.isAgreedTC}
+                                        onChange={() => setModalShow(true)}
                                     />
                                     <Form.Check
                                         checked={formData.emailOptIn}
@@ -233,6 +251,12 @@ export default function SignupScreen() {
                 </Row>
                 <h6 className='mt-3'>Already Signed up? <Link to='/'>Login</Link></h6>
             </Container>
+
+            <ModalTAC
+                show={modalShow}
+                close={handleClose}
+                updateFunction={() => agreeTAC()}
+            />
         </div>
 
 

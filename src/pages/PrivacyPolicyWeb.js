@@ -1,16 +1,17 @@
 import React from 'react'
-import { Container } from 'react-bootstrap'
+import { Container, Row } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
 
-export default function PrivacyPolicyMobile() {
+export default function PrivacyPolicyWeb() {
     return (
         <div className='page-body'>
             <Container className='page-content'>
                 <div>
-                    <h3>PRIVACY POLICY FOR MOBILE APPLICATION "TRP - Rapid HIV testing"</h3>
+                    <h3>PRIVACY POLICY FOR WEB APPLICATION "TRP - Rapid HIV testing"</h3>
                     <h6>Last updated: March 16th, 2023</h6>
-                    <p>This privacy policy governs your use of the software application “TRP - Rapid HIV Testing” (later referred as the/this “App”) for Android™ mobile devices that was created by Gavin Davis.
-                        The Application is a mobile Android application intended to facilitate booking appointments for rapid HIV & syphilis testing
-                        at clinics scheduled by the rainbow project based in Belfast, Northern Ireland.
+                    <p>This privacy policy governs your use of the software application “TRP - Rapid HIV Testing” (later referred as the/this “App”) that was created by Gavin Davis.
+                        The Application is a web based application intended to facilitate scheduling and management of rapid HIV & syphilis testing
+                        clinics by the rainbow project based in Belfast, Northern Ireland.
                     </p>
                 </div>
 
@@ -29,17 +30,16 @@ export default function PrivacyPolicyMobile() {
                             </ul>
                             <li>All personal details are stored within a secure Google Firestore database.</li>
                             <li>Access to users personal information is restricted to the owner of that data and Rainbow project Administrators only.</li>
-                            <li> User provided details are used to identify the user when they attend a rapid HIV testing clinic, verify their age and provide contact details for reporting of positive HIV/syphilis test results only.</li>
+                            <li>Registration of personal details using the web app will also grant the user access to the mobile app</li>
+                            <li>Access to the web application is restricted to administrators only. Administrator status can only be granted by a current administrator.</li>
                         </ol>
                     </div>
                     <div>
                         <h6>Automatically collected Information</h6>
                         <ol>
-                            <li>Users have the ability to check in for their clinic appointments using the app which is automatically recorded in the Firestore database.</li>
-                            <li>Users appointment histories are also recorded remotely in a secure Google firestore database. User appointment history is accessible only to the owner of that data and Rainbow project clinic administrators.</li>
-                            <li>The Application does not collect precise information about the location of your mobile device.</li>
-                            <li>User details and appointment check in status is monitored by the rainbow project clinic staff through a web interface that is accessible to authorised administrators only.</li>
-                            <li>The App collects the minimum viable amount of personal information for app functionality and user maintenance. It is not possible to opt-out of any of the current data collected. All User Provided Data can be deleted by selecting 'Delete Account' within the profile section of the App.  </li>
+                            <li>The Application does not collect precise information about the location of your device.</li>
+                            <li>On scheduling a new testing clinic the users registered name is listed against the clinic. This information is only visible to administrators.</li>
+                            <li>The App collects the minimum viable amount of personal information for app functionality and user maintenance. It is not possible to opt-out of any of the current data collected. All User Provided Data can be deleted by selecting 'Delete Account' within the profile section of the mobile App.  </li>
                         </ol>
                     </div>
                     <div>
@@ -48,9 +48,8 @@ export default function PrivacyPolicyMobile() {
                             <li>All personal details are stored within a secure Google Firestore database.</li>
                             <li>Access to users personal information is restricted to the owner of that data and Rainbow project Administrators only. </li>
                             <li>If you would like to update specific User Provided Data, you may do it directly within the Application, by editing user details via the profile section of the app.</li>
-                            <li>If you would like to delete User Provided Data, all User Provided Data can be deleted by selecting 'Delete Account' within the profile section of the App. </li>
+                            <li>If you would like to delete User Provided Data, all User Provided Data can be deleted by selecting 'Delete Account' within the profile section of the mobile App only. </li>
                             <li>The App collects the minimum viable amount of personal information for app functionality and user maintenance. It is not possible to opt-out of any of the current data collected. All User Provided Data can be deleted by selecting 'Delete Account' within the profile section of the App.  </li>
-                            <li>Results from rapid HIV and syphillis test are not stored or communicated with anyone except the person being tested.</li>
                         </ol>
                     </div>
                     <div>
@@ -82,8 +81,10 @@ export default function PrivacyPolicyMobile() {
                                 gavindave@hotmail.com</p>
                         </ol>
                     </div>
-                    <div>The "Android" name, the Android logo, the "Google Play" brand, and other Google trademarks, are property of Google LLC and not part of the assets available through the Android Open Source Project.</div>
                 </div>
+                <Row>
+                <h6 className='mt-3'><Link to='/'>Return to Login Screen</Link></h6>
+                </Row>
             </Container>
         </div>
     )

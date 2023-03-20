@@ -9,14 +9,14 @@ export default function LoginScreen() {
   const navigate = useNavigate()
   //functions passed to screen by context
   const { signIn } = UserAuth()
-//state
+  //state
   const [formData, setformData] = useState({
     email: "",
     password: "",
   })
   const [error, setError] = useState('')
 
-  
+
   function handleChange(event) {
     const { name, value } = event.target
     setformData(prevState => {
@@ -44,7 +44,7 @@ export default function LoginScreen() {
           <h1 className='text-center login-title '>The Rapid HIV & Syphilis Booking System</h1>
         </Row>
         <Row md={2} sm={1} xs={2} className='d-flex justify-content-center mb-2 mt-4'>
-          <Image src={require("../images/logo.png")} alt="missing"/>
+          <Image src={require("../images/logo.png")} alt="missing" />
         </Row>
         <Row md={2} className='d-flex justify-content-center'>
           <Col >
@@ -81,9 +81,12 @@ export default function LoginScreen() {
             </Form>
           </Col>
         </Row>
-        <Row md={2} className='text-center login-options mt-4'>
+        <Row md={3} className='text-center login-options mt-4'>
           <Col>
             <h6>No login details? <Link to='/signup'>Signup</Link></h6>
+          </Col>
+          <Col>
+            <h6><Link to='/privacy-policy-web'>View our Privacy Policy</Link></h6>
           </Col>
           <Col>
             <h6>Forgot Password? <Link to='/reset'>Reset</Link></h6>

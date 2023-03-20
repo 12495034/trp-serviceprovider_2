@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button, Container, Row, Col } from 'react-bootstrap'
 import { useNavigate, useParams, useLocation } from 'react-router-dom'
 import Card from 'react-bootstrap/Card'
@@ -11,10 +11,13 @@ import useDoc from '../CustomHooks/UseDoc'
 import useCollection from '../CustomHooks/UseCollection'
 
 export default function UserProfileData() {
+  
   const { user, logOut, passwordReset } = UserAuth();
+  
   //retrieve userid from URL parameter
   const { userid } = useParams()
   const navigate = useNavigate()
+  const {state} = useLocation()
 
   //Define State
   const [sent, setSent] = useState(true)
@@ -56,6 +59,8 @@ export default function UserProfileData() {
     }
   }
 
+ 
+
   //-------------------------------------------------------------------------------------
   // Data rendering
   //-------------------------------------------------------------------------------------
@@ -88,15 +93,13 @@ export default function UserProfileData() {
   return (
     <div className='page-body'>
      <NavBarTRP userId={user.uid} email={user.email}/>
-      {/* conditional rendering to ensure user details are not shown unless a user is logged in
-      will be made redundant when protected routes are introduced */}
       <Container className='page-content'>
         <Row>
           <Col md={5}>
             <Card className='user-card'>
               {/* <Card.Img variant="top" src={require('../images/user_test.jpg')} /> */}
               <Card.Body>
-                <Card.Title>User Profile Data <code>{docError ? docError : null}</code></Card.Title>
+                <Card.Title>User Profile <code>{docError ? docError : null}</code></Card.Title>
                 <Card.Text>
                 </Card.Text>
               </Card.Body>
@@ -120,7 +123,13 @@ export default function UserProfileData() {
               </Card.Body>
             </Card>
             <Row>
-              <Col>{error ? <p className='mt-3 text-danger'>{error}</p> : null}{sent ? <p className='mt-3 text-success'>{message}</p> : null}</Col>
+              <Col>{error ? <p className='mt-3 text-danger'>{error}</p> : null}</Col>
+            </Row>
+            <Row>
+              <Col>{sent ? <p className='mt-3 text-success'>{message}</p> : null}</Col>
+            </Row>
+            <Row>
+              <Col>{state ? <p className='mt-3 text-success'>{state.message}</p> : null}</Col>
             </Row>
           </Col>
           <Col className='user-appointments'>

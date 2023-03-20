@@ -375,6 +375,14 @@
     font-size: small;
 }
 
+.privacy-body{
+    margin:20px;
+}
+
+.tac-modal {
+     min-width: 75%;
+} 
+
 
 
 

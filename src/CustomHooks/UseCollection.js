@@ -6,7 +6,7 @@ export default function useCollection(collectionName, dependency) {
   //Hook state
   const [collectionData, setCollectionData] = useState([]);
   const [isCollectionLoading, setIsCollectionLoading] = useState(true);
-  const [collectionError, setCollectionError] = useState('');
+  const [collectionError, setCollectionError] = useState("");
 
   useEffect(() => {
     if (collectionName != undefined) {
@@ -36,6 +36,6 @@ export default function useCollection(collectionName, dependency) {
     isCollectionLoading,
     collectionError
   }
-
 }
+
 

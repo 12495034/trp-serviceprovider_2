@@ -19,6 +19,8 @@ import Missing from './pages/Missing';
 import { AuthContextProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import PrivacyPolicyMobile from './pages/PrivacyPolicyMobile';
+import PrivacyPolicyWeb from './pages/PrivacyPolicyWeb';
+import TermsAndConditions from './pages/TermsAndConditions';
 
 function App() {
 
@@ -41,7 +43,8 @@ function App() {
         <Route path="/signup" element={<SignupScreen />} />
         <Route path="/unauthorised" element={<UnAuthorisedScreen />} />
         <Route path="/privacy-policy-mobile" element={<PrivacyPolicyMobile />} />
-
+        <Route path="/privacy-policy-web" element={<PrivacyPolicyWeb />} />
+        <Route path="/termsandconditions" element={<TermsAndConditions />} />
         {/* //Catch all - page does not exist */}
         <Route path="*" element={<Missing />} />
       </Routes>

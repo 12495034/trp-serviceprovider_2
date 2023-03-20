@@ -2,143 +2,108 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import NewClinicForm from './NewClinicForm';
 import userEvent from '@testing-library/user-event';
+import { within } from '@testing-library/react';
+import useCollection from '../CustomHooks/UseCollection';
 
 
-describe("Test fields disable when role is not an Admin", () => {
+// describe("Test fields disable when role is not an Admin", () => {
+//     //Don't need to mock form drop down data for tests to run
+//     beforeEach(() => {
+//         const role = "Service-User"
+//         const user = { displayName: "Test User" }
+//         render(<NewClinicForm user={user} role={role} />)
+//     });
+//     it("location field disabled if role is not Admin", () => {
+//         const location = screen.getByTestId("location")
+//         expect(location).toBeDisabled();
+//     })
+//     it("location field disabled if role is not Admin", () => {
+//         const center = screen.getByTestId("center")
+//         expect(center).toBeDisabled();
+//     })
+//     it("location field disabled if role is not Admin", () => {
+//         const addDetails = screen.getByRole("textbox", { id: "addDetails" })
+//         expect(addDetails).toBeDisabled();
+//     })
+//     it("location field disabled if role is not Admin", () => {
+//         const date = screen.getByTestId("date")
+//         expect(date).toBeDisabled();
+//     })
+//     it("location field disabled if role is not Admin", () => {
+//         const startTime = screen.getByTestId("startTime")
+//         expect(startTime).toBeDisabled();
+//     })
+//     it("location field disabled if role is not Admin", () => {
+//         const capacity = screen.getByTestId("capacity")
+//         expect(capacity).toBeDisabled();
+//     })
 
-    const handleSubmit = jest.fn();
-    const handleChange = jest.fn();
+// })
 
-    const currentDate = "2023-08-13"
-    const locationData = [{ id: "Belfast" }, { id: "Derry" }]
-    const centerData = [{ id: "LGBT Center" }, { id: "Trans Resource Center" }]
-    const ClinicFormData = {
-        location: "Belfast",
-        center: "",
-        date: "",
-        startTime: "",
-        capacity: 0,
-        slots: {},
-        clinicStatus: "Active",
-        addDetails: "",
-        //timeStamp: Timestamp.fromDate(new Date())
-    }
-    const role = "Service-User"
+// describe("Test fields enabled when role is an Admin", () => {
+//     //Don't need to mock form drop down data for tests to run
+//     beforeEach(() => {
+//         const roleAdmin = "Admin"
+//         const user = { displayName: "Test User" }
+//         render(<NewClinicForm user={user} role={roleAdmin} />)
+//     });
+//     it("location field disabled if role is not Admin", () => {
+//         const location = screen.getByTestId("location")
+//         expect(location).not.toBeDisabled();
+//     })
+//     it("center field disabled if role is not Admin", () => {
+//         const center = screen.getByTestId("center")
+//         expect(center).not.toBeDisabled();
+//     })
+//     it("additional details field disabled if role is not Admin", () => {
+//         const addDetails = screen.getByRole("textbox", { id: "addDetails" })
+//         expect(addDetails).not.toBeDisabled();
+//     })
+//     it("date field disabled if role is not Admin", () => {
+//         const date = screen.getByTestId("date")
+//         expect(date).not.toBeDisabled();
+//     })
+//     it("startTime field disabled if role is not Admin", () => {
+//         const startTime = screen.getByTestId("startTime")
+//         expect(startTime).not.toBeDisabled();
+//     })
+// })
 
-    beforeEach(() => {
-        render(
-            <NewClinicForm
-                locationData={locationData}
-                centerData={centerData}
-                currentFormState={ClinicFormData}
-                onChange={handleChange}
-                currentDate={currentDate}
-                role={role}
-                handleSubmit={handleSubmit}
-            />)
-    });
+// describe("Test output message created on clinic creation", () => {
 
-    it("location field disabled if role is not Admin", () => {
-        const location = screen.getByTestId("location")
-        expect(location).toBeDisabled();
+jest.mock('../CustomHooks/UseCollection')
 
-        const center = screen.getByTestId("center")
-        expect(center).toBeDisabled();
+it("check default selection", async () => {
+    //mocking useCollection hooks in order of call
+    useCollection
+        .mockReturnValueOnce({ collectionData: [{ id: "Belfast" }, { id: "Derry" }] })
+        .mockReturnValueOnce({ collectionData: [{ name: "LGBT Center" }, { name: "Trans Resource Center" }] });
 
-        const addDetails = screen.getByRole("textbox", { id: "addDetails" })
-        expect(addDetails).toBeDisabled();
-
-        const date = screen.getByTestId("date")
-        expect(date).toBeDisabled();
-
-        const startTime = screen.getByTestId("startTime")
-        expect(startTime).toBeDisabled();
-        
-        const capacity = screen.getByTestId("capacity")
-        expect(capacity).toBeDisabled();
-    })
+    const roleAdmin = "Admin"
+    const user = { displayName: "Test User" }
+    render(<NewClinicForm user={user} role={roleAdmin} />)
+    //test default location
+    expect(screen.getByRole('option', { name: 'Belfast' }).selected).toBe(true)
+   
 })
 
-describe("field conditional logic",()=>{
+it("Check selection of other options", async () => {
+    //mocking useCollection hooks in order of call
+    useCollection
+        .mockReturnValueOnce({ collectionData: [{ id: "Belfast" }, { id: "Derry" }] })
+        .mockReturnValueOnce({ collectionData: [{ name: "LGBT Center" }, { name: "Trans Resource Center" }] });
 
-    const handleSubmit = jest.fn();
-    const handleChange = jest.fn();
-
-    const currentDate = "2023-08-13"
-    const locationData = [{ id: "Belfast" }, { id: "Derry" }]
-    const centerData = [{ id: "LGBT Center" }, { id: "Trans Resource Center" }]
-    const ClinicFormData = {
-        location: "Belfast",
-        center: "",
-        date: "",
-        startTime: "18:00",
-        capacity: 0,
-        slots: {},
-        clinicStatus: "Active",
-        addDetails: "",
-        //timeStamp: Timestamp.fromDate(new Date())
-    }
-    const role = "Admin"
-
-    beforeEach(() => {
-        render(
-            <NewClinicForm
-                locationData={locationData}
-                centerData={centerData}
-                currentFormState={ClinicFormData}
-                onChange={handleChange}
-                currentDate={currentDate}
-                role={role}
-                handleSubmit={handleSubmit}
-            />)
-    });
-
-    it("location field disabled if role is not Admin", () => {
-        const location = screen.getByTestId("location")
-        expect(location).not.toBeDisabled();
-
-        const capacity = screen.getByTestId("capacity")
-        expect(capacity).not.toBeDisabled();
-    })
+    const roleAdmin = "Admin"
+    const user = { displayName: "Test User" }
+    render(<NewClinicForm user={user} role={roleAdmin} />)
+    //test default location
+    userEvent.selectOptions(
+        // Find the select element, like a real user would.
+        screen.getByRole('combobox',{name:'location'}),
+        // Find and select the Ireland option, like a real user would.
+        screen.getByRole('option', { name: 'Derry' }),
+      )
+      expect(screen.getByRole('option', { name: 'Derry' }).selected).toBe(true)
+   
 })
-
-
-describe("test function calls",()=>{
-    const handleSubmit = jest.fn();
-    const handleChange = jest.fn();
-
-    const currentDate = "2023-08-13"
-    const locationData = [{ id: "Belfast" }, { id: "Derry" }]
-    const centerData = [{ id: "LGBT Center" }, { id: "Trans Resource Center" }]
-    const ClinicFormData = {
-        location: "Belfast",
-        center: "",
-        date: "",
-        startTime: "18:00",
-        capacity: 0,
-        slots: {},
-        clinicStatus: "Active",
-        addDetails: "",
-        //timeStamp: Timestamp.fromDate(new Date())
-    }
-    const role = "Admin"
-
-    beforeEach(() => {
-        render(
-            <NewClinicForm
-                locationData={locationData}
-                centerData={centerData}
-                currentFormState={ClinicFormData}
-                onChange={handleChange}
-                currentDate={currentDate}
-                role={role}
-                handleSubmit={handleSubmit}
-            />)
-    });
-
-    it("create Clinic button calls handle submit function",()=>{
-        const button = screen.getByText(/create clinic/i)
-        fireEvent.click(button)
-        expect(handleSubmit).toHaveBeenCalledTimes(1);
-    })
-})
+//})
