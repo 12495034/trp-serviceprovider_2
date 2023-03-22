@@ -60,21 +60,22 @@ service cloud.firestore {
         //allow users with the same id as the document to read and update
         allow read,delete: if (request.auth.uid == userId || request.auth.token.role == "Admin" ) && request.auth !=null && request.auth.token.accountStatus == "Active"; 
         //allow users with the same id as the document to update specific fields
-        allow update: if (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['email'])) && (request.auth.token.role == "Service-User" || request.auth.token.role == "Admin") && request.auth !=null && request.auth.token.accountStatus == "Active";
-        
-        match /Appointments/{clinicId} {
+        allow update: if (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['email'])) && (request.auth.token.role == "Service-User" || request.auth.token.role == "Admin") && request.auth !=null && request.auth.token.accountStatus == "Active";  
+      }
+      
+      match /Users/{userId}/Appointments/{clinicId} {
          // Allow data owner CRUD control over their own data
           allow create: if (request.auth.token.role == "Service-User" || request.auth.token.role == "Admin") && request.auth !=null && request.auth.token.accountStatus == "Active";
           allow read,delete: if (request.auth.uid == userId || request.auth.token.role == "Admin") && request.auth !=null && request.auth.token.accountStatus == "Active";
           allow update: if (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['called', 'calledBy','center','date','location','slot','status','time','wasSeen'])) && request.auth.token.role == "Service-User" && request.auth.uid == userId && request.auth !=null && request.auth.token.accountStatus == "Active";
           allow update: if (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['center','date','location','slot','time'])) && request.auth.token.role == "Admin" && request.auth !=null && request.auth.token.accountStatus == "Active";
         }
-        match /Restricted/Details {
+        
+        match /Users/{userId}/Restricted/Details {
           //Allow Users R control over their restricted information
           allow read: if request.auth != null && request.auth.token.accountStatus == "Active"; 
           //Allow Admin Update control over user restricted information only
           allow update: if request.auth.token.role == "Admin" && request.auth.token.accountStatus == "Active"
         }
-      }
   }
 }
