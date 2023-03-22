@@ -7,7 +7,7 @@ export default function useCollectionSnapshotQuery(collectionName, field, depend
     const [collectionData, setCollectionData] = useState([]);
     const [isCollectionLoading, setIsCollectionLoading] = useState(true);
     const [collectionError, setCollectionError] = useState('');
-
+  
     useEffect(() =>
         onSnapshot(query(collection(firestore, `${collectionName}`), where(`${field}`, "==", `${dependency}`)), (querySnapshot) => {
             let collectionArray = []
@@ -17,7 +17,16 @@ export default function useCollectionSnapshotQuery(collectionName, field, depend
                 const combine = Object.assign({}, id, data)
                 collectionArray.push(combine)
             })
-            setCollectionData(collectionArray)
+ 
+            if (collectionArray.length != 0) {
+                setCollectionError(``)
+                setIsCollectionLoading(false)
+                setCollectionData(collectionArray)
+            } else {
+                setCollectionData([])
+                setIsCollectionLoading(false)
+                setCollectionError(`There are no ${collectionName} that match your criteria`)
+            }
         })
         , [dependency])
 

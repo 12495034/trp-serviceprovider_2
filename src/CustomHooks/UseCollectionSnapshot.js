@@ -8,6 +8,7 @@ export default function useCollectionSnapshot(collectionName, dependency) {
     const [isCollectionLoading, setIsCollectionLoading] = useState(true);
     const [collectionError, setCollectionError] = useState('');
 
+    console.log("filtering data somehow")
     useEffect(() =>
         onSnapshot(query(collection(firestore, `${collectionName}`)), (querySnapshot) => {
             let collectionArray = []
@@ -17,7 +18,16 @@ export default function useCollectionSnapshot(collectionName, dependency) {
                 const combine = Object.assign({}, id, data)
                 collectionArray.push(combine)
             })
-            setCollectionData(collectionArray)
+            if(collectionArray.length!=0){
+                setCollectionError(``)
+                setIsCollectionLoading(false)
+                setCollectionData(collectionArray)
+            }else{
+                setCollectionData([])
+                setIsCollectionLoading(false)
+                setCollectionError(`There are no documents in the collection`)
+            }
+            
         })
         , [dependency])
     return {

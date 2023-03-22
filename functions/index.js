@@ -121,3 +121,24 @@ exports.updateUserAuthDetails = functions.firestore.document('/Users/{userId}')
             });
     });
 
+exports.disableUserAccount = functions.firestore.document('/Users/{userId}/Restricted/Details')
+    .onUpdate((change, context) => {
+        const newData = change.after.data();
+        let userDetails = ""
+
+        if (newData.accountStatus == "Suspended") {
+            userDetails = { disabled: true }
+        } else if (newData.accountStatus == "Active") {
+            userDetails = { disabled: false }
+        }
+        //disable user account
+        return admin.auth().updateUser(
+            context.params.userId, userDetails)
+            .then(() => {
+                console.log("User Auth details updated")
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    });
+

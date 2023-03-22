@@ -6,14 +6,17 @@ import Footer from '../components/Footer'
 import ClinicCard from '../components/ClinicCard'
 import NavBarTRP from '../components/NavBarTRP';
 import ClinicToolBar from '../components/ClinicToolBar';
-import useCollectionSnapshot from '../CustomHooks/UseCollectionSnapshotQuery';
 import { UserAuth } from '../context/AuthContext';
 import { createDateString } from '../Functions/GeneralFunctions/createDateString';
 import NewClinicForm from '../components/NewClinicForm';
+import Spinner from 'react-bootstrap/Spinner';
+import useCollectionSnapshotQuery from '../CustomHooks/UseCollectionSnapshotQuery';
+import { spinnerType } from '../Constants/Constants';
+import { spinnerColor } from '../Constants/Constants';
 
 
 export default function ClinicManagement() {
-  
+
   //functions or state provided to screen by context
   const { user, role } = UserAuth();
   const navigate = useNavigate()
@@ -23,13 +26,12 @@ export default function ClinicManagement() {
   //-----------------------------------------------------------------------------------------
   const [filterRadio, setFilterRadio] = useState("Active")
   const [message, setMessage] = useState('')
-
   //-----------------------------------------------------------------------------------------
   //Retrieve data from firestore using custom hook
   //-----------------------------------------------------------------------------------------
 
   //retrieve clinic data based on radio button selection
-  const { collectionData: clinicData, isCollectionLoading: clinicDataLoading, collectionError: clinicDataError } = useCollectionSnapshot('Clinics', 'clinicStatus', filterRadio)
+  const { collectionData: clinicData, isCollectionLoading: clinicDataLoading, collectionError: clinicDataError } = useCollectionSnapshotQuery('Clinics', 'clinicStatus', filterRadio)
 
   //----------------------------------------------------------------------------------------
   // Functions
@@ -79,26 +81,32 @@ export default function ClinicManagement() {
     <div className='page-body'>
       <NavBarTRP userId={user.uid} email={user.email} />
       <Container className='page-content'>
-        <h1 className="Title">Clinic Management</h1>
-        <Accordion>
-          <Accordion.Item eventKey="0">
-            <Accordion.Header>Create New Clinic</Accordion.Header>
-            <Accordion.Body>
-              <NewClinicForm
-                user={user}
-                role={role}
-              />
-            </Accordion.Body>
-          </Accordion.Item>
-        </Accordion>
         <Row>
+          <h1 className="Title">Clinic Management</h1>
+        </Row>
+        <Row>
+          <Accordion>
+            <Accordion.Item eventKey="0">
+              <Accordion.Header>Create New Clinic</Accordion.Header>
+              <Accordion.Body>
+                <NewClinicForm
+                  user={user}
+                  role={role}
+                />
+              </Accordion.Body>
+            </Accordion.Item>
+          </Accordion>
+        </Row>
+        <Row className='p-2'>
           <Stack><ClinicToolBar radioState={filterRadio} setRadioState={setFilterRadio} /><h4><code>{message ? message : null}</code></h4></Stack>
           <hr />
         </Row>
-        <Row>
-          <Col >
-            {clinicData.length > 0 ? clinicCards : <h4>There are no clinics that match the selected criteria</h4>}
-          </Col>
+        <Row className="justify-content-md-center p-3">
+          {/* <Col> */}
+          {/* {clinicData.length > 0 ? clinicCards : <h4>There are no clinics that match the selected criteria</h4>} */}
+          {clinicDataLoading ? <Spinner animation={spinnerType} variant={spinnerColor} /> : clinicCards}
+          {clinicDataError ? <h4>{clinicDataError}</h4> : null}
+          {/* </Col> */}
         </Row>
       </Container>
       <Footer />

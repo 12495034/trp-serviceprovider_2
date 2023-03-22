@@ -10,4 +10,8 @@ export const timeZones = ["en-GB"];
 //Set the max clinic capacity
 export const maxClinicCapacity = 19
 
+//set progress spinner type
+export const spinnerType = "border"
+export const spinnerColor = "info"
+
 

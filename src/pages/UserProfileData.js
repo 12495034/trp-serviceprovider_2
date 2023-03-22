@@ -29,6 +29,8 @@ export default function UserProfileData() {
   const { docData: restrictedData, isDocLoading: restrictedDataLoading, docError: restrictedDataError } = useDoc(`Users/${userid}/Restricted`, 'Details')
   const { collectionData: appointmentHistoryData, isCollectionLoading: locationLoading, collectionError: appointmentHistoryError } = useCollection(`Users/${userid}/Appointments`, null)
 
+  console.log(docError)
+
   function handleClinicDetail(clinicId) {
     navigate(`/clinics/${clinicId}`);
   }
@@ -96,11 +98,13 @@ export default function UserProfileData() {
       <Container className='page-content'>
         <Row>
           <Col md={5}>
+            {docError!=""?
             <Card className='user-card'>
               {/* <Card.Img variant="top" src={require('../images/user_test.jpg')} /> */}
               <Card.Body>
-                <Card.Title>User Profile <code>{docError ? docError : null}</code></Card.Title>
+                <Card.Title>User Profile </Card.Title>
                 <Card.Text>
+                <code>{docError ? docError : null}</code>
                 </Card.Text>
               </Card.Body>
               <ListGroup className="list-group-flush">
@@ -111,10 +115,10 @@ export default function UserProfileData() {
                 <ListGroup.Item><Row><Col><strong>DOB:</strong></Col><Col> {docData.dob}</Col></Row></ListGroup.Item>
                 <ListGroup.Item><Row><Col><strong>Email:</strong></Col><Col> {docData.email}</Col></Row></ListGroup.Item>
                 <ListGroup.Item><Row><Col><strong>Phone Number:</strong></Col><Col>  {docData.PhoneNumber}</Col></Row></ListGroup.Item>
-                <ListGroup.Item><Row><Col><strong>Role:</strong></Col><Col>{restrictedDataError ? <code>{restrictedDataError}</code> : restrictedData.role}</Col></Row></ListGroup.Item>
-                <ListGroup.Item><Row><Col><strong>Status:</strong> </Col><Col> {restrictedDataError ? <code>{restrictedDataError}</code> : restrictedData.accountStatus}</Col></Row></ListGroup.Item>
+                <ListGroup.Item><Row><Col><strong>Role:</strong></Col><Col>{restrictedData.role}</Col></Row></ListGroup.Item>
+                <ListGroup.Item><Row><Col><strong>Status:</strong> </Col><Col> {restrictedData.accountStatus}</Col></Row></ListGroup.Item>
                 <ListGroup.Item><Row><Col><strong>Agreed to T&Cs:</strong> </Col><Col> {docData.isAgreedTC ? "Yes" : "No"}</Col></Row></ListGroup.Item>
-                <ListGroup.Item><Row><Col><strong>Email Notifications On:</strong> </Col><Col> {docData.emailOptIn? "Yes":"No"}</Col></Row></ListGroup.Item>
+                <ListGroup.Item><Row><Col><strong>Email Notifications enabled:</strong> </Col><Col> {docData.emailOptIn? "Yes":"No"}</Col></Row></ListGroup.Item>
               </ListGroup>
               <Card.Body className='user-card-buttons'>
                 <Button variant='warning' className='user-card-button' onClick={handleEditUser}>Edit</Button>
@@ -122,6 +126,8 @@ export default function UserProfileData() {
                 {userid === user.uid ? <Button variant='primary' className='user-card-button' onClick={handleSignOut}>Logout</Button> : null}
               </Card.Body>
             </Card>
+            :
+            <h5><code>{docError}</code></h5>}
             <Row>
               <Col>{error ? <p className='mt-3 text-danger'>{error}</p> : null}</Col>
             </Row>
