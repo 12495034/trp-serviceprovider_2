@@ -11,7 +11,7 @@ service cloud.firestore {
       //these documents are created by a cloud function
       allow read,write: if false
       }
-      match /DropDownData/userStatus{
+      match /Supporting/Data {
       // Allow any signed in user to read question documents only
       allow read: if request.auth !=null && request.auth.token.accountStatus == "Active";
       allow write:if request.auth.token.role == "Admin" && request.auth.token.accountStatus == "Active";

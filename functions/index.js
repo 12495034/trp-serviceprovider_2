@@ -142,3 +142,43 @@ exports.disableUserAccount = functions.firestore.document('/Users/{userId}/Restr
             });
     });
 
+
+exports.deleteUserDocument = functions.auth.user().onDelete(async (user) => {
+    deleteDocument('Users', user.uid)
+});
+
+exports.deleteUserRestrictedData = functions.auth.user().onDelete(async(user) => {
+    deleteDocument(`Users/${user.uid}/Restricted`, 'Details')
+});
+
+exports.deleteUserAppointments = functions.auth.user().onDelete(async(user) => {
+    //delete User subcollection documents
+    const collectionRef = admin.firestore().collection(`Users/${user.uid}/Appointments`);
+    return collectionRef.get()
+        .then(qs => {
+            qs.forEach(docSnapshot => {
+                promises.push(docSnapshot.ref.delete());
+            });
+            return Promise.all(promise1s);
+        })
+        .catch(error => {
+            console.log(error);
+            return false;
+        });
+});
+
+function deleteDocument(collectionName, docName) {
+    admin.firestore().collection(collectionName).doc(docName).delete()
+        .then(() => {
+            console.log("Document successfully deleted!");
+        })
+        .catch((error) => {
+            console.error("Error removing document: ", error);
+        });
+}
+
+
+
+
+
+
