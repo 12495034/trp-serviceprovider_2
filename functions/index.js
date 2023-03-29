@@ -5,8 +5,9 @@ const functions = require("firebase-functions");
 const admin = require('firebase-admin');
 admin.initializeApp();
 
+
 //send notification email to All App users if a new clinic is created
-exports.sendNotificationEmail = functions.firestore.document('/Clinics/{clinicId}')
+exports.sendNotificationEmail = functions.region('europe-west1').firestore.document('/Clinics/{clinicId}')
     .onCreate(async (snap) => {
         //get the data from the newly created document
         const newClinicData = snap.data();
@@ -53,7 +54,7 @@ exports.sendNotificationEmail = functions.firestore.document('/Clinics/{clinicId
     });
 
 //create custom claim and firestore restricted data on initial user creation (default - service user with an active account)
-exports.addDefaultUserClaims = functions.firestore.document('/Users/{userId}')
+exports.addDefaultUserClaims = functions.region('europe-west1').firestore.document('/Users/{userId}')
     .onCreate((change, context) => {
         const customClaims = {
             role: "Service-User",
@@ -81,7 +82,7 @@ exports.addDefaultUserClaims = functions.firestore.document('/Users/{userId}')
     });
 
 //Edit custom claims when document is modified
-exports.modifyUserClaims = functions.firestore.document('/Users/{userId}/Restricted/Details')
+exports.modifyUserClaims = functions.region('europe-west1').firestore.document('/Users/{userId}/Restricted/Details')
     .onUpdate((change, context) => {
         const newData = change.after.data();
         //custom claims are overwritten each time they are updated. Therefore all custom claims must be included with each update
@@ -103,7 +104,7 @@ exports.modifyUserClaims = functions.firestore.document('/Users/{userId}/Restric
 
 //Edit displayName on user auth details if details are modified in the firestore database
 //at present cloud function will run if there is any change to the document, not just the users name
-exports.updateUserAuthDetails = functions.firestore.document('/Users/{userId}')
+exports.updateUserAuthDetails = functions.region('europe-west1').firestore.document('/Users/{userId}')
     .onUpdate((change, context) => {
         const newData = change.after.data();
         //custom claims are overwritten each time they are updated. Therefore all custom claims must be included with each update
@@ -121,7 +122,7 @@ exports.updateUserAuthDetails = functions.firestore.document('/Users/{userId}')
             });
     });
 
-exports.disableUserAccount = functions.firestore.document('/Users/{userId}/Restricted/Details')
+exports.disableUserAccount = functions.region('europe-west1').firestore.document('/Users/{userId}/Restricted/Details')
     .onUpdate((change, context) => {
         const newData = change.after.data();
         let userDetails = ""
@@ -143,15 +144,15 @@ exports.disableUserAccount = functions.firestore.document('/Users/{userId}/Restr
     });
 
 
-exports.deleteUserDocument = functions.auth.user().onDelete(async (user) => {
+exports.deleteUserDocument = functions.region('europe-west1').auth.user().onDelete(async (user) => {
     deleteDocument('Users', user.uid)
 });
 
-exports.deleteUserRestrictedData = functions.auth.user().onDelete(async(user) => {
+exports.deleteUserRestrictedData = functions.region('europe-west1').auth.user().onDelete(async(user) => {
     deleteDocument(`Users/${user.uid}/Restricted`, 'Details')
 });
 
-exports.deleteUserAppointments = functions.auth.user().onDelete(async(user) => {
+exports.deleteUserAppointments = functions.region('europe-west1').auth.user().onDelete(async(user) => {
     //delete User subcollection documents
     const collectionRef = admin.firestore().collection(`Users/${user.uid}/Appointments`);
     return collectionRef.get()
