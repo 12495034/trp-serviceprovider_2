@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { Container, Table, Form, Button, Row } from 'react-bootstrap'
+import { Container, Table, Form, Button, Row, Stack } from 'react-bootstrap'
 import NavBarTRP from '../components/NavBarTRP'
 import Footer from '../components/Footer'
 import { collection, query, getDocs, where } from "firebase/firestore";
@@ -26,6 +26,7 @@ export default function UserManagement() {
   //------------------------------------------------------------------------------------------------
 
   async function searchUsers(e) {
+    console.log("button pressed")
     //prevent screen re-render
     e.preventDefault();
     var q = "";
@@ -85,7 +86,7 @@ export default function UserManagement() {
 
   return (
     <div className='page-body'>
-      <NavBarTRP userId={user.uid} email={user.email}/>
+      <NavBarTRP userId={user.uid} email={user.email} />
       <Container className='page-content'>
         <h1>User Management</h1>
         {/* Insert toolbar */}
@@ -93,23 +94,32 @@ export default function UserManagement() {
         <p><strong>Note:</strong> To view list of all stored users press the search button with no input parameters</p>
         <Row>
           <Form className="d-flex" onSubmit={searchUsers}>
-            <Form.Control
-              type="search"
-              placeholder="Enter First Name"
-              className="me-2"
-              aria-label="Search"
-              name="FirstName"
-              onChange={handleSearchBar}
-            />
-            <Form.Control
-              type="search"
-              placeholder="Enter Last Name"
-              className="me-2"
-              aria-label="Search"
-              name="LastName"
-              onChange={handleSearchBar}
-            />
-            <Button type="submit" variant="outline-success">Search</Button>
+            <Stack direction='horizontal' gap={1} className="col-md-5 mx-auto">
+              <div className="">
+                <Form.Control
+                  type="search"
+                  placeholder="Enter First Name"
+                  className="me-2"
+                  aria-label="Search"
+                  name="FirstName"
+                  onChange={handleSearchBar}
+                />
+              </div>
+              <div className="me-auto">
+                <Form.Control
+                  type="search"
+                  placeholder="Enter Last Name"
+                  className="me-2"
+                  aria-label="Search"
+                  name="LastName"
+                  onChange={handleSearchBar}
+                />
+              </div>
+              <div className="vr" />
+              <div className="ms-auto">
+                <Button type="submit" variant="outline-success">Search</Button>
+              </div>
+            </Stack>
           </Form>
         </Row>
         <hr />
@@ -126,7 +136,7 @@ export default function UserManagement() {
             {userList}
           </tbody>
         </Table>
-        {error? <h4><code>{error}</code></h4>:null}
+        {error ? <h4><code>{error}</code></h4> : null}
       </Container>
       <Footer />
     </div>

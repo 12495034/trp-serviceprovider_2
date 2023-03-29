@@ -5,6 +5,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import { Stack } from 'react-bootstrap';
 import { MdPerson } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 export default function NavBarTRP(props) {
     const navigate = useNavigate()
@@ -30,13 +31,11 @@ export default function NavBarTRP(props) {
                         <Nav.Link href="/home">Home</Nav.Link>
                         <Nav.Link href="/clinics">Clinic Management</Nav.Link>
                         <Nav.Link href="/users">User Management</Nav.Link>
-
                     </Nav>
                     <Nav>
                         <Stack direction='horizontal' gap={3}>
-                        <Nav.Link href={`/Users/${props.userId}`}><MdPerson size={20} color='purple' /></Nav.Link>
                             <Navbar.Text>
-                                Signed in as: {props.email}
+                                Signed in as: <a href={`/users/${props.userId}`}>{props.email}</a>
                             </Navbar.Text>
                         </Stack>
                     </Nav>
