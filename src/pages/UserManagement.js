@@ -94,8 +94,8 @@ export default function UserManagement() {
         <p><strong>Note:</strong> To view list of all stored users press the search button with no input parameters</p>
         <Row>
           <Form className="d-flex" onSubmit={searchUsers}>
-            <Stack direction='horizontal' gap={1} className="col-md-5 mx-auto">
-              <div className="">
+            {/* <Stack direction='horizontal' gap={1} className="col-md-5 mx-auto">
+              <div className=""> */}
                 <Form.Control
                   type="search"
                   placeholder="Enter First Name"
@@ -104,8 +104,8 @@ export default function UserManagement() {
                   name="FirstName"
                   onChange={handleSearchBar}
                 />
-              </div>
-              <div className="me-auto">
+              {/* </div>
+              <div className="me-auto"> */}
                 <Form.Control
                   type="search"
                   placeholder="Enter Last Name"
@@ -114,12 +114,12 @@ export default function UserManagement() {
                   name="LastName"
                   onChange={handleSearchBar}
                 />
-              </div>
-              <div className="vr" />
-              <div className="ms-auto">
+              {/* </div> */}
+              {/* <div className="vr" />
+              <div className="ms-auto"> */}
                 <Button type="submit" variant="outline-success">Search</Button>
-              </div>
-            </Stack>
+              {/* </div>
+            </Stack> */}
           </Form>
         </Row>
         <hr />

@@ -103,6 +103,7 @@ export default function UserProfileData() {
               {/* <Card.Img variant="top" src={require('../images/user_test.jpg')} /> */}
               <Card.Body>
                 <Card.Title>User Profile </Card.Title>
+                <Card.Subtitle className="text-primary text-uppercase">{docData.email}</Card.Subtitle>
                 <Card.Text>
                 <code>{docError ? docError : null}</code>
                 </Card.Text>
@@ -113,7 +114,6 @@ export default function UserProfileData() {
                 <ListGroup.Item><Row><Col><strong>Middle Name:</strong></Col><Col> {docData.MiddleName}</Col></Row> </ListGroup.Item>
                 <ListGroup.Item><Row><Col><strong>Last Name:</strong></Col><Col> {docData.LastName}</Col></Row> </ListGroup.Item>
                 <ListGroup.Item><Row><Col><strong>DOB:</strong></Col><Col> {docData.dob}</Col></Row></ListGroup.Item>
-                <ListGroup.Item><Row><Col><strong>Email:</strong></Col><Col> {docData.email}</Col></Row></ListGroup.Item>
                 <ListGroup.Item><Row><Col><strong>Phone Number:</strong></Col><Col>  {docData.PhoneNumber}</Col></Row></ListGroup.Item>
                 <ListGroup.Item><Row><Col><strong>Role:</strong></Col><Col>{restrictedData.role}</Col></Row></ListGroup.Item>
                 <ListGroup.Item><Row><Col><strong>Status:</strong> </Col><Col> {restrictedData.accountStatus}</Col></Row></ListGroup.Item>
