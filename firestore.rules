@@ -30,6 +30,7 @@ service cloud.firestore {
         //Allow Admins full control over question documents
         allow create,update,delete: if request.auth.token.role == "Admin" && request.auth !=null && request.auth.token.accountStatus == "Active";
       }
+
    		match /Location/{locationId}{
       	// Allow any signed in user to read Location documents only
       	allow read: if request.auth !=null && request.auth.token.accountStatus == "Active";
@@ -55,19 +56,20 @@ service cloud.firestore {
         
 
         match /Appointments/{userId} {
-          // Allow data owner CRUD control over their own data
+          // Allow data owner create, read, update and delete control over their own data
           allow create: if (request.auth.token.role == "Service-User" || request.auth.token.role == "Admin") && request.auth !=null && request.auth.token.accountStatus == "Active";
           allow read,delete: if (request.auth.uid == userId || request.auth.token.role == "Admin"||request.auth.token.role == "Support") && request.auth !=null && request.auth.token.accountStatus == "Active";
           allow update: if (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['called', 'calledBy','slot','status','time','wasSeen'])) && request.auth.token.role == "Service-User" && request.auth.uid == userId && request.auth !=null && request.auth.token.accountStatus == "Active";
-          allow update: if (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['slot','time'])) && (request.auth.token.role == "Admin" || request.auth.token.role == "Support")  && request.auth !=null && request.auth.token.accountStatus == "Active";
+          allow update: if (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['slot'])) && (request.auth.token.role == "Admin" || request.auth.token.role == "Support")  && request.auth !=null && request.auth.token.accountStatus == "Active";
         }
       }
+      
       match /Users/{userId}{
         //allow the creation of a new user document provided specific fields are included
         allow create: if request.resource.data.keys().hasAll(['email', 'FirstName', 'LastName', 'PhoneNumber','ProNouns','dob','isAgreedTC','emailOptIn']);
-        //allow users with the same id as the document to read and update
+        //allow users with the same id as the document or admin role to read and update
         allow read,delete: if (request.auth.uid == userId || request.auth.token.role == "Admin" ) && request.auth !=null && request.auth.token.accountStatus == "Active"; 
-        //allow users with the same id as the document to update specific fields
+        //allow users with the same id as the document or admin role to update any field except those listed
         allow update: if (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['email'])) && (request.auth.token.role == "Service-User" || request.auth.token.role == "Admin") && request.auth !=null && request.auth.token.accountStatus == "Active";  
       }
       
@@ -80,10 +82,9 @@ service cloud.firestore {
         }
         
         match /Users/{userId}/Restricted/Details {
-          //Allow Users R control over their restricted information
-          allow read: if request.auth != null && request.auth.token.accountStatus == "Active"; 
+          //Allow Users read only access to their restricted information
+          allow read: if request.auth != null && request.auth.uid == userId && request.auth.token.accountStatus == "Active"; 
           //Allow Admin Update control over user restricted information only
-          allow update: if request.auth.token.role == "Admin" && request.auth.token.accountStatus == "Active"
         }
   }
 }

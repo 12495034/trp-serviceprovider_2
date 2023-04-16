@@ -122,6 +122,7 @@ exports.updateUserAuthDetails = functions.region('europe-west1').firestore.docum
             });
     });
 
+//disable user auth profile when firestore user document is changed to suspended
 exports.disableUserAccount = functions.region('europe-west1').firestore.document('/Users/{userId}/Restricted/Details')
     .onUpdate((change, context) => {
         const newData = change.after.data();
@@ -143,15 +144,18 @@ exports.disableUserAccount = functions.region('europe-west1').firestore.document
             });
     });
 
-
+//delete User document from firestore when user auth profile is deleted
 exports.deleteUserDocument = functions.region('europe-west1').auth.user().onDelete(async (user) => {
     deleteDocument('Users', user.uid)
 });
 
+//delete user restricted details document when user auth profile is deleted
 exports.deleteUserRestrictedData = functions.region('europe-west1').auth.user().onDelete(async(user) => {
     deleteDocument(`Users/${user.uid}/Restricted`, 'Details')
 });
 
+//Delete user appointments subcollection when user auth profile is deleted
+//subcollections need to be deleted manually
 exports.deleteUserAppointments = functions.region('europe-west1').auth.user().onDelete(async(user) => {
     //delete User subcollection documents
     const collectionRef = admin.firestore().collection(`Users/${user.uid}/Appointments`);
@@ -160,7 +164,7 @@ exports.deleteUserAppointments = functions.region('europe-west1').auth.user().on
             qs.forEach(docSnapshot => {
                 promises.push(docSnapshot.ref.delete());
             });
-            return Promise.all(promise1s);
+            return Promise.all(promises);
         })
         .catch(error => {
             console.log(error);
@@ -168,6 +172,7 @@ exports.deleteUserAppointments = functions.region('europe-west1').auth.user().on
         });
 });
 
+//helper function to delete a document within a firestore collection
 function deleteDocument(collectionName, docName) {
     admin.firestore().collection(collectionName).doc(docName).delete()
         .then(() => {
