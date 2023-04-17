@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { Container, Row, Col, Button, Stack } from 'react-bootstrap'
+import BootstrapSwitchButton from 'bootstrap-switch-button-react'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Tooltip from 'react-bootstrap/Tooltip'
 import ClinicInformationCard from '../components/ClinicInformationCard'
@@ -9,10 +10,10 @@ import ModalConfirmation from '../components/ModalConfirmation'
 import AppointmentCard from '../components/AppointmentCard'
 import Footer from '../components/Footer'
 import { UserAuth } from '../context/AuthContext';
-import { appointInc } from '../Constants/Constants'
-import useCollectionSnapshot from '../CustomHooks/UseCollectionSnapshot'
-import useDocSnapshot from '../CustomHooks/UseDocSnapshot'
-import { firestoreUpdate } from '../FirestoreFunctions/firestoreUpdate'
+import { appointInc } from '../constants/general'
+import useCollectionSnapshot from '../customHooks/UseCollectionSnapshot'
+import useDocSnapshot from '../customHooks/UseDocSnapshot'
+import { firestoreUpdate } from '../firestoreFunctions/firestoreUpdate'
 import { convertFirestoreTimeStamp } from '../Functions/SpecialFunctions/convertFirestoreTimeStamp'
 import { handleReleaseSlot } from '../Functions/SpecialFunctions/handleReleaseSlot'
 import { handleAddSlot } from '../Functions/SpecialFunctions/handleAddSlot'
@@ -43,6 +44,7 @@ export default function ClinicDetail() {
     const handleShowEnd = () => setEndModalShow(true);
     const handleCloseDelete = () => setDeleteModalShow(false);
     const handleShowDelete = () => setDeleteModalShow(true);
+    const [toolTip, setToolTip] = useState(false)
 
     //initialise new array using appointments
     const combinedList = combineSlotsAndAppointments(appointments, clinic.slots, setError)
@@ -76,6 +78,7 @@ export default function ClinicDetail() {
                 availableSlots={clinic.slots}
                 clinicStatus={clinic.clinicStatus}
                 handleUserDetail={handleUserDetail}
+                toolTipControl={toolTip}
             />
         )
     })
@@ -94,8 +97,41 @@ export default function ClinicDetail() {
                     null
                     :
                     <div><Stack direction='horizontal'>
-                        <Button variant='danger' onClick={handleShowCancel}>Cancel Clinic</Button>
-                        <Button className='ms-auto' variant='warning' onClick={handleShowEnd}>Close Clinic</Button>
+                        <OverlayTrigger
+                            show={toolTip}
+                            key='left'
+                            placement='left'
+                            overlay={
+                                <Tooltip>
+                                    Pressing this button will cancel the displayed clinic
+                                </Tooltip>
+                            }
+                        >
+                            <Button variant='danger' onClick={handleShowCancel}>Cancel Clinic</Button>
+                        </OverlayTrigger>
+                            
+                        <div className='ms-auto' >Tool Tips : <BootstrapSwitchButton
+                            checked={toolTip}
+                            size="sm"
+                            onlabel='On'
+                            offlabel='Off'
+                            onChange={(checked) => {
+                                setToolTip(prev => !prev)
+                            }}
+                        /></div>
+                        <OverlayTrigger
+                            show={toolTip}
+                            key='right'
+                            placement='right'
+                            overlay={
+                                <Tooltip>
+                                    Pressing this button will close the displayed clinic
+                                </Tooltip>
+                            }
+                        >
+                            <Button className='ms-auto' variant='warning' onClick={handleShowEnd}>Close Clinic</Button>
+                        </OverlayTrigger>
+
                     </Stack><br /></div>}
                 <Row>
                     <Stack direction="horizontal" gap={3}>
@@ -131,6 +167,7 @@ export default function ClinicDetail() {
                             <Button disabled>Add Additional Slot</Button>
                             :
                             <OverlayTrigger
+                                show={toolTip}
                                 key='bottom'
                                 placement='bottom'
                                 overlay={

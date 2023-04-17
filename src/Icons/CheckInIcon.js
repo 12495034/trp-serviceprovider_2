@@ -1,6 +1,6 @@
 import React from 'react'
 import { FaUserCheck, FaUserClock } from "react-icons/fa";
-import { iconSize } from '../Constants/Constants';
+import { iconSize } from '../constants/general';
 
 export default function CheckInIcon(props) {
     if (props.checkedIn === true) {

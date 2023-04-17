@@ -1,6 +1,6 @@
 import React from 'react'
 import { FaThumbsUp } from "react-icons/fa";
-import { iconSize } from '../Constants/Constants';
+import { iconSize } from '../constants/general';
 
 export default function TestCompleteIcon(props) {
     if (props.checkedIn === true && props.complete === true) {

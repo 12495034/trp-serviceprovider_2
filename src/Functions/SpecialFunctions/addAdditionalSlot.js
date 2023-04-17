@@ -1,4 +1,4 @@
-import { timeZones } from "../../Constants/Constants";
+import { timeZones } from "../../constants/general";
 
 //function to get the next available time (latest + appointInc)
 export function addAdditionalSlot(appointmentsData, date, inc) {

@@ -7,8 +7,8 @@ import NavBarTRP from '../components/NavBarTRP'
 import Footer from '../components/Footer'
 import AppointmentHistoryCard from '../components/AppointmentHistoryCard'
 import { UserAuth } from '../context/AuthContext'
-import useDoc from '../CustomHooks/UseDoc'
-import useCollection from '../CustomHooks/UseCollection'
+import useDoc from '../customHooks/UseDoc'
+import useCollection from '../customHooks/UseCollection'
 
 export default function UserProfileData() {
   
@@ -28,8 +28,6 @@ export default function UserProfileData() {
   const { docData, isDocLoading, docError } = useDoc('Users', userid, userid)
   const { docData: restrictedData, isDocLoading: restrictedDataLoading, docError: restrictedDataError } = useDoc(`Users/${userid}/Restricted`, 'Details')
   const { collectionData: appointmentHistoryData, isCollectionLoading: locationLoading, collectionError: appointmentHistoryError } = useCollection(`Users/${userid}/Appointments`, null)
-
-  console.log(docError)
 
   function handleClinicDetail(clinicId) {
     navigate(`/clinics/${clinicId}`);
@@ -89,6 +87,7 @@ export default function UserProfileData() {
         clinicStatus={item.clinicStatus}
         appointmentStatus={item.status}
         handleClinicDetail={handleClinicDetail}
+        addDetails={item.addDetails}
       />)
   })
 

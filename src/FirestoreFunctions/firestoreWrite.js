@@ -1,5 +1,5 @@
 import { addDoc, collection, } from 'firebase/firestore'
-import { firestore } from '../Firebase';
+import { firestore } from '../config/Firebase';
 
 //re-usable function for updating document fields in firestore
 //takes collection and document references along with an input data object

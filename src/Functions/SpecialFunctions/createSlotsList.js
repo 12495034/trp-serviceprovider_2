@@ -1,4 +1,4 @@
-import { timeZones } from "../../Constants/Constants";
+import { timeZones } from "../../constants/general";
 
 //function to create a slots array of times based on the start time and number of slots selected
 export function createSlotsList(date, startTime, capacity, inc) {

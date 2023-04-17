@@ -4,8 +4,8 @@ import { useNavigate, useParams } from 'react-router-dom'
 import NavBarTRP from '../components/NavBarTRP'
 import { UserAuth } from '../context/AuthContext';
 import Footer from '../components/Footer'
-import useDoc from '../CustomHooks/UseDoc'
-import { firestoreUpdate } from '../FirestoreFunctions/firestoreUpdate'
+import useDoc from '../customHooks/UseDoc'
+import { firestoreUpdate } from '../firestoreFunctions/firestoreUpdate'
 
 
 export default function UserProfileEdit() {

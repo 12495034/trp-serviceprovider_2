@@ -1,5 +1,5 @@
-import { firestoreUpdate } from "../../FirestoreFunctions/firestoreUpdate"
-import { maxClinicCapacity } from "../../Constants/Constants"
+import { firestoreUpdate } from "../../firestoreFunctions/firestoreUpdate"
+import { maxClinicCapacity } from "../../constants/general"
 
 //update capacity of clinic
 export function handleUpdateCapacity(clinicId, capacity, setState) {

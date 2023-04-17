@@ -10,9 +10,9 @@ import { UserAuth } from '../context/AuthContext';
 import { createDateString } from '../Functions/GeneralFunctions/createDateString';
 import NewClinicForm from '../components/NewClinicForm';
 import Spinner from 'react-bootstrap/Spinner';
-import useCollectionSnapshotQuery from '../CustomHooks/UseCollectionSnapshotQuery';
-import { spinnerType } from '../Constants/Constants';
-import { spinnerColor } from '../Constants/Constants';
+import useCollectionSnapshotQuery from '../customHooks/UseCollectionSnapshotQuery';
+import { spinnerType } from '../constants/general';
+import { spinnerColor } from '../constants/general';
 
 
 export default function ClinicManagement() {

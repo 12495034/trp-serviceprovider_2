@@ -83,8 +83,9 @@ service cloud.firestore {
         
         match /Users/{userId}/Restricted/Details {
           //Allow Users read only access to their restricted information
-          allow read: if request.auth != null && request.auth.uid == userId && request.auth.token.accountStatus == "Active"; 
+          allow read: if request.auth != null && (request.auth.uid == userId || request.auth.token.role =="Admin") && request.auth.token.accountStatus == "Active"; 
           //Allow Admin Update control over user restricted information only
+          allow update: if request.auth !=null && request.auth.token.role == "Admin" && request.auth.token.accountStatus == "Active"
         }
   }
 }

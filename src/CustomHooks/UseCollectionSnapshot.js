@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { collection, query, onSnapshot } from "firebase/firestore"
-import { firestore } from "../Firebase"
+import { firestore } from "../config/Firebase"
 
 export default function useCollectionSnapshot(collectionName, dependency) {
     //Hook state

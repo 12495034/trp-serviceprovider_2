@@ -3,7 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import NewClinicForm from './NewClinicForm';
 import userEvent from '@testing-library/user-event';
 import { within } from '@testing-library/react';
-import useCollection from '../CustomHooks/UseCollection';
+import useCollection from '../customHooks/UseCollection';
 
 
 // describe("Test fields disable when role is not an Admin", () => {

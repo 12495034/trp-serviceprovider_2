@@ -2,10 +2,10 @@ import React, { useState } from 'react'
 import { Row, Col, Form, Button } from 'react-bootstrap'
 import { currentDate } from '../Functions/GeneralFunctions/currentDate';
 import { Timestamp } from "firebase/firestore";
-import { appointInc } from '../Constants/Constants';
+import { appointInc } from '../constants/general';
 import { createSlotsList } from '../Functions/SpecialFunctions/createSlotsList';
-import { firestoreAddDoc } from '../FirestoreFunctions/firestoreWrite';
-import useCollection from '../CustomHooks/UseCollection';
+import { firestoreAddDoc } from '../firestoreFunctions/firestoreWrite';
+import useCollection from '../customHooks/UseCollection';
 import { createDateString } from '../Functions/GeneralFunctions/createDateString';
 
 //form component for creating a new clinic
@@ -133,6 +133,7 @@ export default function NewClinicForm(props) {
                         onChange={handleChange}
                         type="text"
                         placeholder="Describe where the tests are being conducted"
+                        maxLength={20}
                         value={ClinicFormData.addDetails} />
                 </Form.Group>
             </Row>
@@ -191,7 +192,7 @@ export default function NewClinicForm(props) {
                 </div>
             </Row>
             <Row>
-                <h5><code>{message}</code></h5>
+                <h5 className='mt-3 text-success'>{message}</h5>
             </Row>
         </Form>
     )

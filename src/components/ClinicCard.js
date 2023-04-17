@@ -3,7 +3,7 @@ import { Col, Row, Container } from 'react-bootstrap';
 
 export default function ClinicCard(props) {
   return (
-    <Container className='clinic-card' onClick={() => props.handleClinicDetail(props.clinicId)}>
+    <Container className='clinic-card pointer' onClick={() => props.handleClinicDetail(props.clinicId)}>
       <Row className="justify-content-md-center">
         <Col md={2}>
           <div>{props.date}</div>

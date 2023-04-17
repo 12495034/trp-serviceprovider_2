@@ -4,7 +4,7 @@ import { Container, Table, Form, Button, Row, Stack } from 'react-bootstrap'
 import NavBarTRP from '../components/NavBarTRP'
 import Footer from '../components/Footer'
 import { collection, query, getDocs, where } from "firebase/firestore";
-import { firestore } from '../Firebase'
+import { firestore } from '../config/Firebase'
 import { UserAuth } from '../context/AuthContext';
 
 export default function UserManagement() {

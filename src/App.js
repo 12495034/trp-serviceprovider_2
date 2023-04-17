@@ -1,4 +1,4 @@
-import './App.css';
+import './styling/App.css';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import {
   Routes,
@@ -17,7 +17,7 @@ import UserProfileData from './pages/UserProfileData';
 import UnAuthorisedScreen from './pages/UnAuthorisedScreen';
 import Missing from './pages/Missing';
 import { AuthContextProvider } from './context/AuthContext';
-import ProtectedRoute from './components/ProtectedRoute';
+import ProtectedRoute from './navigation/ProtectedRoute';
 import PrivacyPolicyMobile from './pages/PrivacyPolicyMobile';
 import PrivacyPolicyWeb from './pages/PrivacyPolicyWeb';
 import TermsAndConditions from './pages/TermsAndConditions';

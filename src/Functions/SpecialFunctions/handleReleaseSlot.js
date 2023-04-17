@@ -1,4 +1,4 @@
-import { firestoreUpdate } from "../../FirestoreFunctions/firestoreUpdate"
+import { firestoreUpdate } from "../../firestoreFunctions/firestoreUpdate"
 
 //function to update specified clinic fields
 export function handleReleaseSlot(clinicId, availableSlots, newSlotNumber, time, clinicStatus, setState) {

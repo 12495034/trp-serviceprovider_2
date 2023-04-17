@@ -1,6 +1,6 @@
-import { firestoreUpdate } from "../../FirestoreFunctions/firestoreUpdate"
+import { firestoreUpdate } from "../../firestoreFunctions/firestoreUpdate"
 import { addAdditionalSlot } from "./addAdditionalSlot"
-import { maxClinicCapacity } from "../../Constants/Constants"
+import { maxClinicCapacity } from "../../constants/general"
 
 //add additional slot to clinic map
 export function handleAddSlot(clinicId, availableSlots, appointmentsData, date, capacity, timeInc, setState) {

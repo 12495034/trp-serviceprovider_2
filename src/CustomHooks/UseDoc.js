@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { collection, getDoc, doc } from "firebase/firestore"
-import { firestore } from "../Firebase"
+import { firestore } from "../config/Firebase"
 
 export default function useDoc(collectionName, docName, dependency) {
     //Hook state

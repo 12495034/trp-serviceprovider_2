@@ -1,6 +1,6 @@
 
 import { collection, query, getDocs, where } from 'firebase/firestore'
-import { firestore } from '../Firebase'
+import { firestore } from '../config/Firebase'
 
 //get a list of appointments with a particular status for a given clinic id
 export async function getListOfAppointmentsByStatus(field, status, clinicId) {

@@ -9,7 +9,7 @@ import {
     onAuthStateChanged,
     getAuth
 } from 'firebase/auth'
-import { auth} from "../Firebase";
+import { auth} from "../config/Firebase";
 
 const UserContext = createContext()
 

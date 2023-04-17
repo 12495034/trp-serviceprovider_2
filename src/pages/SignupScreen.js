@@ -6,7 +6,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import { UserAuth } from '../context/AuthContext'
 import { handlePasswordConfirmation } from '../Functions/SpecialFunctions/handlePasswordConfirmation'
 import { setDoc, doc } from "firebase/firestore";
-import { firestore } from '../Firebase'
+import { firestore } from '../config/Firebase'
 import ModalTAC from '../components/ModalTAC'
 
 export default function SignupScreen() {

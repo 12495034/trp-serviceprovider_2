@@ -1,5 +1,5 @@
 
-import { firestore } from "../../Firebase";
+import { firestore } from "../../config/Firebase";
 import { runTransaction, doc, } from "firebase/firestore"
 
 //Function to update appointment data in multiple locations

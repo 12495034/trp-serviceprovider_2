@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { collection, query, doc, onSnapshot } from "firebase/firestore"
-import { firestore } from "../Firebase"
+import { firestore } from "../config/Firebase"
 
 export default function useDocSnapshot(collectionName, docName, dependency) {
     //Hook state

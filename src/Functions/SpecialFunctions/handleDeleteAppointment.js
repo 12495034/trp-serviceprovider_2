@@ -1,4 +1,4 @@
-import { firestore } from "../../Firebase";
+import { firestore } from "../../config/Firebase";
 import { runTransaction, doc } from "firebase/firestore"
 
 //function to update user called status and enter the tester that has called them

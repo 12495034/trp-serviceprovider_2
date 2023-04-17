@@ -1,5 +1,5 @@
-import { getListOfAppointmentsByStatus } from "../../FirestoreFunctions/firestoreRead"
-import { firestore } from "../../Firebase";
+import { getListOfAppointmentsByStatus } from "../../firestoreFunctions/firestoreRead"
+import { firestore } from "../../config/Firebase";
 import { runTransaction, doc } from "firebase/firestore"
 
 //update the status of all appointment documents when a clinic is cancelled or closed
