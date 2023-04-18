@@ -2,11 +2,12 @@ import React, { useState } from 'react'
 import { Row, Col, Form, Button } from 'react-bootstrap'
 import { currentDate } from '../Functions/GeneralFunctions/currentDate';
 import { Timestamp } from "firebase/firestore";
-import { appointInc } from '../constants/general';
+import { appointInc, leadTime } from '../constants/general';
 import { createSlotsList } from '../Functions/SpecialFunctions/createSlotsList';
 import { firestoreAddDoc } from '../firestoreFunctions/firestoreWrite';
 import useCollection from '../customHooks/UseCollection';
 import { createDateString } from '../Functions/GeneralFunctions/createDateString';
+import { clinicLeadTime } from '../constants/general';
 
 //form component for creating a new clinic
 export default function NewClinicForm(props) {
@@ -30,6 +31,7 @@ export default function NewClinicForm(props) {
     const { collectionData: locationData, isCollectionLoading: locationLoading, collectionError: locationError } = useCollection('Location', null)
     const { collectionData: centerData, isCollectionLoading: centerLoading, collectionError: centerError } = useCollection(`Location/${ClinicFormData.location}/Centers`, ClinicFormData.location)
 
+    console.log(locationData)
     //function that submits form data to firestore collection
     async function handleSubmit(event) {
         event.preventDefault()
@@ -140,7 +142,7 @@ export default function NewClinicForm(props) {
 
             <Row className="mb-3">
                 <Form.Group as={Col}>
-                    <Form.Label>Date</Form.Label>
+                    <Form.Label>Date (Min. 2 day lead time)</Form.Label>
                     <Form.Control
                         required
                         data-testid="date"
@@ -149,7 +151,7 @@ export default function NewClinicForm(props) {
                         name="date"
                         placeholder="Choose a Date"
                         type="date"
-                        min={currentDate()}
+                        min={currentDate(clinicLeadTime)}
                         onChange={handleChange}
                         value={ClinicFormData.date} />
                 </Form.Group>

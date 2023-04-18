@@ -9,6 +9,7 @@ import AppointmentHistoryCard from '../components/AppointmentHistoryCard'
 import { UserAuth } from '../context/AuthContext'
 import useDoc from '../customHooks/UseDoc'
 import useCollection from '../customHooks/UseCollection'
+import { convertFirestoreTimeStamp } from '../Functions/SpecialFunctions/convertFirestoreTimeStamp'
 
 export default function UserProfileData() {
   
@@ -116,6 +117,7 @@ export default function UserProfileData() {
                 <ListGroup.Item><Row><Col><strong>Phone Number:</strong></Col><Col>  {docData.PhoneNumber}</Col></Row></ListGroup.Item>
                 <ListGroup.Item><Row><Col><strong>Role:</strong></Col><Col>{restrictedData.role}</Col></Row></ListGroup.Item>
                 <ListGroup.Item><Row><Col><strong>Status:</strong> </Col><Col> {restrictedData.accountStatus}</Col></Row></ListGroup.Item>
+                <ListGroup.Item><Row><Col><strong>Created On:</strong> </Col><Col> {convertFirestoreTimeStamp(docData.createdAt)}</Col></Row></ListGroup.Item>
                 <ListGroup.Item><Row><Col><strong>Agreed to T&Cs:</strong> </Col><Col> {docData.isAgreedTC ? "Yes" : "No"}</Col></Row></ListGroup.Item>
                 <ListGroup.Item><Row><Col><strong>Email Notifications enabled:</strong> </Col><Col> {docData.emailOptIn? "Yes":"No"}</Col></Row></ListGroup.Item>
               </ListGroup>

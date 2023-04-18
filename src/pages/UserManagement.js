@@ -26,19 +26,19 @@ export default function UserManagement() {
   //------------------------------------------------------------------------------------------------
 
   async function searchUsers(e) {
-    console.log("button pressed")
+    const collectionName = "Users"
     //prevent screen re-render
     e.preventDefault();
     var q = "";
     //Wild card characters cannot be used with firestore queries therefore the query has to be built based on the state of the search input parameters
     if (searchBar.FirstName === "" && searchBar.LastName === "") {
-      q = query(collection(firestore, 'Users'));
+      q = query(collection(firestore, `${collectionName}`));
     } else if (searchBar.FirstName === "") {
-      q = query(collection(firestore, 'Users'), where("LastName", "==", `${searchBar.LastName}`));
+      q = query(collection(firestore, `${collectionName}`), where("LastName", "==", `${searchBar.LastName}`));
     } else if (searchBar.LastName === "") {
-      q = query(collection(firestore, 'Users'), where("FirstName", "==", `${searchBar.FirstName}`));
+      q = query(collection(firestore, `${collectionName}`), where("FirstName", "==", `${searchBar.FirstName}`));
     } else if (searchBar.FirstName !== "" && searchBar.LastName !== "") {
-      q = query(collection(firestore, 'Users'), where("FirstName", "==", `${searchBar.FirstName}`), where("LastName", "==", `${searchBar.LastName}`));
+      q = query(collection(firestore, `${collectionName}`), where("FirstName", "==", `${searchBar.FirstName}`), where("LastName", "==", `${searchBar.LastName}`));
     } else {
     }
 

@@ -7,7 +7,11 @@ import { UserAuth } from '../context/AuthContext'
 import { handlePasswordConfirmation } from '../Functions/SpecialFunctions/handlePasswordConfirmation'
 import { setDoc, doc } from "firebase/firestore";
 import { firestore } from '../config/Firebase'
+import { Timestamp } from 'firebase/firestore'
 import ModalTAC from '../components/ModalTAC'
+
+import useDoc from '../customHooks/UseDoc'
+import usePronouns from '../customHooks/usePronouns'
 
 export default function SignupScreen() {
     //useNavigate hook from react router dom
@@ -35,6 +39,9 @@ export default function SignupScreen() {
         emailOptIn: false,
     })
     const [error, setError] = useState('');
+
+    //Custom hookes for drop down menu population
+    const { docData, isDocLoading, docError } = usePronouns('Supporting', 'pronouns', null)
 
     function handleChange(event) {
         const { name, value, type, checked } = event.target
@@ -80,15 +87,15 @@ export default function SignupScreen() {
                             PhoneNumber: formData.PhoneNumber,
                             isAgreedTC: formData.isAgreedTC,
                             emailOptIn: formData.emailOptIn,
+                            createdAt: Timestamp.fromDate(new Date()),
                         })
                         updateUserAuthProfile(formData.FirstName, formData.LastName, formData.PhoneNumber)
                         //sends verification email to users email address
                         verifyEmail()
                         //signout following account creation so that users token is refreshed with their updated role
-                        handleSignOut()
-
+                        // handleSignOut()
+                        navigate('/welcome')
                     })
-                navigate('/home')
             } catch (e) {
                 setError(e.message)
             }
@@ -122,11 +129,8 @@ export default function SignupScreen() {
                                         controlid="proNouns"
                                         name="pronouns"
                                         onChange={handleChange}>
-                                        <option value=""></option>
-                                        <option value="Not Specified">Prefer not to say</option>
-                                        <option value="he/him">He/Him</option>
-                                        <option value="she/her">She/Her</option>
-                                        <option value="they/them">They/Them</option>
+                                        {docData.map((item) => (<option key={item.value} value={item.value}>{item.label}</option>))}
+
                                     </Form.Select>
                                     <Form.Control.Feedback type="valid">
                                         Looks Good!

@@ -6,23 +6,23 @@ export default function ClinicCard(props) {
     <Container className='clinic-card pointer' onClick={() => props.handleClinicDetail(props.clinicId)}>
       <Row className="justify-content-md-center">
         <Col md={2}>
-          <div>{props.date}</div>
+          <div className='card-column'>{props.date}</div>
         </Col>
         <Col md={1}>
-          <div>{props.time}</div>
+          <div className='card-column'>{props.time}</div>
         </Col>
         <Col md={1}>
-          <div>{props.location}</div>
+          <div className='card-column'>{props.location}</div>
         </Col>
         <Col md={4}>
           <div>{props.center}</div>
           <div>{props.addDetails}</div>
         </Col>
         <Col md={2}>
-          <div>{props.appointments}/{props.capacity}</div>
+          <div className='card-column'>{props.appointments}/{props.capacity}</div>
         </Col>
         <Col md={2}>
-          <div>{props.status}</div>
+          <div className='card-column'>{props.status}</div>
         </Col>
       </Row>
     </Container>

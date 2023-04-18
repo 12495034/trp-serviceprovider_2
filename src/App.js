@@ -21,6 +21,7 @@ import ProtectedRoute from './navigation/ProtectedRoute';
 import PrivacyPolicyMobile from './pages/PrivacyPolicyMobile';
 import PrivacyPolicyWeb from './pages/PrivacyPolicyWeb';
 import TermsAndConditions from './pages/TermsAndConditions';
+import WelcomeScreen from './pages/WelcomeScreen';
 
 function App() {
 
@@ -45,6 +46,7 @@ function App() {
         <Route path="/privacy-policy-mobile" element={<PrivacyPolicyMobile />} />
         <Route path="/privacy-policy-web" element={<PrivacyPolicyWeb />} />
         <Route path="/termsandconditions" element={<TermsAndConditions />} />
+        <Route path="/welcome" element={<WelcomeScreen />} />
         {/* //Catch all - page does not exist */}
         <Route path="*" element={<Missing />} />
       </Routes>

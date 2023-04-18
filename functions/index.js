@@ -145,26 +145,33 @@ exports.disableUserAccount = functions.region('europe-west1').firestore.document
     });
 
 //delete User document from firestore when user auth profile is deleted
-exports.deleteUserDocument = functions.region('europe-west1').auth.user().onDelete(async (user) => {
-    deleteDocument('Users', user.uid)
-});
+// exports.deleteUserDocument = functions.region('europe-west1').auth.user().onDelete(async (user) => {
+//     deleteDocument('Users', user.uid)
+// });
 
 //delete user restricted details document when user auth profile is deleted
-exports.deleteUserRestrictedData = functions.region('europe-west1').auth.user().onDelete(async(user) => {
-    deleteDocument(`Users/${user.uid}/Restricted`, 'Details')
-});
+// exports.deleteUserRestrictedData = functions.region('europe-west1').auth.user().onDelete(async (user) => {
+//     deleteDocument(`Users/${user.uid}/Restricted`, 'Details')
+// });
 
 //Delete user appointments subcollection when user auth profile is deleted
 //subcollections need to be deleted manually
-exports.deleteUserAppointments = functions.region('europe-west1').auth.user().onDelete(async(user) => {
+exports.deleteUserAppointments = functions.region('europe-west1').auth.user().onDelete(async (user) => {
     //delete User subcollection documents
     const collectionRef = admin.firestore().collection(`Users/${user.uid}/Appointments`);
+    let promises = []
     return collectionRef.get()
         .then(qs => {
             qs.forEach(docSnapshot => {
                 promises.push(docSnapshot.ref.delete());
             });
-            return Promise.all(promises);
+            Promise.all(promises);
+        })
+        .then(() => {
+            deleteDocument('Users', user.uid)
+        })
+        .then(() => {
+            return deleteDocument(`Users/${user.uid}/Restricted`, 'Details')
         })
         .catch(error => {
             console.log(error);

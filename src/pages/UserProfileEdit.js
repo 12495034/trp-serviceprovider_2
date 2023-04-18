@@ -6,7 +6,9 @@ import { UserAuth } from '../context/AuthContext';
 import Footer from '../components/Footer'
 import useDoc from '../customHooks/UseDoc'
 import { firestoreUpdate } from '../firestoreFunctions/firestoreUpdate'
-
+import usePronouns from '../customHooks/usePronouns';
+import useUserRole from '../customHooks/useUserRole';
+import useUserStatus from '../customHooks/useUserStatus';
 
 export default function UserProfileEdit() {
     const { user } = UserAuth();
@@ -18,7 +20,9 @@ export default function UserProfileEdit() {
 
     //custom hook for standard data retrieval from firestore
     const { docData, isDocLoading, docError } = useDoc('Users', userid)
-    //const { docData: dropDowns, isDocLoading: dropDownsLoading, docError: dropDownsError } = useDoc('DropDownData', 'Information')
+    const { docData: pronounsList, isDocLoading: pronounsLoading, docError: pronounError } = usePronouns('Supporting', 'pronouns', null)
+    const { docData: statusList, isDocLoading: statusLoading, docError: statusError } = useUserStatus('Supporting', 'userStatus', null)
+    const { docData: roleList, isDocLoading: rolesLoading, docError: rolesError } = useUserRole('Supporting', 'role', null)
     const { docData: restrictedData, isDocLoading: isRestrictedDataLoading, docError: restrictedDataError } = useDoc(`Users/${userid}/Restricted`, 'Details')
 
     //issue in that the useCollection hook is not returning firestore data
@@ -60,17 +64,6 @@ export default function UserProfileEdit() {
         })
     }
 
-    //-------------------------------------------------------------------------------------------------
-    //  Data Rendering
-    //-------------------------------------------------------------------------------------------------
-    // const userStatusArray = dropDowns.userStatus
-    // const userStatusList = userStatusArray.map((item, index) => {
-    //     //for data security the name of the person is not shown but the id of the person is perhaps
-    //     return (
-    //         <option key={index.toString()} value={item}>{item}</option>
-    //     )
-    // })
-
     return (
         <div className='page-body'>
             <NavBarTRP userId={user.uid} email={user.email} />
@@ -82,27 +75,20 @@ export default function UserProfileEdit() {
                     }}>
                         <Form.Group className="mb-3" >
                             <Form.Label>Role</Form.Label>
-                            <Form.Select required name="role" value={restrictedUserData.role||''} onChange={handleRestrictedDataChange}>
-                                <option value="Admin">Admin</option>
-                                <option value="Support">Support</option>
-                                <option value="Service-User">Service-User</option>
+                            <Form.Select required name="role" value={restrictedUserData.role || ''} onChange={handleRestrictedDataChange}>
+                            {roleList.map((item) => (<option key={item.value} value={item.value}>{item.label}</option>))}
                             </Form.Select>
                         </Form.Group>
                         <Form.Group className="mb-3" >
                             <Form.Label>Status</Form.Label>
-                            <Form.Select required name="accountStatus" value={restrictedUserData.accountStatus||''} onChange={handleRestrictedDataChange}>
-                                <option value="Active">Active</option>
-                                <option value="Suspended">Suspended</option>
-                                {/* {userStatusList} */}
+                            <Form.Select required name="accountStatus" value={restrictedUserData.accountStatus || ''} onChange={handleRestrictedDataChange}>
+                                {statusList.map((item) => (<option key={item.value} value={item.value}>{item.label}</option>))}
                             </Form.Select>
                         </Form.Group>
                         <Form.Group className="mb-3" >
                             <Form.Label>Pro-nouns</Form.Label>
-                            <Form.Select required controlid="proNouns" name="ProNouns" value={userData.ProNouns||''} onChange={handleUserDataChange}>
-                                <option value="Prefer not to say">Prefer not to say</option>
-                                <option value="he/him">He/Him</option>
-                                <option value="she/her">She/Her</option>
-                                <option value="they/them">They/Them select</option>
+                            <Form.Select required controlid="proNouns" name="ProNouns" value={userData.ProNouns || ''} onChange={handleUserDataChange}>
+                                {pronounsList.map((item) => (<option key={item.value} value={item.value}>{item.label}</option>))}
                             </Form.Select>
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="FirstName" >
@@ -112,7 +98,7 @@ export default function UserProfileEdit() {
                                 name="FirstName"
                                 type="text"
                                 placeholder="Enter first name"
-                                value={userData.FirstName||''}
+                                value={userData.FirstName || ''}
                                 onChange={handleUserDataChange} />
                             <Form.Control.Feedback type="valid">
                                 Looks Good!
@@ -123,12 +109,12 @@ export default function UserProfileEdit() {
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formMiddleName">
                             <Form.Label>Middle Name</Form.Label>
-                            <Form.Control type="text" placeholder="Enter middle name (Optional)" name="MiddleName" value={userData.MiddleName||''} onChange={handleUserDataChange} />
+                            <Form.Control type="text" placeholder="Enter middle name (Optional)" name="MiddleName" value={userData.MiddleName || ''} onChange={handleUserDataChange} />
                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formLastName">
                             <Form.Label>Last Name</Form.Label>
-                            <Form.Control required type="text" placeholder="Enter last name (Optional)" name="LastName" value={userData.LastName||''} onChange={handleUserDataChange} />
+                            <Form.Control required type="text" placeholder="Enter last name (Optional)" name="LastName" value={userData.LastName || ''} onChange={handleUserDataChange} />
                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group className='mb-3' as={Col} controlId="formGridCity">
@@ -138,12 +124,12 @@ export default function UserProfileEdit() {
                                 name="dob"
                                 type="date"
                                 placeholder="Enter date"
-                                value={userData.dob||''}
+                                value={userData.dob || ''}
                                 onChange={handleUserDataChange} />
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formEmail">
                             <Form.Label>Email</Form.Label>
-                            <Form.Control disabled={true} required type="email" placeholder="Enter a valid email address" name="email" value={userData.email||''} onChange={handleUserDataChange} />
+                            <Form.Control disabled={true} required type="email" placeholder="Enter a valid email address" name="email" value={userData.email || ''} onChange={handleUserDataChange} />
                             <Form.Control.Feedback type="valid">
                                 Email format is correct
                             </Form.Control.Feedback>
@@ -155,7 +141,7 @@ export default function UserProfileEdit() {
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formPhoneNumber">
                             <Form.Label>Phone Number</Form.Label>
-                            <Form.Control required type="phone Number" placeholder="Enter contact number" name="PhoneNumber" value={userData.PhoneNumber||''} onChange={handleUserDataChange} />
+                            <Form.Control required type="phone Number" placeholder="Enter contact number" name="PhoneNumber" value={userData.PhoneNumber || ''} onChange={handleUserDataChange} />
                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                             <Form.Text className="text-muted">
                                 It is important to keep contact details up to date incase direct contact is required
@@ -164,7 +150,7 @@ export default function UserProfileEdit() {
                         <Form.Group className="mb-3" >
                             <Form.Check
                                 label="Recieve Emails Notifications"
-                                checked={userData.emailOptIn||false}
+                                checked={userData.emailOptIn || false}
                                 controlid="emailOptIn"
                                 name="emailOptIn"
                                 onChange={handleUserDataChange}

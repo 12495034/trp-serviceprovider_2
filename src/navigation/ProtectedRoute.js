@@ -16,8 +16,8 @@ export default function ProtectedRoute() {
     }
 
     //if user is logged in and has admin privileges then allow them access to the web application
-    //otherwise the user is logged out and directed to a page indicating they are unauthorised to acess the web app
-    if (role !== "Service-User" && accountStatus !== "Suspended") {
+    //otherwise the user is logged out and directed to a page indicating they are unauthorised to access the web app
+    if (user!=null && role !== "Service-User" && accountStatus !== "Suspended") {
         return <Outlet />
     } else {
         handleSignOut()

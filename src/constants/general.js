@@ -1,3 +1,7 @@
+//The minimum number of days lead time for scheduling a clinic
+//This is to provide users with a reasonable time to signup for clinics
+export const clinicLeadTime = 2;
+
 //increment in minutes when adding a new appointment slot
 export const appointInc = 30;
 

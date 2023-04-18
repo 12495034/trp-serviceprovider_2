@@ -8,7 +8,6 @@ export default function useCollectionSnapshot(collectionName, dependency) {
     const [isCollectionLoading, setIsCollectionLoading] = useState(true);
     const [collectionError, setCollectionError] = useState('');
 
-    console.log("filtering data somehow")
     useEffect(() =>
         onSnapshot(query(collection(firestore, `${collectionName}`)), (querySnapshot) => {
             let collectionArray = []

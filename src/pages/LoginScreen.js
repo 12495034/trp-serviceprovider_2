@@ -41,7 +41,7 @@ export default function LoginScreen() {
     <div className='login-body'>
       <Container className='login-content'>
         <Row >
-          <h1 className='text-center login-title '>The Rapid HIV & Syphilis Booking System</h1>
+          <h1 className='mb-10 text-center login-title '>The Rapid HIV & Syphilis Testing Management Portal</h1>
         </Row>
         <Row md={2} sm={1} xs={2} className='d-flex justify-content-center mb-2 mt-4'>
           <Image src={require("../images/logo.png")} alt="missing" />
