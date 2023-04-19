@@ -21,6 +21,7 @@ import { createDateString } from '../Functions/GeneralFunctions/createDateString
 import { combineSlotsAndAppointments } from '../Functions/SpecialFunctions/combineSlotsAndAppointments'
 import { updateAppointmentStatus } from '../Functions/SpecialFunctions/updateAppointmentStatus'
 import { handleUpdateCapacity } from '../Functions/SpecialFunctions/handleUpdateCapacity'
+import SpinnerIcon from '../components/SpinnerIcon'
 
 export default function ClinicDetail() {
     //react-router-dom params that are passed through navigate
@@ -88,104 +89,112 @@ export default function ClinicDetail() {
     //-------------------------------------------------------------------------------------
     return (
         <div className='page-body'>
-            <NavBarTRP/>
+            <NavBarTRP />
             {/* <BreadCrumbCustom /> */}
-            <Container className='page-content'>
-            <h1 className='page-title'>Detailed Clinic View</h1>
-                {/* //conditional rendering so that if the clinic is not active then it is assumed to be cancelled or complete
-                //actions can therefore not be performed on the clinic data */}
-                {clinic.clinicStatus !== "Active" ?
-                    null
-                    :
-                    <div><Stack direction='horizontal'>
-                        <OverlayTrigger
-                            show={toolTip}
-                            key='left'
-                            placement='left'
-                            overlay={
-                                <Tooltip>
-                                    Pressing this button will cancel the displayed clinic
-                                </Tooltip>
-                            }
-                        >
-                            <Button variant='danger' onClick={handleShowCancel}>Cancel Clinic</Button>
-                        </OverlayTrigger>
-                            
-                        <div className='ms-auto' >Tool Tips : <BootstrapSwitchButton
-                            checked={toolTip}
-                            size="sm"
-                            onlabel='On'
-                            offlabel='Off'
-                            onChange={(checked) => {
-                                setToolTip(prev => !prev)
-                            }}
-                        /></div>
-                        <OverlayTrigger
-                            show={toolTip}
-                            key='right'
-                            placement='right'
-                            overlay={
-                                <Tooltip>
-                                    Pressing this button will close the displayed clinic
-                                </Tooltip>
-                            }
-                        >
-                            <Button className='ms-auto' variant='warning' onClick={handleShowEnd}>Close Clinic</Button>
-                        </OverlayTrigger>
 
-                    </Stack><br /></div>}
-                <Row>
-                    <Stack direction="horizontal" gap={3}>
-                        <div><p>Scheduled By: {clinic.createdBy}</p></div>
-                        <div className="ms-auto"><p>Scheduled on: {convertFirestoreTimeStamp(clinic.timeStamp)}</p></div>
-                    </Stack>
-                </Row>
-                <Row>
-                    <Col>
-                        {clinic.clinicStatus !== "Active" ? <h5 bg='danger'>This clinic is no longer active, changes cannot be made</h5> : null}
-                        <ClinicInformationCard
-                            clinicid={clinicId}
-                            date={createDateString(clinic.date)}
-                            time={clinic.startTime}
-                            location={clinic.location}
-                            center={clinic.center}
-                            addDetails={clinic.addDetails}
-                            appointments={appointments.length}
-                            capacity={clinic.capacity}
-                            active={clinic.clinicStatus} />
-                    </Col>
-                </Row>
-                <hr />
-                <h4><code>{error ? error : null}</code></h4>
-                <Row>
-                    <Col>
-                        {appointmentList}
-                    </Col>
-                </Row>
-                <Row>
-                    <div className='d-grid'>
+            <Container className='page-content'>
+                {!isAppointmentDataLoading ?
+                    <div>
+                        <h1 className='page-title'>Detailed Clinic View</h1>
+                        {/* //conditional rendering so that if the clinic is not active then it is assumed to be cancelled or complete
+                        //actions can therefore not be performed on the clinic data */}
                         {clinic.clinicStatus !== "Active" ?
-                            <Button disabled>Add Additional Slot</Button>
+                            null
                             :
-                            <OverlayTrigger
-                                show={toolTip}
-                                key='bottom'
-                                placement='bottom'
-                                overlay={
-                                    <Tooltip>
-                                        Add an additional appointment slot (+{appointInc}mins)
-                                    </Tooltip>
-                                }
-                            >
-                                <Button onClick={() => {
-                                    handleAddSlot(clinicId, clinic.slots, sortedAppointments, clinic.date, clinic.capacity, appointInc, setError)
-                                    handleUpdateCapacity(clinicId, clinic.capacity, setError)
-                                }}
-                                >Add Additional Slot</Button>
-                            </OverlayTrigger>}
+                            <div><Stack direction='horizontal'>
+                                <OverlayTrigger
+                                    show={toolTip}
+                                    key='left'
+                                    placement='left'
+                                    overlay={
+                                        <Tooltip>
+                                            Pressing this button will cancel the displayed clinic
+                                        </Tooltip>
+                                    }
+                                >
+                                    <Button variant='danger' onClick={handleShowCancel}>Cancel Clinic</Button>
+                                </OverlayTrigger>
+
+                                <div className='ms-auto' >Tool Tips : <BootstrapSwitchButton
+                                    checked={toolTip}
+                                    size="sm"
+                                    onlabel='On'
+                                    offlabel='Off'
+                                    onChange={(checked) => {
+                                        setToolTip(prev => !prev)
+                                    }}
+                                /></div>
+                                <OverlayTrigger
+                                    show={toolTip}
+                                    key='right'
+                                    placement='right'
+                                    overlay={
+                                        <Tooltip>
+                                            Pressing this button will close the displayed clinic
+                                        </Tooltip>
+                                    }
+                                >
+                                    <Button className='ms-auto' variant='warning' onClick={handleShowEnd}>Close Clinic</Button>
+                                </OverlayTrigger>
+
+                            </Stack><br /></div>}
+                        <Row>
+                            <Stack direction="horizontal" gap={3}>
+                                <div><p>Scheduled By: {clinic.createdBy}</p></div>
+                                <div className="ms-auto"><p>Scheduled on: {convertFirestoreTimeStamp(clinic.timeStamp)}</p></div>
+                            </Stack>
+                        </Row>
+                        <Row>
+                            <Col>
+                                {clinic.clinicStatus !== "Active" ? <h5 bg='danger'>This clinic is no longer active, changes cannot be made</h5> : null}
+                                <ClinicInformationCard
+                                    clinicid={clinicId}
+                                    date={createDateString(clinic.date)}
+                                    time={clinic.startTime}
+                                    location={clinic.location}
+                                    center={clinic.center}
+                                    addDetails={clinic.addDetails}
+                                    appointments={appointments.length}
+                                    capacity={clinic.capacity}
+                                    active={clinic.clinicStatus} />
+                            </Col>
+                        </Row>
+                        <hr />
+                        <h4><code>{error ? error : null}</code></h4>
+                        <Row>
+                            <Col>
+                                {appointmentList}
+                            </Col>
+                        </Row>
+                        <Row>
+                            <div className='d-grid'>
+                                {clinic.clinicStatus !== "Active" ?
+                                    <Button disabled>Add Additional Slot</Button>
+                                    :
+                                    <OverlayTrigger
+                                        show={toolTip}
+                                        key='bottom'
+                                        placement='bottom'
+                                        overlay={
+                                            <Tooltip>
+                                                Add an additional appointment slot (+{appointInc}mins)
+                                            </Tooltip>
+                                        }
+                                    >
+                                        <Button onClick={() => {
+                                            handleAddSlot(clinicId, clinic.slots, sortedAppointments, clinic.date, clinic.capacity, appointInc, setError)
+                                            handleUpdateCapacity(clinicId, clinic.capacity, setError)
+                                        }}
+                                        >Add Additional Slot</Button>
+                                    </OverlayTrigger>}
+                            </div>
+                        </Row>
                     </div>
-                </Row>
-            </Container>
+                    :
+                    <Row className="justify-content-md-center p-3"><SpinnerIcon /></Row>
+                }
+            </Container >
+
             <Footer />
 
             <ModalConfirmation
@@ -222,7 +231,7 @@ export default function ClinicDetail() {
                     handleCloseEnd()
                 }}
             />
-        </div>
+        </div >
 
     )
 }

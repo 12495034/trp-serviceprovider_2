@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { Container, Table, Form, Button, Row, Stack } from 'react-bootstrap'
+import { Container, Table, Form, Button, Row, Stack, Spinner } from 'react-bootstrap'
 import NavBarTRP from '../components/NavBarTRP'
 import Footer from '../components/Footer'
 import { collection, query, getDocs, where } from "firebase/firestore";
 import { firestore } from '../config/Firebase'
 import { UserAuth } from '../context/AuthContext';
 import { convertFirestoreTimeStamp } from '../Functions/SpecialFunctions/convertFirestoreTimeStamp';
+import SpinnerIcon from '../components/SpinnerIcon';
 
 export default function UserManagement() {
 
@@ -14,6 +15,7 @@ export default function UserManagement() {
   //------------------------------------------------------------------------------------------------
   //        DEFINE STATE
   //------------------------------------------------------------------------------------------------
+  const [isLoading, setIsLoading] = useState(false)
   const [pressed, setPressed] = useState(false)
   const [allUsers, setAllUsers] = useState([])
   const [error, setError] = useState('')
@@ -29,6 +31,7 @@ export default function UserManagement() {
 
   async function searchUsers(e) {
     setPressed(true)
+    setIsLoading(true)
     const collectionName = "Users"
     //prevent screen re-render
     e.preventDefault();
@@ -56,8 +59,10 @@ export default function UserManagement() {
         usersArray.push(combine)
       })
       setAllUsers(usersArray)
+      setIsLoading(false)
     } catch (e) {
       setError(e.message)
+      setIsLoading(false)
     }
   }
 
@@ -93,7 +98,7 @@ export default function UserManagement() {
       <NavBarTRP />
       <Container className='page-content'>
         <h1 className='page-title'>User Management</h1>
-        {/* Insert toolbar */}
+        {/* Insert toolbar, future developement with radio buttons */}
         <p>From this screen you can view all users of the app and their profile details. Search for a user based on their first or last name or filter based on the users status and role</p>
         <p><strong>Note:</strong> To view list of all stored users press the search button with no input parameters</p>
         <Row>
@@ -127,20 +132,25 @@ export default function UserManagement() {
           </Form>
         </Row>
         <hr />
-        <Table responsive striped bordered hover>
-          <thead>
-            <tr>
-              <th>Pro-Nouns</th>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>Email</th>
-              <th>Created On</th>
-            </tr>
-          </thead>
-          <tbody>
-            {pressed == true && allUsers.length == 0 ? <tr><td className="text-danger">No users found, Please make sure the first character is a capital letter</td><td></td><td></td><td></td><td></td></tr> : userList}
-          </tbody>
-        </Table>
+        {isLoading ?
+          <Row className="justify-content-md-center p-3"><SpinnerIcon /></Row>
+          :
+          <Table responsive striped bordered hover>
+            <thead>
+              <tr>
+                <th>Pro-Nouns</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Created On</th>
+              </tr>
+            </thead>
+            <tbody>
+              {userList}
+            </tbody>
+          </Table>
+        }
+        {allUsers.length==0 && pressed==true && isLoading==false?<p className="text-danger">No users found, please make sure there is a capital letter at the start of the name</p>:null}
         {error ? <h4><code>{error}</code></h4> : null}
       </Container>
       <Footer />

@@ -9,10 +9,8 @@ import ClinicToolBar from '../components/ClinicToolBar';
 import { UserAuth } from '../context/AuthContext';
 import { createDateString } from '../Functions/GeneralFunctions/createDateString';
 import NewClinicForm from '../components/NewClinicForm';
-import Spinner from 'react-bootstrap/Spinner';
+import SpinnerIcon from '../components/SpinnerIcon';
 import useCollectionSnapshotQuery from '../customHooks/UseCollectionSnapshotQuery';
-import { spinnerType } from '../constants/general';
-import { spinnerColor } from '../constants/general';
 
 
 export default function ClinicManagement() {
@@ -104,7 +102,7 @@ export default function ClinicManagement() {
         <Row className="justify-content-md-center p-3">
           {/* <Col> */}
           {/* {clinicData.length > 0 ? clinicCards : <h4>There are no clinics that match the selected criteria</h4>} */}
-          {clinicDataLoading ? <Spinner animation={spinnerType} variant={spinnerColor} /> : clinicCards}
+          {clinicDataLoading ? <SpinnerIcon /> : clinicCards}
           {clinicDataError ? <h4>{clinicDataError}</h4> : null}
           {/* </Col> */}
         </Row>
