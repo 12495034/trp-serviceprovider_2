@@ -10,7 +10,7 @@ export default function Homepage() {
 
   return (
     <div className='page-body'>
-      {/* <NavBarTRP userId={user.uid} email={user.email}/> */}
+      <NavBarTRP/>
       <Container className='page-content'>
         <Row className='page-content-text'>
           <div className="Home-message">

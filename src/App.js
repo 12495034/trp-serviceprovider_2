@@ -23,36 +23,36 @@ import PrivacyPolicyWeb from './pages/PrivacyPolicyWeb';
 import TermsAndConditions from './pages/TermsAndConditions';
 import WelcomeScreen from './pages/WelcomeScreen';
 import NavBarTRP from './components/NavBarTRP';
+import { Outlet } from 'react-router-dom';
 
 function App() {
 
   return (
-      <AuthContextProvider>
-        <NavBarTRP />
-        <Routes>
-          {/* //Protected Routes */}
-          <Route element={<ProtectedRoute />} >
-            <Route path="/home" element={<Homepage />} />
-            <Route path="/clinics" element={<ClinicManagement />} />
-            <Route path="/clinics/:clinicId" element={<ClinicDetail />} />
-            <Route path="/users" element={<UserManagement />} />
-            <Route path="/users/:userid" element={<UserProfileData />} />
-            <Route path="/users/:userid/edit" element={<UserProfileEdit />} />
-          </Route>
-
-          {/* //un-protected routed */}
-          <Route path="/" element={<LoginScreen />} />
-          <Route path="/reset" element={<ResetScreen />} />
-          <Route path="/signup" element={<SignupScreen />} />
-          <Route path="/unauthorised" element={<UnAuthorisedScreen />} />
-          <Route path="/privacy-policy-mobile" element={<PrivacyPolicyMobile />} />
-          <Route path="/privacy-policy-web" element={<PrivacyPolicyWeb />} />
-          <Route path="/termsandconditions" element={<TermsAndConditions />} />
-          <Route path="/welcome" element={<WelcomeScreen />} />
-          {/* //Catch all - page does not exist */}
-          <Route path="*" element={<Missing />} />
-        </Routes>
-      </AuthContextProvider >
+    <AuthContextProvider>
+      <Routes>
+        {/* //Protected Routes */}
+        <Route element={<ProtectedRoute />} >
+          <Route path="/home" element={<Homepage />} />
+          <Route path="/clinics" element={<ClinicManagement />} />
+          <Route path="/clinics/:clinicId" element={<ClinicDetail />} />
+          <Route path="/users" element={<UserManagement />} />
+          <Route path="/users/:userid" element={<UserProfileData />} />
+          <Route path="/users/:userid/edit" element={<UserProfileEdit />} />
+        </Route>
+        
+        {/* //un-protected routed */}
+        <Route path="/" element={<LoginScreen />} />
+        <Route path="/reset" element={<ResetScreen />} />
+        <Route path="/signup" element={<SignupScreen />} />
+        <Route path="/unauthorised" element={<UnAuthorisedScreen />} />
+        <Route path="/privacy-policy-mobile" element={<PrivacyPolicyMobile />} />
+        <Route path="/privacy-policy-web" element={<PrivacyPolicyWeb />} />
+        <Route path="/termsandconditions" element={<TermsAndConditions />} />
+        <Route path="/welcome" element={<WelcomeScreen />} />
+        {/* //Catch all - page does not exist */}
+        <Route path="*" element={<Missing />} />
+      </Routes>
+    </AuthContextProvider >
   );
 }
 

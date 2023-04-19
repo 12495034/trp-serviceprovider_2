@@ -65,7 +65,7 @@ export default function UserProfileEdit() {
 
     return (
         <div className='page-body'>
-            <NavBarTRP userId={user.uid} email={user.email} />
+            <NavBarTRP/>
             <Container className='page-content'>
             <h1 className='page-title'>Edit User Details</h1>
                 <Row>

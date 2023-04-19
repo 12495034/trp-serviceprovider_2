@@ -12,13 +12,13 @@ import useCollection from '../customHooks/UseCollection'
 import { convertFirestoreTimeStamp } from '../Functions/SpecialFunctions/convertFirestoreTimeStamp'
 
 export default function UserProfileData() {
-  
+
   const { user, logOut, passwordReset } = UserAuth();
-  
+
   //retrieve userid from URL parameter
   const { userid } = useParams()
   const navigate = useNavigate()
-  const {state} = useLocation()
+  const { state } = useLocation()
 
   //Define State
   const [sent, setSent] = useState(true)
@@ -60,7 +60,7 @@ export default function UserProfileData() {
     }
   }
 
- 
+
 
   //-------------------------------------------------------------------------------------
   // Data rendering
@@ -94,41 +94,41 @@ export default function UserProfileData() {
 
   return (
     <div className='page-body'>
-     {/* <NavBarTRP userId={user.uid} email={user.email}/> */}
+      <NavBarTRP />
       <Container className='page-content'>
-      <h1 className='page-title'>User Profile</h1>
+        <h1 className='page-title'>User Profile</h1>
         <Row>
           <Col md={5}>
-            {docError!=""?
-            <Card className='user-card'>
-              {/* <Card.Img variant="top" src={require('../images/user_test.jpg')} /> */}
-              <Card.Body>
-                <Card.Title className="text-primary text-uppercase">{docData.email}</Card.Title>
-                <Card.Text>
-                <code>{docError ? docError : null}</code>
-                </Card.Text>
-              </Card.Body>
-              <ListGroup className="list-group-flush">
-                <ListGroup.Item><Row><Col><strong>Pro-Nouns:</strong></Col><Col>{docData.ProNouns} </Col></Row> </ListGroup.Item>
-                <ListGroup.Item><Row><Col><strong>First Name:</strong></Col><Col> {docData.FirstName} </Col></Row> </ListGroup.Item>
-                <ListGroup.Item><Row><Col><strong>Middle Name:</strong></Col><Col> {docData.MiddleName}</Col></Row> </ListGroup.Item>
-                <ListGroup.Item><Row><Col><strong>Last Name:</strong></Col><Col> {docData.LastName}</Col></Row> </ListGroup.Item>
-                <ListGroup.Item><Row><Col><strong>DOB:</strong></Col><Col> {docData.dob}</Col></Row></ListGroup.Item>
-                <ListGroup.Item><Row><Col><strong>Phone Number:</strong></Col><Col>  {docData.PhoneNumber}</Col></Row></ListGroup.Item>
-                <ListGroup.Item><Row><Col><strong>Role:</strong></Col><Col>{restrictedData.role}</Col></Row></ListGroup.Item>
-                <ListGroup.Item><Row><Col><strong>Status:</strong> </Col><Col> {restrictedData.accountStatus}</Col></Row></ListGroup.Item>
-                <ListGroup.Item><Row><Col><strong>Created On:</strong> </Col><Col> {convertFirestoreTimeStamp(docData.createdAt)}</Col></Row></ListGroup.Item>
-                <ListGroup.Item><Row><Col><strong>Agreed to T&Cs:</strong> </Col><Col> {docData.isAgreedTC ? "Yes" : "No"}</Col></Row></ListGroup.Item>
-                <ListGroup.Item><Row><Col><strong>Email Notifications enabled:</strong> </Col><Col> {docData.emailOptIn? "Yes":"No"}</Col></Row></ListGroup.Item>
-              </ListGroup>
-              <Card.Body className='user-card-buttons'>
-                <Button variant='warning' className='user-card-button' onClick={handleEditUser}>Edit</Button>
-                {userid === user.uid ? <Button variant='secondary' className='user-card-button' onClick={resetPassword}>Reset Password</Button> : null}
-                {userid === user.uid ? <Button variant='primary' className='user-card-button' onClick={handleSignOut}>Logout</Button> : null}
-              </Card.Body>
-            </Card>
-            :
-            <h5><code>{docError}</code></h5>}
+            {docError != "" ?
+              <Card className='user-card'>
+                {/* <Card.Img variant="top" src={require('../images/user_test.jpg')} /> */}
+                <Card.Body>
+                  <Card.Title className="text-primary text-uppercase">{docData.email}</Card.Title>
+                  <Card.Text>
+                    <code>{docError ? docError : null}</code>
+                  </Card.Text>
+                </Card.Body>
+                <ListGroup className="list-group-flush">
+                  <ListGroup.Item><Row><Col><strong>Pro-Nouns:</strong></Col><Col>{docData.ProNouns} </Col></Row> </ListGroup.Item>
+                  <ListGroup.Item><Row><Col><strong>First Name:</strong></Col><Col> {docData.FirstName} </Col></Row> </ListGroup.Item>
+                  <ListGroup.Item><Row><Col><strong>Middle Name:</strong></Col><Col> {docData.MiddleName}</Col></Row> </ListGroup.Item>
+                  <ListGroup.Item><Row><Col><strong>Last Name:</strong></Col><Col> {docData.LastName}</Col></Row> </ListGroup.Item>
+                  <ListGroup.Item><Row><Col><strong>DOB:</strong></Col><Col> {docData.dob}</Col></Row></ListGroup.Item>
+                  <ListGroup.Item><Row><Col><strong>Phone Number:</strong></Col><Col>  {docData.PhoneNumber}</Col></Row></ListGroup.Item>
+                  <ListGroup.Item><Row><Col><strong>Role:</strong></Col><Col>{restrictedData.role}</Col></Row></ListGroup.Item>
+                  <ListGroup.Item><Row><Col><strong>Status:</strong> </Col><Col> {restrictedData.accountStatus}</Col></Row></ListGroup.Item>
+                  <ListGroup.Item><Row><Col><strong>Created On:</strong> </Col><Col> {convertFirestoreTimeStamp(docData.createdAt)}</Col></Row></ListGroup.Item>
+                  <ListGroup.Item><Row><Col><strong>Agreed to T&Cs:</strong> </Col><Col> {docData.isAgreedTC ? "Yes" : "No"}</Col></Row></ListGroup.Item>
+                  <ListGroup.Item><Row><Col><strong>Email Notifications enabled:</strong> </Col><Col> {docData.emailOptIn ? "Yes" : "No"}</Col></Row></ListGroup.Item>
+                </ListGroup>
+                <Card.Body className='user-card-buttons'>
+                  <Button variant='warning' className='user-card-button' onClick={handleEditUser}>Edit</Button>
+                  {userid === user.uid ? <Button variant='secondary' className='user-card-button' onClick={resetPassword}>Reset Password</Button> : null}
+                  {userid === user.uid ? <Button variant='primary' className='user-card-button' onClick={handleSignOut}>Logout</Button> : null}
+                </Card.Body>
+              </Card>
+              :
+              <h5><code>{docError}</code></h5>}
             <Row>
               <Col>{error ? <p className='mt-3 text-danger'>{error}</p> : null}</Col>
             </Row>

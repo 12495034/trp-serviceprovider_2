@@ -79,7 +79,7 @@ export default function ClinicManagement() {
 
   return (
     <div className='page-body'>
-      {/* <NavBarTRP userId={user.uid} email={user.email} /> */}
+      <NavBarTRP />
       <Container className='page-content'>
         <Row>
           <h1 className='page-title'>Clinic Management</h1>

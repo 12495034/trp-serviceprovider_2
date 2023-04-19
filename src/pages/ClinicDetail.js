@@ -88,7 +88,7 @@ export default function ClinicDetail() {
     //-------------------------------------------------------------------------------------
     return (
         <div className='page-body'>
-            {/* <NavBarTRP userId={user.uid} email={user.email} /> */}
+            <NavBarTRP/>
             {/* <BreadCrumbCustom /> */}
             <Container className='page-content'>
             <h1 className='page-title'>Detailed Clinic View</h1>

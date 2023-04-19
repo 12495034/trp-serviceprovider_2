@@ -6,6 +6,7 @@ import Footer from '../components/Footer'
 import { collection, query, getDocs, where } from "firebase/firestore";
 import { firestore } from '../config/Firebase'
 import { UserAuth } from '../context/AuthContext';
+import { convertFirestoreTimeStamp } from '../Functions/SpecialFunctions/convertFirestoreTimeStamp';
 
 export default function UserManagement() {
 
@@ -13,6 +14,7 @@ export default function UserManagement() {
   //------------------------------------------------------------------------------------------------
   //        DEFINE STATE
   //------------------------------------------------------------------------------------------------
+  const [pressed, setPressed] = useState(false)
   const [allUsers, setAllUsers] = useState([])
   const [error, setError] = useState('')
   const [searchBar, setSearchBar] = useState({
@@ -26,6 +28,7 @@ export default function UserManagement() {
   //------------------------------------------------------------------------------------------------
 
   async function searchUsers(e) {
+    setPressed(true)
     const collectionName = "Users"
     //prevent screen re-render
     e.preventDefault();
@@ -80,13 +83,14 @@ export default function UserManagement() {
         <td>{item.FirstName}</td>
         <td>{item.LastName}</td>
         <td>{item.email}</td>
+        <td>{convertFirestoreTimeStamp(item.createdAt)}</td>
       </tr>
     )
   })
 
   return (
     <div className='page-body'>
-      {/* <NavBarTRP userId={user.uid} email={user.email} /> */}
+      <NavBarTRP />
       <Container className='page-content'>
         <h1 className='page-title'>User Management</h1>
         {/* Insert toolbar */}
@@ -130,10 +134,11 @@ export default function UserManagement() {
               <th>First Name</th>
               <th>Last Name</th>
               <th>Email</th>
+              <th>Created On</th>
             </tr>
           </thead>
           <tbody>
-            {userList}
+            {pressed == true && allUsers.length == 0 ? <tr><td className="text-danger">No users found, Please make sure the first character is a capital letter</td><td></td><td></td><td></td><td></td></tr> : userList}
           </tbody>
         </Table>
         {error ? <h4><code>{error}</code></h4> : null}
