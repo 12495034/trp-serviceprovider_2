@@ -86,7 +86,7 @@ export default function UserManagement() {
 
   return (
     <div className='page-body'>
-      <NavBarTRP userId={user.uid} email={user.email} />
+      {/* <NavBarTRP userId={user.uid} email={user.email} /> */}
       <Container className='page-content'>
         <h1 className='page-title'>User Management</h1>
         {/* Insert toolbar */}
