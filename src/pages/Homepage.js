@@ -14,7 +14,7 @@ export default function Homepage() {
       <Container className='page-content'>
         <Row className='page-content-text'>
           <div className="Home-message">
-            <h1>Welcome {user.displayName}</h1>
+            <h1 className='page-title'>Welcome {user.displayName}</h1>
             <h4>to the Rapid HIV & syphillis clinic management portal</h4>
           </div>
         </Row>

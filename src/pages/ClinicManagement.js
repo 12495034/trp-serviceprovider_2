@@ -82,7 +82,7 @@ export default function ClinicManagement() {
       <NavBarTRP userId={user.uid} email={user.email} />
       <Container className='page-content'>
         <Row>
-          <h1 className="Title">Clinic Management</h1>
+          <h1 className='page-title'>Clinic Management</h1>
         </Row>
         <Row>
           <Accordion>

@@ -88,7 +88,7 @@ export default function UserManagement() {
     <div className='page-body'>
       <NavBarTRP userId={user.uid} email={user.email} />
       <Container className='page-content'>
-        <h1>User Management</h1>
+        <h1 className='page-title'>User Management</h1>
         {/* Insert toolbar */}
         <p>From this screen you can view all users of the app and their profile details. Search for a user based on their first or last name or filter based on the users status and role</p>
         <p><strong>Note:</strong> To view list of all stored users press the search button with no input parameters</p>
@@ -96,29 +96,29 @@ export default function UserManagement() {
           <Form className="d-flex" onSubmit={searchUsers}>
             {/* <Stack direction='horizontal' gap={1} className="col-md-5 mx-auto">
               <div className=""> */}
-                <Form.Control
-                  type="search"
-                  placeholder="Enter First Name"
-                  className="me-2"
-                  aria-label="Search"
-                  name="FirstName"
-                  onChange={handleSearchBar}
-                />
-              {/* </div>
+            <Form.Control
+              type="search"
+              placeholder="Enter First Name"
+              className="me-2"
+              aria-label="Search"
+              name="FirstName"
+              onChange={handleSearchBar}
+            />
+            {/* </div>
               <div className="me-auto"> */}
-                <Form.Control
-                  type="search"
-                  placeholder="Enter Last Name"
-                  className="me-2"
-                  aria-label="Search"
-                  name="LastName"
-                  onChange={handleSearchBar}
-                />
-              {/* </div> */}
-              {/* <div className="vr" />
+            <Form.Control
+              type="search"
+              placeholder="Enter Last Name"
+              className="me-2"
+              aria-label="Search"
+              name="LastName"
+              onChange={handleSearchBar}
+            />
+            {/* </div> */}
+            {/* <div className="vr" />
               <div className="ms-auto"> */}
-                <Button type="submit" variant="outline-success">Search</Button>
-              {/* </div>
+            <Button type="submit" variant="outline-success">Search</Button>
+            {/* </div>
             </Stack> */}
           </Form>
         </Row>

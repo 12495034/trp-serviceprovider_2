@@ -23,6 +23,18 @@ service cloud.firestore {
       allow read: if true
       allow write:if request.auth.token.role == "Admin" && request.auth.token.accountStatus == "Active";
       }
+
+       match /Supporting/role {
+      // Allow any signed in user to read role document
+      allow read: if true
+      allow write:if request.auth.token.role == "Admin" && request.auth.token.accountStatus == "Active";
+      }
+      
+      match /Supporting/userStatus {
+      // Allow any signed in user to read userStatus document
+      allow read: if true
+      allow write:if request.auth.token.role == "Admin" && request.auth.token.accountStatus == "Active";
+      }
       
    		match /Questions/{questionId}{
         // Allow any signed in user to read question documents only

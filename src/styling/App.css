@@ -284,8 +284,10 @@ div.pointer{
     }
 }
 
-.Title{
-    padding:10px;
+.page-title{
+    
+    font-size: xx-large;
+    margin-bottom:20px;
     /* font-size: x-large; */
 }
 

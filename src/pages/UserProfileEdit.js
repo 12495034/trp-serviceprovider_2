@@ -25,8 +25,7 @@ export default function UserProfileEdit() {
     const { docData: roleList, isDocLoading: rolesLoading, docError: rolesError } = useUserRole('Supporting', 'role', null)
     const { docData: restrictedData, isDocLoading: isRestrictedDataLoading, docError: restrictedDataError } = useDoc(`Users/${userid}/Restricted`, 'Details')
 
-    //issue in that the useCollection hook is not returning firestore data
-    //console.log(dropDowns)
+    console.log(roleList)
 
     //Initialise form using data retrieved using useDoc custom hook
     useEffect(() => {
@@ -68,6 +67,7 @@ export default function UserProfileEdit() {
         <div className='page-body'>
             <NavBarTRP userId={user.uid} email={user.email} />
             <Container className='page-content'>
+            <h1 className='page-title'>Edit User Details</h1>
                 <Row>
                     <Form onSubmit={() => {
                         updateUserDetails(userid, userData)

@@ -96,14 +96,14 @@ export default function UserProfileData() {
     <div className='page-body'>
      <NavBarTRP userId={user.uid} email={user.email}/>
       <Container className='page-content'>
+      <h1 className='page-title'>User Profile</h1>
         <Row>
           <Col md={5}>
             {docError!=""?
             <Card className='user-card'>
               {/* <Card.Img variant="top" src={require('../images/user_test.jpg')} /> */}
               <Card.Body>
-                <Card.Title>User Profile </Card.Title>
-                <Card.Subtitle className="text-primary text-uppercase">{docData.email}</Card.Subtitle>
+                <Card.Title className="text-primary text-uppercase">{docData.email}</Card.Title>
                 <Card.Text>
                 <code>{docError ? docError : null}</code>
                 </Card.Text>

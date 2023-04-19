@@ -91,6 +91,7 @@ export default function ClinicDetail() {
             <NavBarTRP userId={user.uid} email={user.email} />
             {/* <BreadCrumbCustom /> */}
             <Container className='page-content'>
+            <h1 className='page-title'>Detailed Clinic View</h1>
                 {/* //conditional rendering so that if the clinic is not active then it is assumed to be cancelled or complete
                 //actions can therefore not be performed on the clinic data */}
                 {clinic.clinicStatus !== "Active" ?
