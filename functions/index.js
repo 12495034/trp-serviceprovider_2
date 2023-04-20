@@ -7,51 +7,51 @@ admin.initializeApp();
 
 
 //send notification email to All App users if a new clinic is created
-exports.sendNotificationEmail = functions.region('europe-west1').firestore.document('/Clinics/{clinicId}')
-    .onCreate(async (snap) => {
-        //get the data from the newly created document
-        const newClinicData = snap.data();
-        //get the list of users from the Users collection who have opted in for email communications
-        const userSnapshots = await admin.firestore().collection('Users').where('emailOptIn', '==', true).get();
-        //create an array of document Id's from the Users collection
-        const userIdArray = userSnapshots.docs.map(snap => snap.id);
-        //if there are registered users
-        if (userIdArray.length != 0) {
-            emailData = {
-                //toUIDs required an array input
-                toUids: userIdArray,
-                message: {
-                    subject: 'The Rainbow Project - Rapid HIV & Syphillis Testing clinic',
-                    html:
-                        `<div>
-                            <div>
-                                <h2>A new Rapid HIV & Syphillis testing clinic has been scheduled</h2>
-                            </div>
-                            <div>
-                                <h3>Location: ${newClinicData.location}</h3>
-                                <h3>Center: ${newClinicData.center}</h3>
-                                <h3>Room: ${newClinicData.addDetails}</h3>
-                                <h3>Date: ${newClinicData.date}</h3>
-                                <h3>Start Time: ${newClinicData.startTime}</h3>
-                                <h3>Capacity: ${newClinicData.capacity}</h3>
-                            </div>
-                            <div>
-                                <h3>To book an appointment please login to the mobile app</h3>
-                            </div>
-                            <div>
-                                <h4>You are recieving this email because you are a registered user with The Rainbow Projects Rapid HIV testing mobile App</h3>
-                                <h4>To opt out of further communications please update your notification settings in your User profile</h3>
-                            </div>
-                        </div>`
-                    ,
-                }
-            }
-            //create new document in the Mail collection to be sent by the trigger email extension
-            admin.firestore().collection(`Mail`).add(emailData)
-        } else {
-            console.log("There are no Users currently registered for the App")
-        }
-    });
+// exports.sendNotificationEmail = functions.region('europe-west1').firestore.document('/Clinics/{clinicId}')
+//     .onCreate(async (snap) => {
+//         //get the data from the newly created document
+//         const newClinicData = snap.data();
+//         //get the list of users from the Users collection who have opted in for email communications
+//         const userSnapshots = await admin.firestore().collection('Users').where('emailOptIn', '==', true).get();
+//         //create an array of document Id's from the Users collection
+//         const userIdArray = userSnapshots.docs.map(snap => snap.id);
+//         //if there are registered users
+//         if (userIdArray.length != 0) {
+//             emailData = {
+//                 //toUIDs required an array input
+//                 toUids: userIdArray,
+//                 message: {
+//                     subject: 'The Rainbow Project - Rapid HIV & Syphillis Testing clinic',
+//                     html:
+//                         `<div>
+//                             <div>
+//                                 <h2>A new Rapid HIV & Syphillis testing clinic has been scheduled</h2>
+//                             </div>
+//                             <div>
+//                                 <h3>Location: ${newClinicData.location}</h3>
+//                                 <h3>Center: ${newClinicData.center}</h3>
+//                                 <h3>Room: ${newClinicData.addDetails}</h3>
+//                                 <h3>Date: ${newClinicData.date}</h3>
+//                                 <h3>Start Time: ${newClinicData.startTime}</h3>
+//                                 <h3>Capacity: ${newClinicData.capacity}</h3>
+//                             </div>
+//                             <div>
+//                                 <h3>To book an appointment please login to the mobile app</h3>
+//                             </div>
+//                             <div>
+//                                 <h4>You are recieving this email because you are a registered user with The Rainbow Projects Rapid HIV testing mobile App</h3>
+//                                 <h4>To opt out of further communications please update your notification settings in your User profile</h3>
+//                             </div>
+//                         </div>`
+//                     ,
+//                 }
+//             }
+//             //create new document in the Mail collection to be sent by the trigger email extension
+//             admin.firestore().collection(`Mail`).add(emailData)
+//         } else {
+//             console.log("There are no Users currently registered for the App")
+//         }
+//     });
 
 //create custom claim and firestore restricted data on initial user creation (default - service user with an active account)
 exports.addDefaultUserClaims = functions.region('europe-west1').firestore.document('/Users/{userId}')

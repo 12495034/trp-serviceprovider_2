@@ -4,28 +4,24 @@ import '../styling/App.css'
 
 export default function Footer() {
     return (
-        <div className="footer">
-            <Container>
+        <div className='footer'>
+            <Container >
                 <Row>
-                    <h4 className="footer-title"> Contacts</h4>
-                    <Col>
-                        <p className="office">
-                            Belfast Office
-                            23-31 Waring Street
-                            Belfast
-                            BT1 2DX
-                            (028 9031 9030)
-                        </p>
+                    <h4 className="footer-title"> Offices</h4>
+                    <Col className='footer-content'>
+                        <p className='footer-content'>LGBT Center </p>
+                        <p className='footer-content'>23-31 Waring Street</p>
+                        <p className='footer-content'>Belfast</p>
+                        <p className='footer-content'>BT1 2DX</p>
+                        <p className='footer-content'>(028 9031 9030)</p>
                     </Col>
-                    <Col>
-                        <p className="office">
-                            Foyle Office
-                            20 Strand Road
-                            Orlan House
-                            Londonderry
-                            BT48 7AB
-                            (028 7128 3030)
-                        </p>
+                    <Col className='footer-content'>
+                        <p className='footer-content'>Foyle Office </p>
+                        <p className='footer-content'>20 Strand Road</p>
+                        <p className='footer-content'>Orlan House</p>
+                        <p className='footer-content'>Londonderry</p>
+                        <p className='footer-content'>BT48 7AB</p>
+                        <p className='footer-content'>(028 7128 3030)</p>
                     </Col>
                 </Row>
             </Container>

@@ -1,76 +1,30 @@
-.input-error{
-    color: red;
-    font-size: 20px;
-}
+/* CSS controlling mobile screen response */
+@media only screen and (max-width: 400px) {
+    .page-title{
+        font-size: x-large;
+        margin-bottom:20px;
+    }
 
-.appointments{
-  display:flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.clinic-detail{
-    display:flex;
-    justify-content: space-between;    
-}
-
-.clinic-card{
-    box-shadow: -2px 2px #8888884a;
-    background-color: rgba(255, 255, 255, 0); 
-    border-style:solid;
-    border-width:0.1em;
-    padding-top:10px;
-    padding-left:10px;
-    padding-right:10px;
-    padding-bottom:10px;
-    margin-bottom:5px;
-    border-radius: 5px;
-}
-
-.clinic-card:hover{
-    box-shadow: -2px 2px #8888884a;
-    background-color: rgba(255, 0, 187, 0.103); 
-    color:black;
-    /* border-style:solid;
-    border-width:0.1em; */
-    padding-top:10px;
-    padding-left:10px;
-    padding-right:10px;
-    padding-bottom:10px;
-    margin-bottom:5px;
-    border-radius: 5px;
-}
-
-.clinic-information{
-    background-color: white;
-    text-align: center;
-    border-style:groove;
-    /* border-width:0.1em; */
-    padding-top:10px;
-    padding-left:10px;
-    padding-right:10px;
-    padding-bottom:10px;
-    margin-bottom:10px;
-    border-radius: 5px;
-}
-
-div.pointer{
-    cursor: pointer;
-}
-
-.Home-message{
-    margin-bottom:10px;
-    /* font-weight: 200; */
-    
-}
-
-@media only screen and (max-width: 600px) {
     .footer{
-        margin-top: 10px;
-        background-color: rgba(0, 128, 255, 0.238);
-        height:115px; 
-        padding-top:5px;
+        display:flex;
+        align-items: center;
+        background-color: rgba(0, 128, 255, 0.238); 
+        margin-top: 20px;
+        padding-top: 20px;
+        padding-bottom: 20px;
         box-shadow: 0px -5px 10px 1px #e0dcdc;
+        font-size: medium;
+    }
+
+    .footer-title{
+        display:flex;
+        justify-content: flex-start;
+    }
+
+    .footer-content{
+        padding:0px;
+        margin:0px;
+        margin-left:5%;
     }
 
     .Home-message>h5 {
@@ -80,79 +34,9 @@ div.pointer{
         font-size: 1.6rem; 
     }
 
-    .Statistic-card-container{
-        display:flex;
-        justify-content: center;
-        align-content: center;
-        flex-direction:column;
-    }
-
-    .Statistic-card-body{
-        display:flex;
-        justify-content: space-between;
-        align-items: center;
-        background-color: rgba(255, 20, 145, 0.096);
-    }
-    
-    .Statistic-card-count{
-        font-size: 20px;
-        color: rgba(0, 0, 255, 0.572);
-        font-weight: 600;
-    }
-
-    .Statistic-card{
-        margin-bottom:10px;   
-    }
-
-    .Statistic-card-description{
-        font-size: 1rem;
-    }
-
     .appointment-card{
         background-color:white;
-        padding-top:10px;
-        padding-left:10px;
-        padding-right:10px;
-        padding-bottom:10px;
-        margin-bottom:5px;
-        border-radius: 5px;
-        text-align: center;
-        border-style: solid;
-        border-width: 1px;
-    }
-
-    .appointment-card-active{
-        background-color:white;
-        padding-top:10px;
-        padding-left:10px;
-        padding-right:10px;
-        padding-bottom:10px;
-        margin-bottom:5px;
-        border-radius: 5px;
-        text-align: center;
-        border-style: solid;
-        border-width: 1px;
-    }
-
-    .appointment-card-cancelled{
-        background-color:rgb(249, 212, 212);
-        padding-top:10px;
-        padding-left:10px;
-        padding-right:10px;
-        padding-bottom:10px;
-        margin-bottom:5px;
-        border-radius: 5px;
-        text-align: center;
-        border-style: solid;
-        border-width: 1px;
-    }
-
-    .appointment-card-complete{
-        background-color:rgba(144, 238, 144, 0.388);
-        padding-top:10px;
-        padding-left:10px;
-        padding-right:10px;
-        padding-bottom:10px;
+        padding:10px;
         margin-bottom:5px;
         border-radius: 5px;
         text-align: center;
@@ -162,16 +46,13 @@ div.pointer{
     
     .appointment-card:hover{
         background-color: rgba(255, 0, 187, 0.103);
-        padding-top:10px;
-        padding-left:10px;
-        padding-right:10px;
-        padding-bottom:10px;
+        padding:10px;
         margin-bottom:5px;
         border-radius: 5px;
     }
 
     .appointment-card-icons{
-        padding-top:10px;
+       padding-top:10px;
        display:flex;
        flex-direction: row;
        justify-content: space-between;
@@ -179,100 +60,46 @@ div.pointer{
     }
 }
 
+/* CSS controlling larger screen response */
 @media only screen and (min-width: 992px) {
+    .page-title{
+        font-size: xx-large;
+        margin-bottom:20px;
+    }
+
     .footer{
-        margin-top: 10px;
-        display:flex;
-        flex-direction: column;
-        justify-content: center;
         background-color: rgba(0, 128, 255, 0.238);
-        height:100px; 
+        margin-top: 20px;
+        padding-top: 20px;
+        padding-bottom: 20px;
         box-shadow: 0px -5px 10px 1px #e0dcdc;
+        font-size: medium;
     }
 
-    .Statistic-card-container{
-        display:flex;
-        justify-content: center;
-        align-content: center;
-        flex-direction:row;
-        flex-wrap: wrap;
-        gap:1%;
-        flex:1;
-    }
-    
-    .Statistic-card-body{
-        background-color: rgba(255, 20, 145, 0.096);
-    }
-    
-    .Statistic-card-count{
-        text-align: center;
-        font-size: 30px;
-        color: rgba(0, 0, 255, 0.572);
-        font-weight: 600;
-        margin:20px
+    .footer-content{
+        padding:0px;
+        margin:0px;
     }
 
-    .Statistic-card{
-        margin-bottom:10px;
-        width: 250px;
-    }
-
-    .Statistic-card-title{
-        display:flex;
-        justify-content: space-between;
-    }
     .appointment-card{
         background-color:white;
-        padding-top:10px;
-        padding-left:10px;
-        padding-right:10px;
-        padding-bottom:10px;
-        margin-bottom:5px;
+        padding:10px;
+        margin-bottom:1px;
         border-radius: 5px;
         text-align: center;
         border-style: solid;
         border-width: 1px;
+    }
+
+    .appointment-card:hover{
+        background-color: rgba(255, 0, 187, 0.103);
     }
 
     .card-column{
-        height: 100%;
         display:flex;
         flex-direction: column;
         justify-content: center;
-    }
-    .appointment-card:hover{
-        background-color: rgba(255, 0, 187, 0.103);
-        padding-top:10px;
-        padding-left:10px;
-        padding-right:10px;
-        padding-bottom:10px;
-        margin-bottom:5px;
-        border-radius: 5px;
-        
-    }
-
-    .appointment-card-active{
-        background-color:white;
-        padding-top:10px;
-        padding-left:10px;
-        padding-right:10px;
-        padding-bottom:10px;
-        margin-bottom:5px;
-        border-radius: 5px;
-        text-align: center;
-        border-style: solid;
-        border-width: 1px;
-    }
-     
-    .appointment-card-active:hover{
-        background-color: rgba(255, 0, 187, 0.103);
-        padding-top:10px;
-        padding-left:10px;
-        padding-right:10px;
-        padding-bottom:10px;
-        margin-bottom:5px;
-        border-radius: 5px;
-        
+        align-items: center;
     }
 
     .appointment-card-icons{
@@ -283,14 +110,6 @@ div.pointer{
        align-items: center;
     }
 }
-
-.page-title{
-    
-    font-size: xx-large;
-    margin-bottom:20px;
-    /* font-size: x-large; */
-}
-
 
 
 .page-body{
@@ -304,38 +123,6 @@ div.pointer{
     display:flex;
     flex-direction: column;
     flex:1; 
-   
-}
-
-.login-body{
-    display:flex;
-    flex-direction: column;
-    margin-top:0px;
-    margin-bottom:40px;
-}
-
-.login-content{
-    display:flex;
-    flex-direction: column;
-    flex:1; 
-    justify-content: center; 
-}
-
-
-.NavBar{
-    background-color: rgba(0, 128, 255, 0.238);
-    box-shadow: 0px 5px 10px 1px #e0dcdc;
-}
-
-.navbar-menu{
-    margin:1rem;
-    text-decoration: none;
-    color:rgb(90, 82, 82);
-}
-
-.page-content-text{
-    flex:1;
-
 }
 
 .page-content-cards{
@@ -344,38 +131,75 @@ div.pointer{
     align-items: flex-center; 
 }
 
+.login-body{
+    display:flex;
+    flex-direction: column;
+    min-height:100vh;
+}
+
+.login-content{
+    margin-top:20px;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    flex:1; 
+}
+
+.NavBar{
+    background-color: rgba(0, 128, 255, 0.238);
+    box-shadow: 0px 5px 10px 1px #e0dcdc;
+}
+
+.navbar-menu{
+    margin:10px;
+    text-decoration: none;
+    color:rgb(90, 82, 82);
+}
+
 .user-card-buttons{
     display:flex;
     flex-direction: column;
-    justify-content: space-between;
-    gap:5px;
-    
-}
-
-.user-card-button{
-    width:'40px';
-    border-style: solid;
-    border-width: 10px;
-    border-color: black;
-}
-
-.clinic-detail-table-title{
-    text-align: center;
-}
-
-.office{
-    font-size: small;
-}
-
-.privacy-body{
-    margin:20px;
+    gap:5px;  
 }
 
 .tac-modal {
      min-width: 75%;
 } 
 
+.clinic-card{
+    box-shadow: -2px 2px #8888884a;
+    background-color: rgba(255, 255, 255, 0); 
+    border-style:solid;
+    border-width:0.1em;
+    padding:10px;
+    margin-bottom:5px;
+    border-radius: 5px;
+}
 
+.clinic-card:hover{
+    box-shadow: -2px 2px #8888884a;
+    background-color: rgba(255, 0, 187, 0.103); 
+    color:black;
+    padding-top:10px;
+    padding-left:10px;
+    padding-right:10px;
+    padding-bottom:10px;
+    margin-bottom:5px;
+    border-radius: 5px;
+}
+
+.clinic-information{
+    background-color: white;
+    text-align: center;
+    border-style:groove;
+    padding:10px;
+    margin-bottom:5px;
+    border-radius: 5px;
+}
+
+div.pointer{
+    cursor: pointer;
+}
 
 
 

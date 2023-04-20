@@ -10,9 +10,9 @@ export default function Homepage() {
 
   return (
     <div className='page-body'>
-      <NavBarTRP/>
+      <NavBarTRP />
       <Container className='page-content'>
-        <Row className='page-content-text'>
+        <Row>
           <div className="Home-message">
             <h1 className='page-title'>Welcome {user.displayName}</h1>
             <h4>to the Rapid HIV & syphillis clinic management portal</h4>
@@ -56,9 +56,8 @@ export default function Homepage() {
                     >
                       <div className="ms-2 me-auto">
                         <div className="fw-bold">Active Clinics</div>
-                        Clinics that have been schedule but are yet to be held
                       </div>
-                      <Badge bg="warning" pill>Future implementation</Badge>
+                      <Badge bg="warning" pill>TBD</Badge>
                     </ListGroup.Item>
                     <ListGroup.Item
                       as="li"
@@ -66,9 +65,8 @@ export default function Homepage() {
                     >
                       <div className="ms-2 me-auto">
                         <div className="fw-bold">Live appointments</div>
-                        Service users currently waiting for a test
                       </div>
-                      <Badge bg="warning" pill>Future implementation</Badge>
+                      <Badge bg="warning" pill>TBD</Badge>
                     </ListGroup.Item>
                     <ListGroup.Item
                       as="li"
@@ -76,9 +74,8 @@ export default function Homepage() {
                     >
                       <div className="ms-2 me-auto">
                         <div className="fw-bold">Completed Clinics</div>
-                        Clinics that have been held and tests administered
                       </div>
-                      <Badge bg="warning" pill>Future implementation</Badge>
+                      <Badge bg="warning" pill>TBD</Badge>
                     </ListGroup.Item>
                     <ListGroup.Item
                       as="li"
@@ -86,9 +83,8 @@ export default function Homepage() {
                     >
                       <div className="ms-2 me-auto">
                         <div className="fw-bold">Tests administered</div>
-                        The number of tests administered since the system went live
                       </div>
-                      <Badge bg="warning" pill>Future implementation</Badge>
+                      <Badge bg="warning" pill>TBD</Badge>
                     </ListGroup.Item>
                     <ListGroup.Item
                       as="li"
@@ -96,9 +92,8 @@ export default function Homepage() {
                     >
                       <div className="ms-2 me-auto">
                         <div className="fw-bold">Clinic Searches</div>
-                        The number of times users have enquired within a clinic to view the booking slots available
                       </div>
-                      <Badge bg="warning" pill>Future implementation</Badge>
+                      <Badge bg="warning" pill>TBD</Badge>
                     </ListGroup.Item>
                   </ListGroup>
                 </Accordion.Body>

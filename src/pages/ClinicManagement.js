@@ -99,12 +99,9 @@ export default function ClinicManagement() {
           <Stack><ClinicToolBar radioState={filterRadio} setRadioState={setFilterRadio} /><h4><code>{message ? message : null}</code></h4></Stack>
           <hr />
         </Row>
-        <Row className="justify-content-md-center p-3">
-          {/* <Col> */}
-          {/* {clinicData.length > 0 ? clinicCards : <h4>There are no clinics that match the selected criteria</h4>} */}
+        <Row className="p-3">
           {clinicDataLoading ? <SpinnerIcon /> : clinicCards}
           {clinicDataError ? <h4>{clinicDataError}</h4> : null}
-          {/* </Col> */}
         </Row>
       </Container>
       <Footer />

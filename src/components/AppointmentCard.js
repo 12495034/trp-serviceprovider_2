@@ -14,7 +14,6 @@ import { handleDeleteAppointment } from '../Functions/SpecialFunctions/handleDel
 
 export default function AppointmentCard(props) {
   const [error, setError] = useState("")
-  console.log(props.clinicStatus)
   return (
     <Container fluid="md" className='appointment-card pointer' >
       <Row>
@@ -23,8 +22,8 @@ export default function AppointmentCard(props) {
           {props.userid != null && props.clinicStatus === "Active" ?
             <OverlayTrigger
               show={props.toolTipControl}
-              key='left'
-              placement='left'
+              key='appointment'
+              placement='top'
               overlay={
                 <Tooltip>
                   View Service User profile

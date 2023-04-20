@@ -95,54 +95,52 @@ export default function ClinicDetail() {
             <Container className='page-content'>
                 {!isAppointmentDataLoading ?
                     <div>
-                        <h1 className='page-title'>Detailed Clinic View</h1>
+                        <h1 className='page-title'>Clinic Information</h1>
                         {/* //conditional rendering so that if the clinic is not active then it is assumed to be cancelled or complete
                         //actions can therefore not be performed on the clinic data */}
                         {clinic.clinicStatus !== "Active" ?
                             null
                             :
-                            <div><Stack direction='horizontal'>
-                                <OverlayTrigger
-                                    show={toolTip}
-                                    key='left'
-                                    placement='left'
-                                    overlay={
-                                        <Tooltip>
-                                            Pressing this button will cancel the displayed clinic
-                                        </Tooltip>
-                                    }
-                                >
-                                    <Button variant='danger' onClick={handleShowCancel}>Cancel Clinic</Button>
-                                </OverlayTrigger>
+                            <div>
+                                <Stack direction='horizontal'>
+                                    <OverlayTrigger
+                                        show={toolTip}
+                                        key='cancel'
+                                        placement='bottom'
+                                        overlay={
+                                            <Tooltip>
+                                                Pressing this button will cancel the displayed clinic
+                                            </Tooltip>
+                                        }
+                                    >
+                                        <Button variant='danger' onClick={handleShowCancel}>Cancel Clinic</Button>
+                                    </OverlayTrigger>
 
-                                <div className='ms-auto' >Tool Tips : <BootstrapSwitchButton
-                                    checked={toolTip}
-                                    size="sm"
-                                    onlabel='On'
-                                    offlabel='Off'
-                                    onChange={(checked) => {
-                                        setToolTip(prev => !prev)
-                                    }}
-                                /></div>
-                                <OverlayTrigger
-                                    show={toolTip}
-                                    key='right'
-                                    placement='right'
-                                    overlay={
-                                        <Tooltip>
-                                            Pressing this button will close the displayed clinic
-                                        </Tooltip>
-                                    }
-                                >
-                                    <Button className='ms-auto' variant='warning' onClick={handleShowEnd}>Close Clinic</Button>
-                                </OverlayTrigger>
-
-                            </Stack><br /></div>}
+                                    <div className='ms-auto' >Help: <BootstrapSwitchButton
+                                        checked={toolTip}
+                                        size="xs"
+                                        onlabel='On'
+                                        offlabel='Off'
+                                        onChange={(checked) => {
+                                            setToolTip(prev => !prev)
+                                        }}
+                                    /></div>
+                                    <OverlayTrigger
+                                        show={toolTip}
+                                        key='close'
+                                        placement='top'
+                                        overlay={
+                                            <Tooltip>
+                                                Pressing this button will close the displayed clinic
+                                            </Tooltip>
+                                        }
+                                    >
+                                        <Button className='ms-auto' variant='warning' onClick={handleShowEnd}>Close Clinic</Button>
+                                    </OverlayTrigger>
+                                </Stack><br /></div>}
                         <Row>
-                            <Stack direction="horizontal" gap={3}>
-                                <div><p>Scheduled By: {clinic.createdBy}</p></div>
-                                <div className="ms-auto"><p>Scheduled on: {convertFirestoreTimeStamp(clinic.timeStamp)}</p></div>
-                            </Stack>
+                            <p>Scheduled By: {clinic.createdBy}</p>
+                            <p>Scheduled on: {convertFirestoreTimeStamp(clinic.timeStamp)}</p>
                         </Row>
                         <Row>
                             <Col>
@@ -173,8 +171,8 @@ export default function ClinicDetail() {
                                     :
                                     <OverlayTrigger
                                         show={toolTip}
-                                        key='bottom'
-                                        placement='bottom'
+                                        key='addSlot'
+                                        placement='top'
                                         overlay={
                                             <Tooltip>
                                                 Add an additional appointment slot (+{appointInc}mins)

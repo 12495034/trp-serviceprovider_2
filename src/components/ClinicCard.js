@@ -14,9 +14,9 @@ export default function ClinicCard(props) {
         <Col md={1}>
           <div className='card-column'>{props.location}</div>
         </Col>
-        <Col md={4}>
-          <div>{props.center}</div>
-          <div>{props.addDetails}</div>
+        <Col md={3}>
+          <div className='card-column'>{props.center}</div>
+          <div className='card-column'>{props.addDetails}</div>
         </Col>
         <Col md={2}>
           <div className='card-column'>{props.appointments}/{props.capacity}</div>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { collection, getDoc, doc } from "firebase/firestore"
+import { getDoc, doc } from "firebase/firestore"
 import { firestore } from "../config/Firebase"
 
 export default function useDoc(collectionName, docName, dependency) {
@@ -23,12 +23,12 @@ export default function useDoc(collectionName, docName, dependency) {
         const docSnap = await getDoc(docRef)
         if (!docSnap.exists()) {
             setDocError('Document does not exist or user data has been deleted')
+            setIsDocLoading(false)
         } else {
             setDocData(docSnap.data())
+            setIsDocLoading(false)
         }
     }
-
-    console.log(docError)
 
     return {
         docData,
