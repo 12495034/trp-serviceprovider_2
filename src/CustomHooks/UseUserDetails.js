@@ -24,14 +24,14 @@ export default function useUserDetails(collectionName, dependency) {
       let data = Object.assign({ id: doc.id }, doc.data())
       collectionArray.push(data)
     })
-  setCollectionData(collectionArray)
-}
+    setCollectionData(collectionArray)
+  }
 
-return {
-  collectionData,
-  isCollectionLoading,
-  collectionError
-}
+  return {
+    collectionData,
+    isCollectionLoading,
+    collectionError
+  }
 
 }
 

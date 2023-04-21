@@ -17,7 +17,7 @@ export default function AppointmentCard(props) {
   return (
     <Container fluid="md" className='appointment-card pointer' >
       <Row>
-        <Col md={1} >
+        <Col xs={1} sm={1} md={1} >
           {/* if slot is booked, clicking on slot number will navigate to the users profile */}
           {props.userid != null && props.clinicStatus === "Active" ?
             <OverlayTrigger

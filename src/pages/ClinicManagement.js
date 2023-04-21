@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
-import { Row, Col, Accordion, Stack } from 'react-bootstrap'
+import { Row, Accordion, Stack } from 'react-bootstrap'
 import Footer from '../components/Footer'
 import ClinicCard from '../components/ClinicCard'
 import NavBarTRP from '../components/NavBarTRP';
@@ -23,7 +23,6 @@ export default function ClinicManagement() {
   //define state
   //-----------------------------------------------------------------------------------------
   const [filterRadio, setFilterRadio] = useState("Active")
-  const [message, setMessage] = useState('')
   //-----------------------------------------------------------------------------------------
   //Retrieve data from firestore using custom hook
   //-----------------------------------------------------------------------------------------
@@ -96,10 +95,10 @@ export default function ClinicManagement() {
           </Accordion>
         </Row>
         <Row className='p-2'>
-          <Stack><ClinicToolBar radioState={filterRadio} setRadioState={setFilterRadio} /><h4><code>{message ? message : null}</code></h4></Stack>
+          <Stack><ClinicToolBar radioState={filterRadio} setRadioState={setFilterRadio} /></Stack>
           <hr />
         </Row>
-        <Row className="p-3">
+        <Row  xs={12} sm={12} md={12}  className="p-3 justify-content-center">
           {clinicDataLoading ? <SpinnerIcon /> : clinicCards}
           {clinicDataError ? <h4>{clinicDataError}</h4> : null}
         </Row>

@@ -22,8 +22,6 @@ import PrivacyPolicyMobile from './pages/PrivacyPolicyMobile';
 import PrivacyPolicyWeb from './pages/PrivacyPolicyWeb';
 import TermsAndConditions from './pages/TermsAndConditions';
 import WelcomeScreen from './pages/WelcomeScreen';
-import NavBarTRP from './components/NavBarTRP';
-import { Outlet } from 'react-router-dom';
 
 function App() {
 

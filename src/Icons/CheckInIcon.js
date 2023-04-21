@@ -1,8 +1,6 @@
 import React from 'react'
 import { FaUserCheck, FaUserClock } from "react-icons/fa";
 import { iconSize } from '../constants/general';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
-import Tooltip from 'react-bootstrap/Tooltip'
 
 export default function CheckInIcon(props) {
 

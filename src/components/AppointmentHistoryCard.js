@@ -1,26 +1,18 @@
 import React from 'react'
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import { Card } from 'react-bootstrap';
 
 export default function AppointmentHistoryCard(props) {
-  
+
   return (
-    <Container  className='appointment-card pointer' onClick={() => props.handleClinicDetail(props.clinicId)} >
-      <Row>
-        <Col md={2}>
-          <div className={props.appointmentStatus=="Active"?'text-primary card-column':'text-body card-column'}>{props.date}</div>
-          {/* <Button variant="info" onClick={() => props.handleClinicDetail(props.clinicId)}>{props.date}</Button> */}
-        </Col>
-        <Col md={3}>
-          <div className={props.appointmentStatus=="Active"?'text-primary card-column':'text-body card-column'}>{props.location}</div>
-        </Col>
-        <Col md={5}>
-          <div className={props.appointmentStatus=="Active"?'text-primary card-column':'text-body card-column'}>{props.center}</div>
-          <div className={props.appointmentStatus=="Active"?'text-primary card-column':'text-body card-column'}>{props.addDetails}</div>
-        </Col>
-        <Col md={2}>
-          <div className={props.appointmentStatus=="Active"?'text-primary card-column':'text-body card-column'}>{props.appointmentStatus}</div>
-        </Col>
-      </Row>
-    </Container >
+    <Card className="text-left appointment-card pointer" onClick={() => props.handleClinicDetail(props.clinicId)}>
+      <Card.Header as='h5'>{props.date} at {props.time}</Card.Header>
+      <Card.Body>
+        <Card.Title as='h6'>{props.center}, {props.location}</Card.Title>
+        <Card.Text as='mt-0'>{props.addDetails}</Card.Text>
+      </Card.Body>
+      <Card.Footer className={props.appointmentStatus==="Active"?'text-primary text-center':'text-muted text-center'}>
+        {props.appointmentStatus}
+      </Card.Footer>
+    </Card>
   )
 }

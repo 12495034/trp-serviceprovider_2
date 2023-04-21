@@ -7,7 +7,7 @@ export async function handleDeleteAppointment(userId, clinicId, clinicStatus, se
     const clinicsAppointmentsRef = doc(firestore, `Clinics/${clinicId}/Appointments`, `${userId}`)
     const usersAppointmentsRef = doc(firestore, `Users/${userId}/Appointments`, `${clinicId}`)
 
-    if (clinicStatus == "Active") {
+    if (clinicStatus === "Active") {
         try {
             await runTransaction(firestore, async (transaction) => {
                 transaction.delete(clinicsAppointmentsRef);

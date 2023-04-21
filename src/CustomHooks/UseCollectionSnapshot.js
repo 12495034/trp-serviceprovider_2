@@ -17,7 +17,7 @@ export default function useCollectionSnapshot(collectionName, dependency) {
                 const combine = Object.assign({}, id, data)
                 collectionArray.push(combine)
             })
-            if(collectionArray.length!=0){
+            if(collectionArray.length!==0){
                 setCollectionError(``)
                 setIsCollectionLoading(false)
                 setCollectionData(collectionArray)

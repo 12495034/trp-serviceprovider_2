@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { Container, Row, Col, Form, Button } from 'react-bootstrap'
 import { useNavigate, useParams } from 'react-router-dom'
 import NavBarTRP from '../components/NavBarTRP'
-import { UserAuth } from '../context/AuthContext';
 import Footer from '../components/Footer'
 import useDoc from '../customHooks/UseDoc'
 import { firestoreUpdate } from '../firestoreFunctions/firestoreUpdate'
@@ -11,7 +10,6 @@ import useUserRole from '../customHooks/useUserRole';
 import useUserStatus from '../customHooks/useUserStatus';
 
 export default function UserProfileEdit() {
-    const { user } = UserAuth();
     const navigate = useNavigate()
     const { userid } = useParams()
     //define State
@@ -24,8 +22,6 @@ export default function UserProfileEdit() {
     const { docData: statusList, isDocLoading: statusLoading, docError: statusError } = useUserStatus('Supporting', 'userStatus', null)
     const { docData: roleList, isDocLoading: rolesLoading, docError: rolesError } = useUserRole('Supporting', 'role', null)
     const { docData: restrictedData, isDocLoading: isRestrictedDataLoading, docError: restrictedDataError } = useDoc(`Users/${userid}/Restricted`, 'Details')
-
-    console.log(roleList)
 
     //Initialise form using data retrieved using useDoc custom hook
     useEffect(() => {

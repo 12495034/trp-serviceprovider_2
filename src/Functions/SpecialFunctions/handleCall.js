@@ -10,7 +10,7 @@ export async function handleCall(field, value, userId, clinicId, tester, clinicS
         [field]: value,
         calledBy: tester
     }
-    if (clinicStatus == "Active") {
+    if (clinicStatus === "Active") {
         try {
             await runTransaction(firestore, async (transaction) => {
                 transaction.update(clinicsAppointmentsRef, data);

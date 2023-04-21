@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { collection, query, doc, onSnapshot } from "firebase/firestore"
+import { doc, onSnapshot } from "firebase/firestore"
 import { firestore } from "../config/Firebase"
 
 export default function useDocSnapshot(collectionName, docName, dependency) {
@@ -9,7 +9,7 @@ export default function useDocSnapshot(collectionName, docName, dependency) {
     const [docError, setDocError] = useState('');
 
     useEffect(() => {
-        if (docName != undefined) {
+        if (docName !== undefined) {
             fetchDocData(collectionName, docName)
         } else {
             setDocError("Collection name or doc name has not been defined")

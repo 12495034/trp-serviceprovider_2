@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { Button, Container, Row, Col, Image } from 'react-bootstrap'
+import React from 'react'
+import { useNavigate } from 'react-router-dom'
+import { Button, Container, Row, Col } from 'react-bootstrap'
 import { UserAuth } from '../context/AuthContext'
 
 export default function WelcomeScreen() {
-    const { user, role, accountStatus, logOut } = UserAuth();
+    const { logOut } = UserAuth();
     const navigate = useNavigate()
 
     async function handleSignOut() {

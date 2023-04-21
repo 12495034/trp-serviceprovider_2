@@ -2,11 +2,9 @@ import React from 'react'
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import { NavDropdown } from 'react-bootstrap';
-import { Stack } from 'react-bootstrap';
 import { UserAuth } from '../context/AuthContext'
 import { Link } from 'react-router-dom'
-import { hover } from '@testing-library/user-event/dist/hover';
+
 
 export default function NavBarTRP(props) {
     const { user } = UserAuth()

@@ -9,7 +9,7 @@ import {
     onAuthStateChanged,
     getAuth
 } from 'firebase/auth'
-import { auth} from "../config/Firebase";
+import { auth } from "../config/Firebase";
 
 const UserContext = createContext()
 
@@ -20,22 +20,18 @@ export const AuthContextProvider = ({ children }) => {
     const [accountStatus, setAccountStatus] = useState(undefined)
 
     const createUser = (email, password) => {
-        console.log("Auth context create user function")
         return createUserWithEmailAndPassword(auth, email, password)
     }
 
     const signIn = (email, password) => {
-        console.log("Auth context signIn function")
         return signInWithEmailAndPassword(auth, email, password)
     }
 
     const logOut = () => {
-        console.log("Auth context signOut function")
         return signOut(auth)
     }
 
     async function passwordReset(email) {
-        console.log("Resetting password")
         return sendPasswordResetEmail(auth, email)
     }
 
@@ -83,7 +79,7 @@ export const AuthContextProvider = ({ children }) => {
     }, [user])
 
     return (
-        <UserContext.Provider value={{createUser, signIn, user, logOut, role, accountStatus, passwordReset, verifyEmail, updateUserAuthProfile }}>
+        <UserContext.Provider value={{ createUser, signIn, user, logOut, role, accountStatus, passwordReset, verifyEmail, updateUserAuthProfile }}>
             {children}
         </UserContext.Provider>
     )

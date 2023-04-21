@@ -8,7 +8,7 @@ export async function handleUpdateAppointment(field, value, userId, clinicId, cl
 
   const clinicsAppointmentsRef = doc(firestore, `Clinics/${clinicId}/Appointments`, `${userId}`)
   const usersAppointmentsRef = doc(firestore, `Users/${userId}/Appointments`, `${clinicId}`)
-  if (clinicStatus == "Active") {
+  if (clinicStatus === "Active") {
     try {
       await runTransaction(firestore, async (transaction) => {
         transaction.update(clinicsAppointmentsRef, { [field]: value });

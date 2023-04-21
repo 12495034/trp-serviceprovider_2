@@ -1,5 +1,5 @@
 import React from 'react'
-import { Outlet, Navigate, useLocation, useNavigate } from 'react-router-dom'
+import { Outlet, Navigate, useLocation } from 'react-router-dom'
 import { UserAuth } from '../context/AuthContext'
 
 export default function ProtectedRoute() {

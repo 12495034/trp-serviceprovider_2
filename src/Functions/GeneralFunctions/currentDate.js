@@ -1,11 +1,12 @@
 //used in new clinic form to limit date picker to future dates only
 export function currentDate(offset) {
     var d = new Date();
+    var n
     //guard against null value input
     if (offset == null) {
-        var n = 0
+        n = 0
     } else {
-        var n = Number(offset)
+        n = Number(offset)
     }
 
     //offset date by a defined number of days through offset parameter

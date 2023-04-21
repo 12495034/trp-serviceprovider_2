@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Row, Col, Form, Button, Container } from 'react-bootstrap'
 import { currentDate } from '../Functions/GeneralFunctions/currentDate';
 import { Timestamp } from "firebase/firestore";
-import { appointInc, leadTime } from '../constants/general';
+import { appointInc } from '../constants/general';
 import { createSlotsList } from '../Functions/SpecialFunctions/createSlotsList';
 import { firestoreAddDoc } from '../firestoreFunctions/firestoreWrite';
 import useCollection from '../customHooks/UseCollection';
@@ -30,7 +30,7 @@ export default function NewClinicForm(props) {
     //Custom hooks to retrieve clinic dropdown menu data
     const { collectionData: locationData, isCollectionLoading: locationLoading, collectionError: locationError } = useCollection('Location', null)
     const { collectionData: centerData, isCollectionLoading: centerLoading, collectionError: centerError } = useCollection(`Location/${ClinicFormData.location}/Centers`, ClinicFormData.location)
-    
+
     //function that submits form data to firestore collection
     async function handleSubmit(event) {
         event.preventDefault()
@@ -38,7 +38,7 @@ export default function NewClinicForm(props) {
         Object.assign(clinicData, ClinicFormData, { createdBy: props.user.displayName })
         firestoreAddDoc("Clinics", clinicData)
             .then(() => {
-                setMessage(`A New Clinic has been created at ${clinicData.location},${clinicData.center},${createDateString(clinicData.date)}, ${clinicData.startTime}`)
+                setMessage(`A New Clinic has been created at ${clinicData.location}, ${clinicData.center}, ${createDateString(clinicData.date)}, ${clinicData.startTime}`)
             })
             .catch((e) => {
                 setMessage(e.message)
@@ -59,7 +59,7 @@ export default function NewClinicForm(props) {
         })
         //resets capacity to 0 if time is altered after capacity, which is outside the valid data range.
         //prevents slots data map from becoming out of sync with start time and capacity
-        if (event.target.name == "startTime") {
+        if (event.target.name === "startTime") {
             setClinicFormData(prevFormData => {
                 return {
                     ...prevFormData,
@@ -89,7 +89,7 @@ export default function NewClinicForm(props) {
                 <Row>
                     <h5>{centerError}</h5>
                 </Row>
-                <Row>
+                <Row md={2} sm={1} xs={1}>
                     <Form.Group data-testid='select' className="mb-3" as={Col}>
                         <Form.Label >{`Location ${locationError}`}</Form.Label>
                         <Form.Control
@@ -120,7 +120,7 @@ export default function NewClinicForm(props) {
                             value={ClinicFormData.center}
                         >
                             <option value="">Choose Center</option>
-                            {centerData.map((item) => (<option key={item.name} value={item.name}>{item.name}</option>))}
+                            {centerData.map((item) => (<option key={item.name} value={item.name}>{item.name}, {item.line1}, {item.postcode}</option>))}
                         </Form.Control>
                     </Form.Group>
                 </Row>

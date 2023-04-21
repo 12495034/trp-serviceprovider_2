@@ -12,7 +12,7 @@ export default function useCollection(collectionName, dependency) {
   //Use Effect used to synchronize component or function with external system
   //dependency array contains hook input parameter to trigger call back function
   useEffect(() => {
-    if (collectionName != undefined) {
+    if (collectionName !== undefined) {
       fetchCollectionData(collectionName)
     } else {
       //

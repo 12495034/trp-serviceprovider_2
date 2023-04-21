@@ -18,7 +18,7 @@ export default function useCollectionSnapshotQuery(collectionName, field, depend
                 collectionArray.push(combine)
             })
  
-            if (collectionArray.length != 0) {
+            if (collectionArray.length !== 0) {
                 setCollectionError(``)
                 setIsCollectionLoading(false)
                 setCollectionData(collectionArray)

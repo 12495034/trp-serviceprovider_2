@@ -28,7 +28,6 @@ export default function ResetScreen() {
   }
 
   function handleChange(event) {
-    // console.log(event.target.type)
     const { name, value, type, checked } = event.target
     setformData(prevState => {
       return {
@@ -43,11 +42,11 @@ export default function ResetScreen() {
         <Row >
           <h1 className='text-center login-title '>Password Reset</h1>
         </Row>
-        <Row md={2} sm={1} xs={2} className='d-flex justify-content-center mb-4 mt-4'>
+        <Row md={3} sm={1} xs={2} className='d-flex justify-content-center mb-4 mt-4'>
           <Image src={require("../images/logo.png")} alt="missing" />
         </Row>
-        <Row md={2} className='d-flex justify-content-center'>
-          <Col>
+        <Row className='d-flex justify-content-center'>
+          <Col xs={10} sm={1} md={6}>
             <Form onSubmit={resetPassword}>
               <Form.Group className="mb-3" controlId="formBasicEmail" >
 
@@ -73,12 +72,12 @@ export default function ResetScreen() {
             </Form>
           </Col>
         </Row>
-        <Row>
-          <Col>
-            <h6 md={1} className='text-center login-options mt-4'>No registered Email? <Link to='/signup'>Signup</Link></h6>
+        <Row className='justify-content-center'>
+          <Col  xs={5} sm={1} md={4}>
+            <h6 className='text-center login-options mt-4'>No registered Email? <Link to='/signup'>Signup</Link></h6>
           </Col>
-          <Col>
-            <h6 md={1} className='text-center mt-4'>Already Signed up? <Link to='/'>Login</Link></h6>
+          <Col  xs={5} sm={1} md={4}>
+            <h6 className='text-center login-options mt-4'>Already Signed up? <Link to='/'>Login</Link></h6>
           </Col>
         </Row>
       </Container>

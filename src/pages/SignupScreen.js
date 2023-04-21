@@ -10,7 +10,6 @@ import { firestore } from '../config/Firebase'
 import { Timestamp } from 'firebase/firestore'
 import ModalTAC from '../components/ModalTAC'
 
-import useDoc from '../customHooks/UseDoc'
 import usePronouns from '../customHooks/usePronouns'
 
 export default function SignupScreen() {
@@ -63,14 +62,13 @@ export default function SignupScreen() {
 
     async function handleFormSubmit(e) {
         const form = e.currentTarget;
-        console.log(form.checkValidity())
+        
         if (form.checkValidity() === false) {
             e.preventDefault();
             e.stopPropagation();
             setValidated(true);
         } else {
             e.preventDefault()
-            console.log(formData)
             setError('')
             setValidated(true);
             try {

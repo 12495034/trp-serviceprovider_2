@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { Container, Table, Form, Button, Row, FormGroup, Col } from 'react-bootstrap'
+import { Container, Table, Form, Button, Row } from 'react-bootstrap'
 import NavBarTRP from '../components/NavBarTRP'
 import Footer from '../components/Footer'
 import { collection, query, getDocs, where } from "firebase/firestore";
@@ -10,8 +10,6 @@ import { convertFirestoreTimeStamp } from '../Functions/SpecialFunctions/convert
 import SpinnerIcon from '../components/SpinnerIcon';
 
 export default function UserManagement() {
-
-  const { user } = UserAuth();
   //------------------------------------------------------------------------------------------------
   //        DEFINE STATE
   //------------------------------------------------------------------------------------------------
@@ -97,42 +95,39 @@ export default function UserManagement() {
 
     <div className='page-body'>
       <NavBarTRP />
-
       <Container className='page-content'>
         <h1 className='page-title justify-content-md-justified'>User Management</h1>
         {/* Insert toolbar, future developement with radio buttons */}
-        <p>From this screen you can view all users of the app and their profile details. Search for a user based on their first or last name or filter based on the users status and role</p>
+        <p>From this screen you can view all users of the app and their profile details. Search for a user based on their first or last name</p>
         <p><strong>Note:</strong> To view list of all stored users press the search button with no input parameters</p>
-        <Row>
+        <Row xs={1} sm={1} md={1}>
           <Form className="d-flex" onSubmit={searchUsers}>
-            <Form.Group as={Col}>
               <Form.Control
                 type="search"
-                placeholder="Enter First Name"
+                placeholder="First Name"
                 className="me-2"
                 aria-label="Search"
                 name="FirstName"
                 onChange={handleSearchBar}
               />
-
               <Form.Control
                 type="search"
-                placeholder="Enter Last Name"
+                placeholder="Last Name"
                 className="me-2"
                 aria-label="Search"
                 name="LastName"
                 onChange={handleSearchBar}
               />
-            </Form.Group>
+         
             <Button type="submit" variant="outline-success">Search</Button>
           </Form>
         </Row>
         <hr />
         {isLoading ?
-          <Row className="justify-content-md-center p-3"><SpinnerIcon /></Row>
+          <Row className="justify-content-center p-3"><SpinnerIcon /></Row>
           :
           <Table size='sm' responsive='sm' striped bordered hover>
-            <thead>
+            {pressed? <thead>
               <tr>
                 <th>Pro-Nouns</th>
                 <th>First Name</th>
@@ -140,13 +135,14 @@ export default function UserManagement() {
                 <th>Email</th>
                 <th>Created On</th>
               </tr>
-            </thead>
+            </thead>:
+              null}
             <tbody>
               {userList}
             </tbody>
           </Table>
         }
-        {allUsers.length == 0 && pressed == true && isLoading == false ? <p className="text-danger">No users found, please make sure there is a capital letter at the start of the name</p> : null}
+        {allUsers.length === 0 && pressed === true && isLoading === false ? <p className="text-danger">No users found, please make sure there is a capital letter at the start of the name</p> : null}
         {error ? <h4><code>{error}</code></h4> : null}
       </Container>
       <Footer />

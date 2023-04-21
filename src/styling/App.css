@@ -1,5 +1,15 @@
 /* CSS controlling mobile screen response */
 @media only screen and (max-width: 400px) {
+
+    .login-title{
+        font-size: x-large; 
+    }
+
+    .login-options{
+        font-size: small;
+    }
+
+
     .page-title{
         font-size: x-large;
         margin-bottom:20px;
@@ -13,18 +23,13 @@
         padding-top: 20px;
         padding-bottom: 20px;
         box-shadow: 0px -5px 10px 1px #e0dcdc;
-        font-size: medium;
-    }
-
-    .footer-title{
-        display:flex;
-        justify-content: flex-start;
+        font-size: x-small;
     }
 
     .footer-content{
         padding:0px;
         margin:0px;
-        margin-left:5%;
+        font-weight: 500;
     }
 
     .Home-message>h5 {
@@ -46,8 +51,6 @@
     
     .appointment-card:hover{
         background-color: rgba(255, 0, 187, 0.103);
-        padding:10px;
-        margin-bottom:5px;
         border-radius: 5px;
     }
 
@@ -62,6 +65,15 @@
 
 /* CSS controlling larger screen response */
 @media only screen and (min-width: 992px) {
+
+    .login-title{
+        font-size: xxx-large; 
+    }
+
+    .login-options{
+        font-size: medium;
+    }
+
     .page-title{
         font-size: xx-large;
         margin-bottom:20px;
@@ -79,14 +91,14 @@
     .footer-content{
         padding:0px;
         margin:0px;
+        font-weight: 500;
     }
 
     .appointment-card{
         background-color:white;
-        padding:10px;
-        margin-bottom:1px;
+        
+        padding:5px;
         border-radius: 5px;
-        text-align: center;
         border-style: solid;
         border-width: 1px;
     }
@@ -97,13 +109,11 @@
 
     .card-column{
         display:flex;
-        flex-direction: column;
-        justify-content: center;
+        flex-direction: row;
         align-items: center;
     }
 
     .appointment-card-icons{
-        width: max-content;
        display:flex;
        flex-direction: row;
        justify-content: space-between;
@@ -169,9 +179,7 @@
 .clinic-card{
     box-shadow: -2px 2px #8888884a;
     background-color: rgba(255, 255, 255, 0); 
-    border-style:solid;
-    border-width:0.1em;
-    padding:10px;
+    padding:5px;
     margin-bottom:5px;
     border-radius: 5px;
 }
@@ -179,18 +187,15 @@
 .clinic-card:hover{
     box-shadow: -2px 2px #8888884a;
     background-color: rgba(255, 0, 187, 0.103); 
-    color:black;
-    padding-top:10px;
-    padding-left:10px;
-    padding-right:10px;
-    padding-bottom:10px;
-    margin-bottom:5px;
-    border-radius: 5px;
 }
+
+
+
+
 
 .clinic-information{
     background-color: white;
-    text-align: center;
+    text-align: left;
     border-style:groove;
     padding:10px;
     margin-bottom:5px;

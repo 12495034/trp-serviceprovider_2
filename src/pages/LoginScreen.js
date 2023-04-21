@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import { Button, Container, Row, Col, Form, Image } from "react-bootstrap"
 import { Link, useNavigate } from "react-router-dom"
 import { UserAuth } from "../context/AuthContext"
+import packageJson from "../../package.json"
 
 export default function LoginScreen() {
 
@@ -40,14 +41,17 @@ export default function LoginScreen() {
   return (
     <div className='login-body'>
       <Container className='login-content'>
-        <Row >
+        <Row md={2} sm={1} className='justify-content-center'>
           <h1 className='mb-10 text-center login-title '>The Rapid HIV & Syphilis Testing Management Portal</h1>
         </Row>
-        <Row md={2} sm={1} xs={2} className='d-flex justify-content-center mb-2 mt-4'>
+        <Row className=' justify-content-center' xs={2} sm={1} md={1}>
+          <h5 className='text-center'>Version {packageJson.version}</h5>
+        </Row>
+        <Row md={3} sm={1} xs={2} className='d-flex justify-content-center mb-2 mt-4'>
           <Image src={require("../images/logo.png")} alt="missing" />
         </Row>
-        <Row md={2} className='d-flex justify-content-center'>
-          <Col >
+        <Row className='d-flex justify-content-center'>
+          <Col xs={10} sm={1} md={6} >
             <Form onSubmit={handleSubmit}>
               <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Email address</Form.Label>
@@ -81,15 +85,15 @@ export default function LoginScreen() {
             </Form>
           </Col>
         </Row>
-        <Row md={3} className='text-center login-options mt-4'>
-          <Col>
-            <h6>No login details? <Link to='/signup'>Signup</Link></h6>
+        <Row className='text-center justify-content-center mt-4'>
+          <Col xs={4} sm={1} md={2}>
+            <h5 className='text-center login-options'>No login details? <Link to='/signup'>Signup</Link></h5>
+          </Col >
+          <Col xs={4} sm={1} md={2}>
+            <h5 className='text-center login-options'><Link to='/privacy-policy-web'>View our Privacy Policy</Link></h5>
           </Col>
-          <Col>
-            <h6><Link to='/privacy-policy-web'>View our Privacy Policy</Link></h6>
-          </Col>
-          <Col>
-            <h6>Forgot Password? <Link to='/reset'>Reset</Link></h6>
+          <Col xs={4} sm={1} md={2}>
+            <h5 className='text-center login-options'>Forgot Password? <Link to='/reset'>Reset</Link></h5>
           </Col>
         </Row>
       </Container>

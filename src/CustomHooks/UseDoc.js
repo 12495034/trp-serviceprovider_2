@@ -9,7 +9,7 @@ export default function useDoc(collectionName, docName, dependency) {
     const [docError, setDocError] = useState(null);
 
     useEffect(() => {
-        if (docName != undefined) {
+        if (docName !== undefined) {
             fetchDocData(collectionName, docName)
         } else {
             setDocError("Collection name or doc name has not been defined")
@@ -20,14 +20,19 @@ export default function useDoc(collectionName, docName, dependency) {
         //button has been setup to call the firestore database and get the user info if available
         //This aspect of the code is functioning correctly, manually added document and the data imported
         const docRef = doc(firestore, `${collectionName}`, `${docId}`)
-        const docSnap = await getDoc(docRef)
-        if (!docSnap.exists()) {
-            setDocError('Document does not exist or user data has been deleted')
-            setIsDocLoading(false)
-        } else {
-            setDocData(docSnap.data())
-            setIsDocLoading(false)
-        }
+        await getDoc(docRef)
+        .then((docSnap)=>{
+            if (!docSnap.exists()) {
+                setDocError('Document does not exist or user data has been deleted')
+                setIsDocLoading(false)
+            } else {
+                setDocData(docSnap.data())
+                setIsDocLoading(false)
+            }
+        })
+        .catch((e)=>{
+            setDocError(e.message)
+        })
     }
 
     return {
