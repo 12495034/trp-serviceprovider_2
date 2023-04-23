@@ -28,15 +28,13 @@ export default function AppointmentCard(props) {
                 <Tooltip>
                   View Service User profile
                 </Tooltip>
-              }
-            >
+              }>
               <Button variant={props.userid ? "info" : "null"} onClick={() => props.userid ? props.handleUserDetail(props.userid) : null}>{props.slot}</Button>
-
             </OverlayTrigger>
             :
             <Button variant={props.userid ? "info" : "null"} onClick={() => props.userid ? props.handleUserDetail(props.userid) : null}>{props.slot}</Button>}
-
         </Col>
+
         <Col md={1}>
           <div className='card-column'>{props.time}</div>
         </Col>
@@ -49,20 +47,27 @@ export default function AppointmentCard(props) {
         <Col md={2}>
           <div className='card-column'><code>{error}</code></div>
         </Col>
+        {/* Clickable icons which describe the state of each appointment */}
         <Col md={3} className='appointment-card-icons'>
-              <div className="icon" onClick={() => { handleUpdateAppointment("checkedIn", !props.checkedIn, props.userid, props.clinicid, props.clinicStatus, setError) }}><CheckInIcon checkedIn={props.checkedIn} /></div>
-              <div className="icon" onClick={() => { handleCall("called", true, props.userid, props.clinicid, props.tester, props.clinicStatus, setError) }}><CallAppointmentIcon checkedIn={props.checkedIn} called={props.called} /></div>
-              <div className="icon" onClick={() => {
-                handleUpdateAppointment("wasSeen", !props.wasSeen, props.userid, props.clinicid, props.clinicStatus, setError)
-              }}
-              >
-                <TestCompleteIcon complete={props.wasSeen} checkedIn={props.checkedIn} />
-              </div>
-           
-          {props.checkedIn ? null : <div className='icon' onClick={() => {
-            handleDeleteAppointment(props.userid, props.clinicid, props.clinicStatus, props.setError)
-            props.slotsUpdate(props.clinicid, props.availableSlots, props.slot, props.time, props.clinicStatus, props.setError)
-          }}><DeleteAppointmentIcon userid={props.userid} checkedIn={props.checkedIn} /> </div>}
+          <div className="icon" onClick={() => { handleUpdateAppointment("checkedIn", !props.checkedIn, props.userid, props.clinicid, props.clinicStatus, setError) }}>
+            <CheckInIcon checkedIn={props.checkedIn} />
+          </div>
+          <div className="icon" onClick={() => { handleCall("called", true, props.userid, props.clinicid, props.tester, props.clinicStatus, setError) }}>
+            <CallAppointmentIcon checkedIn={props.checkedIn} called={props.called} />
+          </div>
+          <div className="icon" onClick={() => { handleUpdateAppointment("wasSeen", !props.wasSeen, props.userid, props.clinicid, props.clinicStatus, setError) }}>
+            <TestCompleteIcon complete={props.wasSeen} checkedIn={props.checkedIn} />
+          </div>
+
+          {props.checkedIn ?
+            null
+            :
+            <div className='icon' onClick={() => {
+              handleDeleteAppointment(props.userid, props.clinicid, props.clinicStatus, props.setError)
+              props.slotsUpdate(props.clinicid, props.availableSlots, props.slot, props.time, props.clinicStatus, props.setError)
+            }}><DeleteAppointmentIcon userid={props.userid} checkedIn={props.checkedIn} />
+            </div>
+          }
         </Col>
       </Row>
     </Container >

@@ -21,5 +21,4 @@ export async function updateAppointmentStatus(field, value, clinicId, updateStat
     } catch (e) {
         setState(e.message)
     }
-
 }

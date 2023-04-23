@@ -213,7 +213,7 @@ export default function ClinicDetail() {
                 header="Are you sure you want to Delete this Users appointment?"
                 body="The user will loose their appointment"
                 updatefunction={() => {
-                    handleCloseDelete()
+                    handleCloseDelete()D
                 }}
             /> */}
 

@@ -16,8 +16,8 @@ export async function handleUpdateAppointment(field, value, userId, clinicId, cl
       });
       setState("")
     } catch (e) {
+      //setState function passed from calling component so that error can be passed back to UI
       setState(e.message)
     }
   }
-
 }

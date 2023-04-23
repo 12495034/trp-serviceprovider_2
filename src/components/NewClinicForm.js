@@ -79,10 +79,6 @@ export default function NewClinicForm(props) {
         }
     }
 
-    // if (!locationData || !centerData) {
-    //     return <div>Loading...</div>
-    // }
-
     return (
         <Form onSubmit={handleSubmit} className="mt-3">
             <Container>
@@ -185,6 +181,7 @@ export default function NewClinicForm(props) {
                             onChange={handleChange}
                             value={ClinicFormData.capacity} />
                     </Form.Group>
+                    
                 </Row>
                 <Row>
                     <div className='d-grid'>
