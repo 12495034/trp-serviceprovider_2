@@ -22,7 +22,7 @@ const expectedObjectFalse = {
 }
 
 
-describe('Checks data format prior to submissiong to firestore to update called field in appointment', () => {
+describe('Checks data format prior to submission to firestore to update called field in appointment', () => {
     test.skip('User called', () => {
         expect(handleCall(field, valueTrue, userid, clinicid, tester, statusActive)).toEqual(
             expect.objectContaining(expectedObjectTrue)

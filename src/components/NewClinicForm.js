@@ -28,17 +28,26 @@ export default function NewClinicForm(props) {
     })
 
     //Custom hooks to retrieve clinic dropdown menu data
-    const { collectionData: locationData, isCollectionLoading: locationLoading, collectionError: locationError } = useCollection('Location', null)
-    const { collectionData: centerData, isCollectionLoading: centerLoading, collectionError: centerError } = useCollection(`Location/${ClinicFormData.location}/Centers`, ClinicFormData.location)
+    const { collectionData: locationData, isCollectionLoading: locationLoading, collectionError: locationError } 
+    = useCollection('Location', null)
+    const { collectionData: centerData, isCollectionLoading: centerLoading, collectionError: centerError } 
+    = useCollection(`Location/${ClinicFormData.location}/Centers`, ClinicFormData.location)
 
-    //function that submits form data to firestore collection
+    console.log( locationData)
+    console.log(centerData)
+    
+    //function that submits form data to firestore collection as a new document
     async function handleSubmit(event) {
         event.preventDefault()
         const clinicData = {}
-        Object.assign(clinicData, ClinicFormData, { createdBy: props.user.displayName })
+        Object.assign(clinicData, ClinicFormData, { createdBy: props.user.displayName,  })
         firestoreAddDoc("Clinics", clinicData)
             .then(() => {
-                setMessage(`A New Clinic has been created at ${clinicData.location}, ${clinicData.center}, ${createDateString(clinicData.date)}, ${clinicData.startTime}`)
+                setMessage(`A New Clinic has been created at 
+                ${clinicData.location}, 
+                ${clinicData.center}, 
+                ${createDateString(clinicData.date)}, 
+                ${clinicData.startTime}`)
             })
             .catch((e) => {
                 setMessage(e.message)
@@ -96,8 +105,7 @@ export default function NewClinicForm(props) {
                             as="select"
                             name="location"
                             onChange={handleChange}
-                            value={ClinicFormData.location}
-                        >
+                            value={ClinicFormData.location}>
                             <option>Select a location</option>
                             {locationData.map((item) => (<option key={item.id} value={item.id}>{item.id}</option>))}
                         </Form.Control>
@@ -113,8 +121,7 @@ export default function NewClinicForm(props) {
                             name="center"
                             placeholder='Choose Center'
                             onChange={handleChange}
-                            value={ClinicFormData.center}
-                        >
+                            value={ClinicFormData.center}>
                             <option value="">Choose Center</option>
                             {centerData.map((item) => (<option key={item.name} value={item.name}>{item.name}, {item.line1}, {item.postcode}</option>))}
                         </Form.Control>
@@ -135,10 +142,9 @@ export default function NewClinicForm(props) {
                             value={ClinicFormData.addDetails} />
                     </Form.Group>
                 </Row>
-
                 <Row className="mb-3">
                     <Form.Group className='mb-3' as={Col}>
-                        <Form.Label>Date (Min. 2 day lead time)</Form.Label>
+                        <Form.Label>Date</Form.Label>
                         <Form.Control
                             required
                             data-testid="date"
@@ -151,7 +157,6 @@ export default function NewClinicForm(props) {
                             onChange={handleChange}
                             value={ClinicFormData.date} />
                     </Form.Group>
-
                     <Form.Group as={Col}>
                         <Form.Label>Start Time</Form.Label>
                         <Form.Control
@@ -165,7 +170,6 @@ export default function NewClinicForm(props) {
                             onChange={handleChange}
                             value={ClinicFormData.startTime} />
                     </Form.Group>
-
                     <Form.Group as={Col}>
                         <Form.Label>Capacity (Max 8) </Form.Label>
                         <Form.Control
@@ -181,7 +185,6 @@ export default function NewClinicForm(props) {
                             onChange={handleChange}
                             value={ClinicFormData.capacity} />
                     </Form.Group>
-                    
                 </Row>
                 <Row>
                     <div className='d-grid'>

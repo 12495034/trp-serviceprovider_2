@@ -71,7 +71,7 @@ exports.addDefaultUserClaims = functions.region('europe-west1').firestore.docume
                 console.log(error);
             });
 
-        //create subcollection and document on document creation
+        //create subcollection and document on user document creation
         admin.firestore().doc(`/Users/${context.params.userId}/Restricted/Details`).set(customClaims)
             .then(() => {
                 console.log("Restricted User data created in firestore")
@@ -156,7 +156,7 @@ exports.disableUserAccount = functions.region('europe-west1').firestore.document
 
 //Delete user appointments subcollection when user auth profile is deleted
 //subcollections need to be deleted manually
-exports.deleteUserAppointments = functions.region('europe-west1').auth.user().onDelete(async (user) => {
+exports.deleteUserData = functions.region('europe-west1').auth.user().onDelete(async (user) => {
     //delete User subcollection documents
     const collectionRef = admin.firestore().collection(`Users/${user.uid}/Appointments`);
     let promises = []

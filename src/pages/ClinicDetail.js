@@ -29,7 +29,9 @@ export default function ClinicDetail() {
     const navigate = useNavigate()
     const { user } = UserAuth();
     //Custom hookes for standard data retrievel
-    const { collectionData: appointments, isCollectionLoading: isAppointmentDataLoading, collectionError: appointmentDataError } = useCollectionSnapshot(`Clinics/${clinicId}/Appointments`, null)
+    const { collectionData: appointments, isCollectionLoading: isAppointmentDataLoading, collectionError: appointmentDataError } 
+    = useCollectionSnapshot(`Clinics/${clinicId}/Appointments`, null)
+    
     const { docData: clinic, isDocLoading, docError } = useDocSnapshot("Clinics", clinicId, null)
     //-------------------------------------------------------------------------------------
     // Define State
@@ -56,13 +58,12 @@ export default function ClinicDetail() {
     function handleUserDetail(userid) {
         navigate(`/Users/${userid}`);
     }
-
     //-------------------------------------------------------------------------------------
     // Data rendering
     //-------------------------------------------------------------------------------------
     //create JSX elements based on stored state data
     const appointmentList = sortedAppointments.map((item) => {
-        //for data security the name of the person is not shown but the id of the person is perhaps
+        //for data security the name of the person is not shown at the clinic level
         return (
             <AppointmentCard
                 key={item.slot}
@@ -83,7 +84,6 @@ export default function ClinicDetail() {
             />
         )
     })
-
     //-------------------------------------------------------------------------------------
     // Page Content
     //-------------------------------------------------------------------------------------
@@ -91,7 +91,6 @@ export default function ClinicDetail() {
         <div className='page-body'>
             <NavBarTRP />
             {/* <BreadCrumbCustom /> */}
-
             <Container className='page-content'>
                 {!isAppointmentDataLoading ?
                     <div>

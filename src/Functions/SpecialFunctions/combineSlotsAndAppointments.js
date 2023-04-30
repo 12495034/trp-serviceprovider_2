@@ -15,7 +15,7 @@ export function combineSlotsAndAppointments(appointmentsArray, clinicSlotsMap, c
     if(combinedList){
         return combinedList
     } else { 
-        callback("Error combined appointment data with available appointment data")
+        callback("Error combining available slots and booked appointment data")
         return []
     }
     

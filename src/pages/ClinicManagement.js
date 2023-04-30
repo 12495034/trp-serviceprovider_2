@@ -33,7 +33,6 @@ export default function ClinicManagement() {
   //----------------------------------------------------------------------------------------
   // Functions
   //----------------------------------------------------------------------------------------
-
   //When a user clicks on the
   function handleClinicDetail(clinicId) {
     navigate(`${clinicId}`);
@@ -42,38 +41,22 @@ export default function ClinicManagement() {
   //----------------------------------------------------------------------------------------
   // Data Rendering
   //----------------------------------------------------------------------------------------
-
-  //sort clinics by date prior to rendering, nearest clinic at the top
-  clinicData.sort(
-    (p1, p2) => (p1.date < p2.date) ? -1 : (p1.date > p2.date) ? 1 : 0)
-
+  //sort clinics by date prior to rendering, next clinic at the top
+  clinicData.sort((p1, p2) => (p1.date < p2.date) ? -1 : (p1.date > p2.date) ? 1 : 0)
   //create Cards object that can be listed on the screen
   const clinicCards = clinicData.map((item) => {
-    //slots map is maintained as appointments are booked and cancelled
     const availableSlots = Object.keys(item.slots).length
     const appointments = item.capacity - availableSlots
-
     return (
       <ClinicCard
-        key={item.id}
-        location={item.location}
-        center={item.center}
-        addDetails={item.addDetails}
-        date={createDateString(item.date)}
-        capacity={item.capacity}
-        time={item.startTime}
-        appointments={appointments}
-        status={appointments === item.capacity ? "Full" : "Space Available"}
-        clinicId={item.id}
+        key={item.id} clinicId={item.id}
+        location={item.location} center={item.center}
+        addDetails={item.addDetails} date={createDateString(item.date)}
+        capacity={item.capacity} time={item.startTime}
+        appointments={appointments} status={appointments === item.capacity ? "Full" : "Space Available"}
         handleClinicDetail={handleClinicDetail}
-      />
-    )
+      />)
   })
-
-  //----------------------------------------------------------------------------------------
-  // Page content
-  //----------------------------------------------------------------------------------------
-
   return (
     <div className='page-body'>
       <NavBarTRP />
@@ -87,8 +70,7 @@ export default function ClinicManagement() {
               <Accordion.Header>Create New Clinic</Accordion.Header>
               <Accordion.Body>
                 <NewClinicForm
-                  user={user}
-                  role={role}
+                  user={user} role={role}
                 />
               </Accordion.Body>
             </Accordion.Item>
@@ -98,7 +80,7 @@ export default function ClinicManagement() {
           <Stack><ClinicToolBar radioState={filterRadio} setRadioState={setFilterRadio} /></Stack>
           <hr />
         </Row>
-        <Row  xs={12} sm={12} md={12}  className="p-3 justify-content-center">
+        <Row xs={12} sm={12} md={12} className="p-3 justify-content-center">
           {clinicDataLoading ? <SpinnerIcon /> : clinicCards}
           {clinicDataError ? <h4>{clinicDataError}</h4> : null}
         </Row>

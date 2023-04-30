@@ -1,13 +1,11 @@
 import React, { useState } from 'react'
-import { Container, Row, Col, Button, } from 'react-bootstrap';
+import { Container, Row, Col, Button, Alert } from 'react-bootstrap';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Tooltip from 'react-bootstrap/Tooltip'
-//Icons
 import CallAppointmentIcon from '../Icons/CallAppointmentIcon';
 import CheckInIcon from '../Icons/CheckInIcon';
 import TestCompleteIcon from '../Icons/TestCompleteIcon';
 import DeleteAppointmentIcon from '../Icons/DeleteAppointmentIcon';
-//helper functions
 import { handleCall } from '../Functions/SpecialFunctions/handleCall';
 import { handleUpdateAppointment } from '../Functions/SpecialFunctions/handleUpdateAppointment';
 import { handleDeleteAppointment } from '../Functions/SpecialFunctions/handleDeleteAppointment';
@@ -55,7 +53,9 @@ export default function AppointmentCard(props) {
           <div className="icon" onClick={() => { handleCall("called", true, props.userid, props.clinicid, props.tester, props.clinicStatus, setError) }}>
             <CallAppointmentIcon checkedIn={props.checkedIn} called={props.called} />
           </div>
-          <div className="icon" onClick={() => { handleUpdateAppointment("wasSeen", !props.wasSeen, props.userid, props.clinicid, props.clinicStatus, setError) }}>
+          <div className="icon" onClick={() => 
+            props.called ? handleUpdateAppointment("wasSeen", !props.wasSeen, props.userid, props.clinicid, props.clinicStatus, setError) : null
+          }>
             <TestCompleteIcon complete={props.wasSeen} checkedIn={props.checkedIn} />
           </div>
 

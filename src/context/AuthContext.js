@@ -12,36 +12,37 @@ import {
 import { auth } from "../config/Firebase";
 
 const UserContext = createContext()
-
 export const AuthContextProvider = ({ children }) => {
     //define state and functions that we want available through the useContext hook
     const [user, setUser] = useState({})
     const [role, setRole] = useState(undefined)
     const [accountStatus, setAccountStatus] = useState(undefined)
 
+    //create user account with email and password, user signed in automatically
     const createUser = (email, password) => {
         return createUserWithEmailAndPassword(auth, email, password)
     }
-
+    //sign in user with email and password
     const signIn = (email, password) => {
         return signInWithEmailAndPassword(auth, email, password)
     }
 
+    //sign out user
     const logOut = () => {
         return signOut(auth)
     }
-
+    //send reset link to users email
     async function passwordReset(email) {
         return sendPasswordResetEmail(auth, email)
     }
-
+    //send verification email to users email
     async function verifyEmail() {
         return sendEmailVerification(auth.currentUser)
             .then(() => {
                 console.log("Verification email sent")
             });
     }
-
+    //update user auth profile with new display name and phone number
     async function updateUserAuthProfile(firstName, lastName, phoneNumber) {
         updateProfile(auth.currentUser, {
             displayName: `${firstName} ${lastName}`,
@@ -52,7 +53,7 @@ export const AuthContextProvider = ({ children }) => {
         });
     }
 
-    //runs once to determine the user state following render
+    //useEffect hook triggered by inputting user within dependancy array
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
             //attempt to set details earlier for login
@@ -70,8 +71,6 @@ export const AuthContextProvider = ({ children }) => {
             } else {
                 setUser(null)
             }
-
-
         })
         return () => {
             unsubscribe();
