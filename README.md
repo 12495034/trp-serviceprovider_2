@@ -1,5 +1,12 @@
 # Rapid HIV & Syphillis Clinic scheduling and management system
 
+The Rainbow Project is the largest LGBT charity in Nothern Ireland, who offer a variety of services to the LGBT community. One such service is rapid HIV and Syphillus testing. A system was developed to enable The Rainbow project to schedule rapid HIV testing clinics at specific test centers within the City of Belfast. 
+This project has focused on the developement of the service provider aspect of the system. A React js web application was developed using as Firebase back end for user authentication and data storage. Communication between the Service-Provider part of the system and the service user occurs entirely through the Firestore database. firestore snapshot listeners were employed for real time data update facilitating an immediate render of user actions within the system.
+
+
+This aspect of the project is only acessible to Rainbow Project Staff as sensitive information about service users is accessible.
+As such this project is not currently accepting contributions. However, this may change in the future.
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

@@ -18,7 +18,7 @@ export default function ClinicCard(props) {
           {props.capacity - props.appointments > 0 ?
             <h5 className='ms-auto'>Appointments Booked - <Badge pill bg='success'> {props.appointments}</Badge></h5>
             :
-            <h5 className='ms-auto'>Appointments Booked - <Badge pill bg='success'> {props.appointments}</Badge></h5>}
+            <h5 className='ms-auto'>Appointments Booked - <Badge pill bg='danger'> {props.appointments}</Badge></h5>}
         </Stack>
       </Card.Footer>
     </Card>
