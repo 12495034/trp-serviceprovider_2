@@ -14,6 +14,11 @@ https://user-images.githubusercontent.com/94055886/235648039-dac206d0-2cc4-4bc1-
 This aspect of the project is only acessible to Rainbow Project Staff as sensitive information about service users is accessible.
 As such this project is not currently accepting contributions. However, this may change in the future. 
 
+## System Overview
+1. Front End - React JS
+2. UI framework - React Boostrap
+3. Backend - Firebase Auth and firestore
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 <!-- ## Available Scripts
