@@ -4,8 +4,20 @@ The Rainbow Project is the largest LGBT charity in Nothern Ireland, who offer a 
 This project has focused on the developement of the service provider aspect of the system. A React js web application was developed using as Firebase back end for user authentication and data storage. Communication between the Service-Provider part of the system and the service user occurs entirely through the Firestore database. firestore snapshot listeners were employed for real time data update facilitating an immediate render of user actions within the system.
 
 
+
+
+https://user-images.githubusercontent.com/94055886/235648039-dac206d0-2cc4-4bc1-8762-f7b89f132da2.mp4
+
+
+
+
 This aspect of the project is only acessible to Rainbow Project Staff as sensitive information about service users is accessible.
 As such this project is not currently accepting contributions. However, this may change in the future. 
+
+## System Overview
+1. Front End - React JS
+2. UI framework - React Boostrap
+3. Backend - Firebase Auth and firestore
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
