@@ -26,9 +26,3 @@ export default function ClinicCard(props) {
   )
 }
 
-// <Card.Text>Spaces Available -  <Badge pill bg='success'>{props.capacity - props.appointments}</Badge></Card.Text>
-//         {props.capacity - props.appointments > 0 ?
-//           <Card.Text>Spaces Available -  <Badge pill bg='success'>{props.capacity - props.appointments}</Badge></Card.Text>
-//           :
-//           <Card.Text>Spaces Available -  <Badge pill bg='danger'>None</Badge></Card.Text>
-//         }

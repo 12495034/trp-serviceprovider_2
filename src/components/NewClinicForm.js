@@ -32,9 +32,6 @@ export default function NewClinicForm(props) {
     = useCollection('Location', null)
     const { collectionData: centerData, isCollectionLoading: centerLoading, collectionError: centerError } 
     = useCollection(`Location/${ClinicFormData.location}/Centers`, ClinicFormData.location)
-
-    console.log( locationData)
-    console.log(centerData)
     
     //function that submits form data to firestore collection as a new document
     async function handleSubmit(event) {
