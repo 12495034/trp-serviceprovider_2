@@ -161,6 +161,7 @@ exports.deleteUserData = functions.region('europe-west1').auth.user().onDelete(a
     const collectionRef = admin.firestore().collection(`Users/${user.uid}/Appointments`);
     let promises = []
     return collectionRef.get()
+        //delete user appointments from User Appointments sub-collection
         .then(qs => {
             qs.forEach(docSnapshot => {
                 promises.push(docSnapshot.ref.delete());
@@ -168,9 +169,11 @@ exports.deleteUserData = functions.region('europe-west1').auth.user().onDelete(a
             Promise.all(promises);
         })
         .then(() => {
+            //delete user document
             deleteDocument('Users', user.uid)
         })
         .then(() => {
+            //delete user restricted details files
             return deleteDocument(`Users/${user.uid}/Restricted`, 'Details')
         })
         .catch(error => {
