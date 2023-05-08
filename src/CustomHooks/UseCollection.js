@@ -2,9 +2,15 @@ import { useState, useEffect } from 'react'
 import { collection, getDocs } from "firebase/firestore"
 import { firestore } from "../config/Firebase"
 
+/**
+ * Custom Hook used to perform single data retrieval from a firestore collection, loading state of the data 
+ * and any system errors generated
+ * @param {String} collectionName Firestore Collection
+ * @param {state variable} dependency Input to dependency array
+ * @returns collectionData, isCollectionLoading, collectionError
+ */
 export default function useCollection(collectionName, dependency) {
-  //Custom Hook state, used to store data retrieved, loading state of the data 
-  //and any system errors generated
+  
   const [collectionData, setCollectionData] = useState([]);
   const [isCollectionLoading, setIsCollectionLoading] = useState(true);
   const [collectionError, setCollectionError] = useState("");

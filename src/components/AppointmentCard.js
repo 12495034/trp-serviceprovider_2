@@ -10,6 +10,10 @@ import { handleCall } from '../Functions/SpecialFunctions/handleCall';
 import { handleUpdateAppointment } from '../Functions/SpecialFunctions/handleUpdateAppointment';
 import { handleDeleteAppointment } from '../Functions/SpecialFunctions/handleDeleteAppointment';
 
+/**
+ * Appointment Card component used to render appointments on the Clinic detail screen
+ */
+
 export default function AppointmentCard(props) {
   const [error, setError] = useState("")
   return (

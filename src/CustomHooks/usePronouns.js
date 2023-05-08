@@ -2,6 +2,16 @@ import { useState, useEffect } from 'react'
 import { getDoc, doc } from "firebase/firestore"
 import { firestore } from "../config/Firebase"
 
+
+/**
+ * Custom Hook used to perform one time data retrievel from firestore document pronouns field, loading state of the data 
+ * and any system errors generated
+ * @param {String} collectionName Firestore collection
+ * @param {String} docName Firestore document
+ * @param {state variable} dependency Input to dependency array
+ * @returns docData, isDocLoading, docError
+ */
+
 export default function usePronouns(collectionName, docName, dependency) {
     //Hook state
     const [docData, setDocData] = useState([]);
@@ -17,8 +27,6 @@ export default function usePronouns(collectionName, docName, dependency) {
     }, [dependency])
 
     async function fetchDocData(collectionName, docId) {
-        //button has been setup to call the firestore database and get the user info if available
-        //This aspect of the code is functioning correctly, manually added document and the data imported
         const docRef = doc(firestore, `${collectionName}`, `${docId}`)
         await getDoc(docRef)
             .then((docSnap) => {
@@ -26,6 +34,7 @@ export default function usePronouns(collectionName, docName, dependency) {
                     setDocError('Document does not exist or user data has been deleted')
                     setIsDocLoading(false)
                 } else {
+                    // data().prnouns manually set as cannot use a variable here
                     setDocData(docSnap.data().pronouns)
                     setIsDocLoading(false)
                 }

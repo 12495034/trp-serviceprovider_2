@@ -23,15 +23,21 @@ import { updateAppointmentStatus } from '../Functions/SpecialFunctions/updateApp
 import { handleUpdateCapacity } from '../Functions/SpecialFunctions/handleUpdateCapacity'
 import SpinnerIcon from '../components/SpinnerIcon'
 
+/**
+ * Web Page showing the detail of a selected clinic
+ * @returns 
+ */
+
 export default function ClinicDetail() {
     //react-router-dom params that are passed through navigate
     const { clinicId } = useParams();
     const navigate = useNavigate()
+    //User object passed through AuthContext Provider
     const { user } = UserAuth();
+
     //Custom hookes for standard data retrievel
-    const { collectionData: appointments, isCollectionLoading: isAppointmentDataLoading, collectionError: appointmentDataError } 
-    = useCollectionSnapshot(`Clinics/${clinicId}/Appointments`, null)
-    
+    const { collectionData: appointments, isCollectionLoading: isAppointmentDataLoading, collectionError: appointmentDataError }
+        = useCollectionSnapshot(`Clinics/${clinicId}/Appointments`, null)
     const { docData: clinic, isDocLoading, docError } = useDocSnapshot("Clinics", clinicId, null)
     //-------------------------------------------------------------------------------------
     // Define State
@@ -42,19 +48,20 @@ export default function ClinicDetail() {
     const handleCloseCancel = () => setCancelModalShow(false);
     const handleShowCancel = () => setCancelModalShow(true);
     const [endModalshow, setEndModalShow] = useState(false);
-    const [deleteModalShow, setDeleteModalShow] = useState(false)
     const handleCloseEnd = () => setEndModalShow(false);
     const handleShowEnd = () => setEndModalShow(true);
-    const handleCloseDelete = () => setDeleteModalShow(false);
-    const handleShowDelete = () => setDeleteModalShow(true);
+    //toolstip state handling
     const [toolTip, setToolTip] = useState(false)
 
-    //initialise new array using appointments
+    //initialise new array using appointments data and available appointments retrieved from firestore
     const combinedList = combineSlotsAndAppointments(appointments, clinic.slots, setError)
     //Array is sorted starting with earliest appointment slot time using a compare method in an arrow function
     const sortedAppointments = combinedList.sort((p1, p2) => (p1.slot > p2.slot) ? 1 : (p1.slot < p2.slot) ? -1 : 0)
 
-    //navigate to user profile details
+    /**
+     * Function to navigate to user profile details screen
+     * @param {String} userid Firebase user id
+     */
     function handleUserDetail(userid) {
         navigate(`/Users/${userid}`);
     }
@@ -90,7 +97,6 @@ export default function ClinicDetail() {
     return (
         <div className='page-body'>
             <NavBarTRP />
-            {/* <BreadCrumbCustom /> */}
             <Container className='page-content'>
                 {!isAppointmentDataLoading ?
                     <div>
@@ -205,16 +211,6 @@ export default function ClinicDetail() {
                     handleCloseCancel()
                 }}
             />
-
-            {/* <ModalConfirmation
-                show={deleteModalShow}
-                close={handleCloseDelete}
-                header="Are you sure you want to Delete this Users appointment?"
-                body="The user will loose their appointment"
-                updatefunction={() => {
-                    handleCloseDelete()D
-                }}
-            /> */}
 
             <ModalConfirmation
                 show={endModalshow}

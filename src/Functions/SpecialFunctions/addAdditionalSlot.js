@@ -1,6 +1,13 @@
 import { timeZones } from "../../constants/general";
 
-//function to get the next available time (latest + appointInc)
+/**
+ * function to get the next available time (latest + appointInc)
+ * @param {Array} appointmentsData Array of all appointment slots regardless of status
+ * @param {String} date of clinic
+ * @param {Int} inc Number of minutes to increment appointment by
+ * @returns String of next time slot
+ */
+
 export function addAdditionalSlot(appointmentsData, date, inc) {
     if (appointmentsData!=null && date!=null && inc!=null) {
         const latestTime = appointmentsData[appointmentsData.length - 1].time

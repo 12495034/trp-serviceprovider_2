@@ -2,6 +2,14 @@ import { useState, useEffect } from 'react'
 import { collection, query, onSnapshot } from "firebase/firestore"
 import { firestore } from "../config/Firebase"
 
+/**
+ * Custom Hook used to perform real Time data retrieval of a firestore collection, loading state of the data 
+ * and any system errors generated
+ * @param {String} collectionName Firestore Collection
+ * @param {state variable} dependency Input to dependency array
+ * @returns collectionData, isCollectionLoading, collectionError
+ */
+
 export default function useCollectionSnapshot(collectionName, dependency) {
     //Hook state
     const [collectionData, setCollectionData] = useState([]);

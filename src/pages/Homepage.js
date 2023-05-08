@@ -5,8 +5,12 @@ import { Container, Row, Col } from 'react-bootstrap'
 import { UserAuth } from '../context/AuthContext'
 import HomePageInformation from '../components/HomePageInformation'
 
+/**
+ * Web page welcoming the user to the web app
+ */
+
 export default function Homepage() {
-  //functions passed to screen through context
+  //User object passed through AuthContext Provider
   const { user } = UserAuth()
 
   return (

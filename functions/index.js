@@ -6,7 +6,9 @@ const admin = require('firebase-admin');
 admin.initializeApp();
 
 
-//send notification email to All App users if a new clinic is created
+//send notification email to All App users if a new clinic is created. Cloud function not deployed due to issue with email account used to send email notifications.
+//Setup dedicated SMTP to re-introduce this functionality.
+//
 // exports.sendNotificationEmail = functions.region('europe-west1').firestore.document('/Clinics/{clinicId}')
 //     .onCreate(async (snap) => {
 //         //get the data from the newly created document
@@ -81,7 +83,7 @@ exports.addDefaultUserClaims = functions.region('europe-west1').firestore.docume
             });
     });
 
-//Edit custom claims when document is modified
+//Edit custom claims when a users Details document is modified
 exports.modifyUserClaims = functions.region('europe-west1').firestore.document('/Users/{userId}/Restricted/Details')
     .onUpdate((change, context) => {
         const newData = change.after.data();
@@ -122,7 +124,7 @@ exports.updateUserAuthDetails = functions.region('europe-west1').firestore.docum
             });
     });
 
-//disable user auth profile when firestore user document is changed to suspended
+//disable or enable user auth profile when firestore user Details document accountStatus field is ammended
 exports.disableUserAccount = functions.region('europe-west1').firestore.document('/Users/{userId}/Restricted/Details')
     .onUpdate((change, context) => {
         const newData = change.after.data();
@@ -144,24 +146,15 @@ exports.disableUserAccount = functions.region('europe-west1').firestore.document
             });
     });
 
-//delete User document from firestore when user auth profile is deleted
-// exports.deleteUserDocument = functions.region('europe-west1').auth.user().onDelete(async (user) => {
-//     deleteDocument('Users', user.uid)
-// });
 
-//delete user restricted details document when user auth profile is deleted
-// exports.deleteUserRestrictedData = functions.region('europe-west1').auth.user().onDelete(async (user) => {
-//     deleteDocument(`Users/${user.uid}/Restricted`, 'Details')
-// });
-
-//Delete user appointments subcollection when user auth profile is deleted
-//subcollections need to be deleted manually
+//Delete all user information from the system
+//triggered by deletion of authentication profile
 exports.deleteUserData = functions.region('europe-west1').auth.user().onDelete(async (user) => {
     //delete User subcollection documents
     const collectionRef = admin.firestore().collection(`Users/${user.uid}/Appointments`);
     let promises = []
     return collectionRef.get()
-        //delete user appointments from User Appointments sub-collection
+        //delete user appointments from User Appointments sub-collection one by one
         .then(qs => {
             qs.forEach(docSnapshot => {
                 promises.push(docSnapshot.ref.delete());

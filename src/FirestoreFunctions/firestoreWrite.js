@@ -1,8 +1,13 @@
 import { addDoc, collection, } from 'firebase/firestore'
 import { firestore } from '../config/Firebase';
 
-//re-usable function for updating document fields in firestore
-//takes collection and document references along with an input data object
+/**
+ * Function for adding a new document with a unique id to the firestore database
+ * @param {String} collectionAddress Firestore collection
+ * @param {Object} data Object containing data for new document
+ * @returns addDoc(collection(), data)
+ */
+
 export async function firestoreAddDoc(collectionAddress, data) {
     return await addDoc(collection(firestore, collectionAddress), data)
         

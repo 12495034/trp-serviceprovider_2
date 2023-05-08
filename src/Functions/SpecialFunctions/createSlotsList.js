@@ -1,6 +1,14 @@
 import { timeZones } from "../../constants/general";
 
-//function to create a slots array of times based on the start time and number of slots selected
+/**
+ * //function to create a slots array of times based on the start time and number of slots selected
+ * @param {String} date The date of the clinic
+ * @param {String} startTime The start time of the clinic
+ * @param {Int} capacity The capacity of the clinic
+ * @param {Int} inc Duration of appointment slot
+ * @returns Object of sequentially numbered available appointment times
+ */
+
 export function createSlotsList(date, startTime, capacity, inc) {
     if (date != null && startTime != null && capacity != null && inc != null) {
         //date format must be "2023-12-17T03:24:00.000" for ISO-8601 compliance

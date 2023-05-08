@@ -10,10 +10,14 @@ import { UserAuth } from '../context/AuthContext'
 import useDoc from '../customHooks/UseDoc'
 import useCollection from '../customHooks/UseCollection'
 import { convertFirestoreTimeStamp } from '../Functions/SpecialFunctions/convertFirestoreTimeStamp'
-import SpinnerIcon from '../components/SpinnerIcon'
+
+/**
+ * Access user profile data and appointment history from this screen
+ */
 
 export default function UserProfileData() {
 
+  //user object and functions provided through AuthContext Provider
   const { user, logOut, passwordReset } = UserAuth();
 
   //retrieve userid from URL parameter
@@ -33,14 +37,25 @@ export default function UserProfileData() {
   const { docData: restrictedData, isDocLoading: restrictedDataLoading, docError: restrictedDataError } = useDoc(`Users/${userid}/Restricted`, 'Details')
   const { collectionData: appointmentHistoryData, isCollectionLoading: locationLoading, collectionError: appointmentHistoryError } = useCollection(`Users/${userid}/Appointments`, null)
 
+  /**
+   * Function to navigate to the clinic detail screen when a users appointment history is selected
+   * @param {String} clinicId Firestore clinic id of the appointment selected
+   */
   function handleClinicDetail(clinicId) {
     navigate(`/clinics/${clinicId}`);
   }
 
+  /**
+   * Function to navigate to edit user details screen for the current signed in user
+   */
   function handleEditUser() {
     navigate(`/Users/${userid}/edit`);
   }
 
+  /**
+   * Function to reset the signed in users password
+   * @param {event} e Object describing the event that occurred
+   */
   function resetPassword(e) {
     e.preventDefault();
     passwordReset(docData.email)
@@ -53,6 +68,9 @@ export default function UserProfileData() {
       });
   }
 
+  /**
+   * Function to sign out the current user and navigate to the login screen
+   */
   async function handleSignOut() {
     try {
       await logOut()

@@ -9,8 +9,11 @@ import { setDoc, doc } from "firebase/firestore";
 import { firestore } from '../config/Firebase'
 import { Timestamp } from 'firebase/firestore'
 import ModalTAC from '../components/ModalTAC'
-
 import usePronouns from '../customHooks/usePronouns'
+
+/**
+ * Web app screen for users to create a new profile
+ */
 
 export default function SignupScreen() {
     //useNavigate hook from react router dom
@@ -20,9 +23,11 @@ export default function SignupScreen() {
     //modal state handling
     const handleClose = () => setModalShow(false);
     const handleShow = () => setModalShow(true);
-    //functions passed to screen by context
+
+    //functions passed to screen by AuthContext provider
     const { createUser, verifyEmail, updateUserAuthProfile, logOut } = UserAuth()
-    //state
+
+    //state Management
     const [validated, setValidated] = useState(false);
     const [formData, setformData] = useState({
         pronouns: "",
@@ -42,6 +47,11 @@ export default function SignupScreen() {
     //Custom hookes for drop down menu population
     const { docData, isDocLoading, docError } = usePronouns('Supporting', 'pronouns', null)
 
+    /**
+     * Function to handle changes to signup form
+     * @param {event} event Object describing the event that occurred
+     * @returns setFormData state
+     */
     function handleChange(event) {
         const { name, value, type, checked } = event.target
         setformData(prevState => {
@@ -51,6 +61,10 @@ export default function SignupScreen() {
         })
     }
 
+    /**
+     * Function to set state of terms and conditions sign up, followed by closing of the modal
+     * @returns setFormData state
+     */
     function agreeTAC() {
         setformData(prevState => {
             return {
@@ -60,9 +74,13 @@ export default function SignupScreen() {
         setModalShow(false)
     }
 
+    /**
+     * Function handles submission of form to firebase for user account creations
+     * @param {event} e Object describing the event that occurred
+     */
     async function handleFormSubmit(e) {
         const form = e.currentTarget;
-        
+
         if (form.checkValidity() === false) {
             e.preventDefault();
             e.stopPropagation();
@@ -75,6 +93,7 @@ export default function SignupScreen() {
                 await createUser(formData.email, formData.Password)
                     .then(async (userCredential) => {
                         const newUser = userCredential.user
+                        //create new firestore database record with newly created firebase user id
                         await setDoc(doc(firestore, "Users", newUser.uid), {
                             ProNouns: formData.pronouns,
                             FirstName: formData.FirstName.charAt(0).toUpperCase() + formData.FirstName.slice(1),
@@ -87,26 +106,17 @@ export default function SignupScreen() {
                             emailOptIn: formData.emailOptIn,
                             createdAt: Timestamp.fromDate(new Date()),
                         })
+                        //update user auth profile with firstname, lastname and phoneNumber
                         updateUserAuthProfile(formData.FirstName, formData.LastName, formData.PhoneNumber)
                         //sends verification email to users email address
                         verifyEmail()
-                        //signout following account creation so that users token is refreshed with their updated role
-                        // handleSignOut()
+                        //navigate to welcome page following user sign up
                         navigate('/welcome')
                     })
             } catch (e) {
+                //error set in state and rendered within UI
                 setError(e.message)
             }
-        }
-    }
-
-    async function handleSignOut() {
-        console.log("Sign out")
-        try {
-            await logOut()
-            navigate('/')
-        } catch (e) {
-            console.log(e.message)
         }
     }
 

@@ -1,6 +1,10 @@
 import React from 'react'
 import { Modal, Button } from 'react-bootstrap'
 
+/**
+ * Modal Confirmation Component, used to display a message to the user prior to performing an action
+ */
+
 export default function ModalConfirmation(props) {
   return (
      <Modal show={props.show} onHide={props.close}>

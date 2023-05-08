@@ -3,12 +3,20 @@ import { useNavigate } from 'react-router-dom'
 import { Button, Container, Row, Col } from 'react-bootstrap'
 import { UserAuth } from '../context/AuthContext'
 
+/**
+ * Page that welcomes the user following sign up.
+ */
+
 export default function WelcomeScreen() {
+
+    //Logout function passed through AuthContext Provider
     const { logOut } = UserAuth();
     const navigate = useNavigate()
 
+    /**
+     * Function to handle user signout
+     */
     async function handleSignOut() {
-        console.log("un-authorised user, signing out....")
         try {
             await logOut()
         } catch (e) {

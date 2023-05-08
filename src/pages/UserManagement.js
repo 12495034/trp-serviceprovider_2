@@ -9,6 +9,10 @@ import { UserAuth } from '../context/AuthContext';
 import { convertFirestoreTimeStamp } from '../Functions/SpecialFunctions/convertFirestoreTimeStamp';
 import SpinnerIcon from '../components/SpinnerIcon';
 
+/**
+ * Page that allows the user to review users of the system, modify roles, account status or personal details
+ */
+
 export default function UserManagement() {
   //------------------------------------------------------------------------------------------------
   //        DEFINE STATE
@@ -26,6 +30,11 @@ export default function UserManagement() {
   //------------------------------------------------------------------------------------------------
   //        FUNCTIONS
   //------------------------------------------------------------------------------------------------
+
+  /**
+   * Function to create firestore query object base on user inputs and perform that query on the firestore database
+   * @param {event} e Object describing the event that ocurred
+   */
 
   async function searchUsers(e) {
     setPressed(true)
@@ -64,6 +73,10 @@ export default function UserManagement() {
     }
   }
 
+  /**
+   * Function to handle state changes to the user management search fields
+   * @param {event} e Object describing the event that occurred
+   */
   function handleSearchBar(e) {
     const { name, value } = e.target
     setSearchBar(prev => {
@@ -97,7 +110,6 @@ export default function UserManagement() {
       <NavBarTRP />
       <Container className='page-content'>
         <h1 className='page-title justify-content-md-justified'>User Management</h1>
-        {/* Insert toolbar, future developement with radio buttons */}
         <p>From this screen you can view all users of the app and their profile details. Search for a user based on their first or last name</p>
         <p><strong>Note:</strong> To view list of all stored users press the search button with no input parameters</p>
         <Row xs={1} sm={1} md={1}>
@@ -123,6 +135,7 @@ export default function UserManagement() {
           </Form>
         </Row>
         <hr />
+        {/* Conditional rendering of loading icon when performing query on firestore database */}
         {isLoading ?
           <Row className="justify-content-center p-3"><SpinnerIcon /></Row>
           :
@@ -138,10 +151,12 @@ export default function UserManagement() {
             </thead>:
               null}
             <tbody>
+              {/* Render user list queried from firestore database */}
               {userList}
             </tbody>
           </Table>
         }
+        {/* conditional rendering of message to user if no records were found */}
         {allUsers.length === 0 && pressed === true && isLoading === false ? <p className="text-danger">No users found, please make sure there is a capital letter at the start of the name</p> : null}
         {error ? <h4><code>{error}</code></h4> : null}
       </Container>

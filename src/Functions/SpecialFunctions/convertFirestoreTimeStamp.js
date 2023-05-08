@@ -1,4 +1,9 @@
-//convert firestore timestamp to date and time string for display purposes
+/**
+ * convert firestore timestamp to date and time string for display purposes
+ * @param {Timestamp} timeStamp firestore timestamp
+ * @returns Long string format of date and time
+ */
+
 export function convertFirestoreTimeStamp(timeStamp){
     if(timeStamp){
       const fireBaseTime = new Date(

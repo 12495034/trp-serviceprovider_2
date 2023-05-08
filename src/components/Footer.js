@@ -2,6 +2,10 @@ import React from 'react'
 import { Container, Row, Col } from 'react-bootstrap'
 import '../styling/App.css'
 
+/**
+ * Web App footer with static information
+ */
+
 export default function Footer() {
     return (
         <div className='footer'>

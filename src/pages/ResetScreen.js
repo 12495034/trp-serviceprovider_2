@@ -3,17 +3,26 @@ import { Link } from 'react-router-dom'
 import { Button, Container, Row, Col, Image, Form } from 'react-bootstrap'
 import { UserAuth } from '../context/AuthContext'
 
+/**
+ * Reset screen for users to reset their password
+ */
+
 export default function ResetScreen() {
 
   //functions passed to screen by context
   const { passwordReset } = UserAuth()
-  //state
+
+  //state Management
   const [formData, setformData] = useState({
     email: "",
   })
   const [error, setError] = useState('')
   const [sent, setSent] = useState(false)
 
+  /**
+   * Function to perform password reset using method passed through AuthContext Provider
+   * @param {event} e Object describing the event that occurred
+   */
   function resetPassword(e) {
     setSent(false)
     e.preventDefault();
@@ -27,6 +36,10 @@ export default function ResetScreen() {
       });
   }
 
+  /**
+   * Function to handle state changes to password reset form
+   * @param {event} event Object describing the event that occurred
+   */
   function handleChange(event) {
     const { name, value, type, checked } = event.target
     setformData(prevState => {

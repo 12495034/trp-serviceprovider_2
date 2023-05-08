@@ -2,6 +2,11 @@ import React from 'react'
 import { Container, Row } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 
+/**
+ * Privacy Policy page for the web app
+ */
+
+
 export default function PrivacyPolicyWeb() {
     return (
         <div className='page-body'>

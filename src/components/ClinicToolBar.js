@@ -1,6 +1,10 @@
 import React from 'react'
 import Form from 'react-bootstrap/Form';
 
+/**
+ * Clinic Tool Bar component used to render radio buttons on clinic management screen
+ */
+
 export default function ClinicToolBar(props) {
   return (
         <Form className="pb-3 pt-3">

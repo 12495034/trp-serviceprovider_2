@@ -2,6 +2,15 @@ import { useState, useEffect } from 'react'
 import { getDoc, doc } from "firebase/firestore"
 import { firestore } from "../config/Firebase"
 
+/**
+ * Custom Hook used to perform one time data retrievel of users account status, loading state of the data 
+ * and any system errors generated
+ * @param {String} collectionName Firestore Collection
+ * @param {String} docName Firestore document
+ * @param {state variable} dependency Input to dependency array
+ * @returns docData, isDocLoading, docError
+ */
+
 export default function useUserStatus(collectionName, docName, dependency) {
     //Hook state
     const [docData, setDocData] = useState([]);
@@ -17,8 +26,6 @@ export default function useUserStatus(collectionName, docName, dependency) {
     }, [dependency])
 
     async function fetchDocData(collectionName, docId) {
-        //button has been setup to call the firestore database and get the user info if available
-        //This aspect of the code is functioning correctly, manually added document and the data imported
         const docRef = doc(firestore, `${collectionName}`, `${docId}`)
         await getDoc(docRef)
             .then((docSnap) => {

@@ -12,37 +12,71 @@ import {
 import { auth } from "../config/Firebase";
 
 const UserContext = createContext()
+
+/**
+ * Auth Context Provider exposes high level state variables to component tree
+ */
 export const AuthContextProvider = ({ children }) => {
-    //define state and functions that we want available through the useContext hook
+    //High Level State Management of user variables
     const [user, setUser] = useState({})
     const [role, setRole] = useState(undefined)
     const [accountStatus, setAccountStatus] = useState(undefined)
 
-    //create user account with email and password, user signed in automatically
+    /**
+     * Firebase function to create user with email and password
+     * @param {String} email User email address
+     * @param {Stirng} password User password
+     * @returns Promise
+     */
     const createUser = (email, password) => {
         return createUserWithEmailAndPassword(auth, email, password)
     }
-    //sign in user with email and password
+
+     /**
+     * Firebase function to create user with email and password
+     * @param {String} email User email address
+     * @param {Stirng} password User password
+     * @returns Promise
+     */
     const signIn = (email, password) => {
         return signInWithEmailAndPassword(auth, email, password)
     }
 
-    //sign out user
+    /**
+     * Firebase function to signout current user
+     * @returns Promise
+     */
     const logOut = () => {
         return signOut(auth)
     }
-    //send reset link to users email
+
+    /**
+     * Firebase Function to reset users password based on email
+     * @param {String} email Users email address
+     * @returns promise
+     */
     async function passwordReset(email) {
         return sendPasswordResetEmail(auth, email)
     }
-    //send verification email to users email
+
+    /**
+     * Firebase Function to send verification email to current users email
+     * @returns Promise
+     */
     async function verifyEmail() {
         return sendEmailVerification(auth.currentUser)
             .then(() => {
                 console.log("Verification email sent")
             });
     }
-    //update user auth profile with new display name and phone number
+    
+    /**
+     * Firebase function to update user auth profile with new display name and phone number
+     * Only possible for the current signed in user using firebase client sdk
+     * @param {String} firstName Users first name
+     * @param {String} lastName Users last name
+     * @param {String} phoneNumber Users phone number
+     */
     async function updateUserAuthProfile(firstName, lastName, phoneNumber) {
         updateProfile(auth.currentUser, {
             displayName: `${firstName} ${lastName}`,
@@ -53,10 +87,10 @@ export const AuthContextProvider = ({ children }) => {
         });
     }
 
-    //useEffect hook triggered by inputting user within dependancy array
+    //Firebase onAuthStateChanged function used within use effect to track user sign in state
+    //Updated custom claims retrieved on each change of user state
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-            //attempt to set details earlier for login
             if (currentUser) {
                 setUser(currentUser)
                 //retrieves the custom claims
@@ -77,6 +111,7 @@ export const AuthContextProvider = ({ children }) => {
         }
     }, [user])
 
+    // High level state variables and functions passwed to component tree through Provider
     return (
         <UserContext.Provider value={{ createUser, signIn, user, logOut, role, accountStatus, passwordReset, verifyEmail, updateUserAuthProfile }}>
             {children}

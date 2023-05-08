@@ -4,13 +4,18 @@ import { Link, useNavigate } from "react-router-dom"
 import { UserAuth } from "../context/AuthContext"
 import packageJson from "../../package.json"
 
+/**
+ * Login page to access the web app
+ */
+
 export default function LoginScreen() {
 
-  //useNavigate hook from react router DOM
+  //useNavigate hook from react router DOM for navigating routes
   const navigate = useNavigate()
   //functions passed to screen by context
   const { signIn } = UserAuth()
-  //state
+
+  //state management
   const [formData, setformData] = useState({
     email: "",
     password: "",
@@ -18,6 +23,10 @@ export default function LoginScreen() {
   const [error, setError] = useState('')
 
 
+  /**
+   * Handle change to form state
+   * @param {event} event Object describing the event the occurred
+   */
   function handleChange(event) {
     const { name, value } = event.target
     setformData(prevState => {
@@ -27,11 +36,16 @@ export default function LoginScreen() {
     })
   }
 
+  /**
+   * handle submission of login details to firebase
+   * @param {*} e 
+   */
   async function handleSubmit(e) {
     e.preventDefault()
     setError('')
     try {
       await signIn(formData.email, formData.password)
+      //On successful login navigate to the home page
       navigate('/home')
     } catch (e) {
       setError(e.message)

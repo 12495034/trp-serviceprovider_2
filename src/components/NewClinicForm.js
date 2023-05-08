@@ -9,7 +9,11 @@ import useCollection from '../customHooks/UseCollection';
 import { createDateString } from '../Functions/GeneralFunctions/createDateString';
 import { clinicLeadTime } from '../constants/general';
 
-//form component for creating a new clinic
+/**
+ * New Clinic Form Component, renders new clinic form fields.
+ * Encapsulates calls to firebase for drop down menu population and functions to submit data to the firestore database
+ */
+
 export default function NewClinicForm(props) {
 
     //manage form state

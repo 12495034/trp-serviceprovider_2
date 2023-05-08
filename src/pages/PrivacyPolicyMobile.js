@@ -1,6 +1,10 @@
 import React from 'react'
 import { Container } from 'react-bootstrap'
 
+/**
+ * Privacy Policy page for the mobile app
+ */
+
 export default function PrivacyPolicyMobile() {
     return (
         <div className='page-body'>

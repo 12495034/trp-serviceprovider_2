@@ -13,9 +13,13 @@ import SpinnerIcon from '../components/SpinnerIcon';
 import useCollectionSnapshotQuery from '../customHooks/UseCollectionSnapshotQuery';
 
 
+/**
+ * Web Page providing an overview of clinics created and the ability to schedule new clinics 
+ */
+
 export default function ClinicManagement() {
 
-  //functions or state provided to screen by context
+  //User object and role passed through AuthContext Provider
   const { user, role } = UserAuth();
   const navigate = useNavigate()
 
@@ -69,6 +73,7 @@ export default function ClinicManagement() {
             <Accordion.Item eventKey="0">
               <Accordion.Header>Create New Clinic</Accordion.Header>
               <Accordion.Body>
+                {/* Render the new clinic form */}
                 <NewClinicForm
                   user={user} role={role}
                 />

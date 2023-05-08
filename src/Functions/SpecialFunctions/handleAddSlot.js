@@ -2,7 +2,17 @@ import { firestoreUpdate } from "../../firestoreFunctions/firestoreUpdate"
 import { addAdditionalSlot } from "./addAdditionalSlot"
 import { maxClinicCapacity } from "../../constants/general"
 
-//add additional slot to clinic map
+/**
+ * Function to add additional available appointment to firestore clinic slot map
+ * @param {String} clinicId Firestore clinic id
+ * @param {Object} availableSlots Object containing currently available appointment slots
+ * @param {Array} appointmentsData Array of all appointment slots regardless of status
+ * @param {String} date date of the clinic
+ * @param {Int} capacity clinic capacity
+ * @param {Int} timeInc duration of new appointment slot
+ * @param {function} setState Pass error out of function to parent state
+ */
+
 export function handleAddSlot(clinicId, availableSlots, appointmentsData, date, capacity, timeInc, setState) {
 
     if (capacity < maxClinicCapacity) {

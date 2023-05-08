@@ -2,6 +2,15 @@ import { useState, useEffect } from 'react'
 import { getDoc, doc } from "firebase/firestore"
 import { firestore } from "../config/Firebase"
 
+/**
+ * Custom Hook used to perform one time data retrievel of users role, loading state of the data 
+ * and any system errors generated
+ * @param {String} collectionName Firestore Collection
+ * @param {String} docName Firestore document
+ * @param {state variable} dependency Input to dependency array
+ * @returns docData, isDocLoading, docError
+ */
+
 export default function useUserRole(collectionName, docName, dependency) {
     //Hook state
     const [docData, setDocData] = useState([]);

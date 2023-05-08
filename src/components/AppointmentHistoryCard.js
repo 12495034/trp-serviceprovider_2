@@ -1,6 +1,10 @@
 import React from 'react'
 import { Card } from 'react-bootstrap';
 
+/**
+ * Appointment History Card component used to render appointments within the users profile
+ */
+
 export default function AppointmentHistoryCard(props) {
 
   return (

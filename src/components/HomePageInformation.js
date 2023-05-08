@@ -1,6 +1,11 @@
 import React from 'react'
 import { Accordion, ListGroup} from 'react-bootstrap'
 
+/**
+ * Home page information component, renders user information on what the system does
+ * Placeholder code and input props defined for displaying system usage statistics
+ */
+
 export default function HomePageInformation(props) {
     return (
         <Accordion defaultActiveKey="0">

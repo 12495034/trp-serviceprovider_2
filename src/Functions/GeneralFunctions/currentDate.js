@@ -1,4 +1,9 @@
-//used in new clinic form to limit date picker to future dates only
+/**
+ * Function to return current date in YYYY-MM-DD format
+ * @param {String} offset Optional - Offset current date by a number of days
+ * @returns today String in YYYY-MM-DD format
+ */
+
 export function currentDate(offset) {
     var d = new Date();
     var n

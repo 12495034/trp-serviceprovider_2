@@ -1,6 +1,10 @@
 import React from 'react'
 import { Card, Badge, Stack } from 'react-bootstrap';
 
+/**
+ * Clinic Card component used to render clinics on the clinic management screen
+ */
+
 export default function ClinicCard(props) {
   return (
     <Card className="text-left clinic-card pointer" onClick={() => props.handleClinicDetail(props.clinicId)}>

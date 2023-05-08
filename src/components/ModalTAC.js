@@ -1,6 +1,10 @@
 import React from 'react'
 import { Modal, Button } from 'react-bootstrap'
 
+/**
+ * Modal Terms and conditions, used to display terms and conditions to the user at signup
+ */
+
 export default function ModalTAC(props) {
     return (
         <Modal dialogClassName="tac-modal" show={props.show} onHide={props.close}>

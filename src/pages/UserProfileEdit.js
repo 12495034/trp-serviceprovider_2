@@ -9,10 +9,15 @@ import usePronouns from '../customHooks/usePronouns';
 import useUserRole from '../customHooks/useUserRole';
 import useUserStatus from '../customHooks/useUserStatus';
 
+/**
+ * Page for editing user details
+ */
+
 export default function UserProfileEdit() {
     const navigate = useNavigate()
     const { userid } = useParams()
-    //define State
+
+    //State Management
     const [userData, setUserData] = useState({})
     const [restrictedUserData, setRestrictedUserData] = useState({})
 
@@ -29,18 +34,33 @@ export default function UserProfileEdit() {
         setRestrictedUserData(restrictedData)
     }, [docData, restrictedData])
 
-    //Edit user details
+    /**
+     * Function to update user profile details within firestore database
+     * @param {String} userid Firebase user id
+     * @param {Object} data Object containing data to update user firestore document
+     * @param {event} e Object describing the event that occurred
+     */
     function updateUserDetails(userid, data, e) {
         //function to update user checkedIn status from false to true
         firestoreUpdate(`Users`, `${userid}`, data)
     }
 
+    /**
+     * Function to update restricted user details within firestore database
+     * @param {String} userid Firebase user id
+     * @param {Object} data containing data to update restricted user details document
+     * @param {event} e Object describing event that occurred
+     */
     function updateRestrictedUserDetails(userid, data, e) {
         //function to update user checkedIn status from false to true
         firestoreUpdate(`Users/${userid}/Restricted`, `Details`, data)
         navigate(`/Users/${userid}`, { state: { message: "User Details updated!" } })
     }
 
+    /**
+     * Function to handle state changes to form
+     * @param {event} event Object describing event that occurred
+     */
     function handleUserDataChange(event) {
         const { name, value, type, checked } = event.target
         setUserData(prevState => {
@@ -50,6 +70,10 @@ export default function UserProfileEdit() {
         })
     }
 
+     /**
+     * Function to handle state changes to restricted data fields on form
+     * @param {event} event Object describing event that occurred
+     */
     function handleRestrictedDataChange(event) {
         const { name, value } = event.target
         setRestrictedUserData(prevState => {

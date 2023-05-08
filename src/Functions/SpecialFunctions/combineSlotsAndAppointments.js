@@ -1,4 +1,12 @@
-//function to combined the available slots map and booked appointments objects array into a single list for clinic detail screen
+
+/**
+ * function to combined the available slots map and booked appointments objects array into a single list for clinic detail screen
+ * @param {Array} appointmentsArray Array of current appointment bookings
+ * @param {Object} clinicSlotsMap Object of available appointment slots
+ * @param {function} callback callback function to return error message
+ * @returns Array of booked appointments and available appointment slots
+ */
+
 export function combineSlotsAndAppointments(appointmentsArray, clinicSlotsMap, callback) {
     //take a copy of the appointments list
     const combinedList = appointmentsArray.slice()

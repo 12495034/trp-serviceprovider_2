@@ -2,7 +2,13 @@ import React from 'react'
 import { Outlet, Navigate, useLocation } from 'react-router-dom'
 import { UserAuth } from '../context/AuthContext'
 
+/**
+ * Functional component controls access to protected routes
+ */
+
 export default function ProtectedRoute() {
+
+    //user, role, accountstatus and logout function passed through AuthContext Provider
     const { user, role, accountStatus, logOut } = UserAuth();
     const location = useLocation();
 

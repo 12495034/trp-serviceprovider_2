@@ -20,8 +20,11 @@ import { AuthContextProvider } from './context/AuthContext';
 import ProtectedRoute from './navigation/ProtectedRoute';
 import PrivacyPolicyMobile from './pages/PrivacyPolicyMobile';
 import PrivacyPolicyWeb from './pages/PrivacyPolicyWeb';
-import TermsAndConditions from './pages/TermsAndConditions';
 import WelcomeScreen from './pages/WelcomeScreen';
+
+/**
+ * High level definition of protected and un-protected routes through implementation of react router dom
+ */
 
 function App() {
 
@@ -45,7 +48,6 @@ function App() {
         <Route path="/unauthorised" element={<UnAuthorisedScreen />} />
         <Route path="/privacy-policy-mobile" element={<PrivacyPolicyMobile />} />
         <Route path="/privacy-policy-web" element={<PrivacyPolicyWeb />} />
-        <Route path="/termsandconditions" element={<TermsAndConditions />} />
         <Route path="/welcome" element={<WelcomeScreen />} />
         {/* //Catch all - page does not exist */}
         <Route path="*" element={<Missing />} />

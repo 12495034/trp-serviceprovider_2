@@ -2,6 +2,10 @@ import React from 'react'
 import { Button, Container, Row, Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
+/**
+ * Screen shown to un-authenticated users or those with in-sufficient permissions
+ */
+
 export default function UnAuthorisedScreen() {
     const navigate = useNavigate()
     return (

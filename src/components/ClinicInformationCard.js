@@ -1,6 +1,10 @@
 import React from 'react'
 import {Card, Badge, Stack } from 'react-bootstrap';
 
+/**
+ * Clinic Information Card component used to render clinic information on the clinic detail screen
+ */
+
 export default function ClinicInformationCard(props) {
   return (
     <Card className="clinic-information" onClick={() => props.handleClinicDetail(props.clinicId)}>
